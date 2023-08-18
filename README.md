@@ -47,9 +47,3 @@ SiegeEngineers combine/copy those:
     ```
   * Format both files for uniformness in searches.
 * `tsx data/model.ts` to run the file in `node` for quick console.log outputs.
-
-## TODO
-- [ ] Add proper types to JSONs in the `model`.
-- [ ] Add task to copy shoelace assets (icons, etc.) https://shoelace.style/frameworks/react#installation
-- [ ] Script for pulling `json` files periodically. Add auto-formatting to the script.
-- [ ] Test whether cherry-picking results in a less code / speed: https://shoelace.style/frameworks/react#notes-about-tree-shaking
