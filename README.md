@@ -2,8 +2,8 @@
 
 Playground for a future app that digs into AOE2 data and presents it in a user friendly way.
 
-Temporary link for the project using github pages:
-https://king8fisher.github.io/aoe2card/
+Temporary link for the project using vercel:
+https://aoe2card.vercel.app/
 
 ## Requirements
 
