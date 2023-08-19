@@ -1,23 +1,21 @@
-import '@shoelace-style/shoelace/dist/themes/dark.css';
-import '@shoelace-style/shoelace/dist/themes/light.css';
-// import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-import { SlButton, SlDropdown, SlInput, SlMenu, SlMenuItem } from '@shoelace-style/shoelace/dist/react';
-import { useEffect, useMemo, useState } from 'react';
-import { allCivs, allUnits, imperialAgeUniqueUnit, searchUnits, unitCivData, unitData } from '../../data/model';
-import { DarkModeButton } from './DarkMode';
-import { Debouncer } from './debouncer';
+import { SlButton, SlDropdown, SlInput, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react"
+import "@shoelace-style/shoelace/dist/themes/dark.css"
+import "@shoelace-style/shoelace/dist/themes/light.css"
+import { useEffect, useMemo, useState } from "react"
+import { IUnitCivData, IUnitData, allUnits, getAllCivs, imperialAgeUniqueUnit, searchUnits } from "../../data/model"
+import { DarkModeButton } from "./DarkMode"
+import { Debouncer } from "./debouncer"
+import { Container, ListItem, ListWrapper } from "./styles"
 
 function App() {
-  // setBasePath('assets/shoelace');
-
-  const [civ, setCiv] = useState('Aztecs');
-  const allCivs_ = allCivs()
+  const [civ, setCiv] = useState("Aztecs")
+  const allCivs = getAllCivs()
 
   useEffect(() => {
-    document.body.classList.add('ready');
+    document.body.classList.add("ready")
   })
-  const visibleUnits = useMemo(() => allUnits(civ), [civ]);
-  const imerialUnit = useMemo(() => imperialAgeUniqueUnit(civ), [civ]);
+  const visibleUnits = useMemo(() => allUnits(civ), [civ])
+  const uniqueUnite = useMemo(() => imperialAgeUniqueUnit(civ), [civ])
 
   // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
   //
@@ -33,7 +31,7 @@ function App() {
   })
 
   const [search, setSearch] = useState('');
-  const [searchResult, setSearchResult] = useState<unitCivData[]>();
+  const [searchResult, setSearchResult] = useState<IUnitCivData[]>();
 
   useMemo(() => {
     let result = searchUnits(search)
@@ -42,7 +40,7 @@ function App() {
 
   return (
     <>
-      <div className="py-2 bg-zinc-300 dark:bg-zinc-800">
+      <div className="px-2 py-2 bg-zinc-300 dark:bg-zinc-800">
         <div className="flex flex-row items-center justify-between max-w-3xl mx-auto">
           <a href="/">Aoe2 Card</a>
           <div className="flex flex-row items-center gap-1">
@@ -58,7 +56,7 @@ function App() {
             </SlInput>
           </div>
           <DarkModeButton />
-        </div>
+        </div >
 
       </div >
       <div className="max-w-3xl mx-auto">
@@ -67,37 +65,45 @@ function App() {
             <UnitPresentation unitCivData={v} />
           ))}
         </div>
+
         <SlDropdown className="shadow-lg">
           <SlButton slot="trigger" caret>
             {civ}
           </SlButton>
-          <SlMenu onSlSelect={event => { setCiv(event.detail.item.value) }}>
-            {allCivs_.map((value, _index) => (
-              <SlMenuItem key={value.key} value={value.key}>{value.value}</SlMenuItem>
+          <SlMenu
+            onSlSelect={(event) => {
+              setCiv(event.detail.item.value)
+            }}
+          >
+            {allCivs.map((value) => (
+              <SlMenuItem key={value.key} value={value.key}>
+                {value.value}
+              </SlMenuItem>
             ))}
           </SlMenu>
         </SlDropdown>
-
-        <div className="flex flex-row flex-wrap gap-1 mt-1">
-          <span key={imerialUnit.key} className="p-2 bg-blue-400 dark:bg-blue-700 rounded-md">
-            {imerialUnit.value}
-            <span className="opacity-50 ml-1 text-xs">{imerialUnit.key}</span>
-          </span>
-          {visibleUnits.map((v: unitData) => (
-            <span key={v.key} className="p-2 bg-zinc-400 dark:bg-zinc-700 rounded-md">{v.value}</span>
-          ))}
-        </div>
+        <DarkModeButton />
       </div>
+    
+
+      <Container>
+        <ListWrapper>
+          <ListItem key={uniqueUnite.key}>{uniqueUnite.value}</ListItem>
+          {visibleUnits.map((visableUnit: IUnitData) => (
+            <ListItem key={visableUnit.key}>{visableUnit.value}</ListItem>
+          ))}
+        </ListWrapper>
+      </Container>
     </>
   )
 }
 
 interface UnitPresentationProps {
-  unitCivData: unitCivData
+  unitCivData: IUnitCivData
 }
 
 function UnitPresentation(props: UnitPresentationProps) {
-  let unitCivData: unitCivData = props.unitCivData
+  let unitCivData: IUnitCivData = props.unitCivData
   return (
     <>
       <div className={
@@ -118,7 +124,7 @@ function UnitPresentation(props: UnitPresentationProps) {
   )
 }
 
-function CostPresentation({ unitCivData }: { unitCivData: unitCivData }) {
+function CostPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
   return (
     <div className="flex flex-row gap-1">
       <span>F{unitCivData.unitStats.cost.food}</span>
