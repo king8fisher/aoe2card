@@ -24,7 +24,6 @@ export const Container = styled(ContainerFluid)`
 `;
 
 export const ListWrapper = styled.div`
-  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   ${breakpoints.smDown} {
@@ -40,3 +39,32 @@ export const ListItem = styled.div`
   min-width: 200px;
   background-color: ${colors.gray};
 `;
+
+export const UnitDisplayLine = styled.div`
+  display: flex; 
+  flex-direction: row; 
+  gap: 0.25rem; 
+  align-items: baseline; 
+  padding-left: 0.25rem;
+  padding-right: 0.25rem; 
+  line-height: 100%; 
+`;
+
+export const UnitDisplayLineItemsCentered = styled(UnitDisplayLine)`
+  align-items: center; 
+`;
+
+export const FlexWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem/* 4px */;
+`
+
+export const UnitsPresentationFlex = styled.div`
+ display: flex; 
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem; 
+  flex-direction: row; 
+  flex-wrap: wrap; 
+  gap: 0.25rem; 
+`

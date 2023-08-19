@@ -33,7 +33,7 @@ export interface ICivData {
   value: string;
 }
 
-export function getAllCivs(): ICivData[] {
+function allCivs(): ICivData[] {
   let entries: ICivData[] = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
@@ -42,23 +42,29 @@ export function getAllCivs(): ICivData[] {
   return entries;
 }
 
+export function civByName(civ: string): ICivData | null {
+  let found = data["civ_names"][civ]
+  if (found == null) return null;
+  return { key: civ, value: strings[found] }
+}
+
 export interface IUnitData {
-  key: number;
+  id: number;
   value: string;
   isImperialAgeUniqueUnit: boolean;
 }
 
-export function allUnits(civ: string): IUnitData[] {
+export function allUnits(civKey: string): IUnitData[] {
   let entries: IUnitData[] = [];
-  data.techtrees[civ].units.forEach((v: number) => {
-    entries.push({ key: v, value: unitNameByID(v), isImperialAgeUniqueUnit: false })
+  data.techtrees[civKey].units.forEach((v: number) => {
+    entries.push({ id: v, value: unitNameByID(v), isImperialAgeUniqueUnit: false })
   })
   return entries;
 }
 
-export function imperialAgeUniqueUnit(civ: string): IUnitData {
-  let id = data.techtrees[civ].unique.imperialAgeUniqueUnit
-  return { key: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true }
+export function imperialAgeUniqueUnit(civKey: string): IUnitData {
+  let id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
+  return { id: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true }
 }
 
 export interface IUnitStatsData {
@@ -74,12 +80,26 @@ export interface IUnitCivData {
 export function searchUnits(like: string): IUnitCivData[] {
   like = like.toLowerCase().trim();
   if (like == '') return []
+  // TODO: Turn this into fuzzy search
+  return matchUnits(allCivs(), (u) => {
+    return (u.value.toLowerCase().indexOf(like) >= 0)
+  })
+}
+
+export function allCivUnits(civKey: string): IUnitCivData[] {
+  let civ_ = civByName(civKey)
+  if (civ_ == null) return []
+  return matchUnits([civ_], (_u) => true)
+}
+
+export function matchUnits(
+  civs: ICivData[],
+  match: (unit: IUnitData) => boolean): IUnitCivData[] {
   let result: IUnitCivData[] = []
-  getAllCivs().forEach((c) => {
+  civs.forEach((c) => {
     [imperialAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
-      // TODO: Turn this into fuzzy search
-      if (u.value.toLowerCase().indexOf(like) >= 0) {
-        let cost = data.data.units[u.key].Cost
+      if (match(u)) {
+        let cost = data.data.units[u.id].Cost
         result.push({
           civ: c,
           unit: u,

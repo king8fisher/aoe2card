@@ -2,21 +2,18 @@ import { SlButton, SlDropdown, SlInput, SlMenu, SlMenuItem } from "@shoelace-sty
 import "@shoelace-style/shoelace/dist/themes/dark.css"
 import "@shoelace-style/shoelace/dist/themes/light.css"
 import { useEffect, useMemo, useState } from "react"
-import { IUnitCivData, IUnitData, allUnits, getAllCivs, imperialAgeUniqueUnit, searchUnits } from "../../data/model"
+import { IUnitCivData, allCivUnits, getAllCivs, searchUnits } from "../../data/model"
 import { DarkModeButton } from "./DarkMode"
 import { Debouncer } from "./debouncer"
-import { Container, ListItem, ListWrapper } from "./styles"
+import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles"
 
 function App() {
-  const [civ, setCiv] = useState("Aztecs")
+  const [selectedCivKey, setCiv] = useState("Aztecs")
   const allCivs = getAllCivs()
 
   useEffect(() => {
     document.body.classList.add("ready")
   })
-
-  const visibleUnits = useMemo(() => allUnits(civ), [civ])
-  const uniqueUnit = useMemo(() => imperialAgeUniqueUnit(civ), [civ])
 
   // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
   //
@@ -33,6 +30,9 @@ function App() {
 
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState<IUnitCivData[]>();
+  const unitsByCiv: IUnitCivData[] = useMemo(() => {
+    return allCivUnits(selectedCivKey)
+  }, [selectedCivKey])
 
   useMemo(() => {
     let result = searchUnits(search)
@@ -42,7 +42,7 @@ function App() {
   return (
     <>
       <div className="px-2 py-2 bg-zinc-300 dark:bg-zinc-800">
-        <div className="flex flex-row items-center justify-between max-w-3xl mx-auto">
+        <Container className="flex flex-row items-center justify-between max-w-3xl mx-auto">
           <a href="/">Aoe2 Card</a>
           <div className="flex flex-row items-center gap-1">
             <SlInput clearable placeholder="Search" value={search} autoFocus
@@ -57,18 +57,19 @@ function App() {
             </SlInput>
           </div>
           <DarkModeButton />
-        </div >
+        </Container>
 
       </div >
-      <div className="max-w-3xl mx-auto">
-        <div className="py-2 flex flex-row flex-wrap gap-1">
+      <Container>
+        <UnitsPresentationFlex>
           {searchResult?.map((v, _index) => (
-            <UnitPresentation unitCivData={v} />
+            <UnitPresentation unitCivData={v} showCivName={true} />
           ))}
-        </div>
+        </UnitsPresentationFlex>
         <SlDropdown className="shadow-lg">
           <SlButton slot="trigger" caret>
-            {civ}
+            <img slot="prefix" src={civImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
+            {selectedCivKey}
           </SlButton>
           <SlMenu
             onSlSelect={(event) => {
@@ -78,40 +79,55 @@ function App() {
             {allCivs.map((value) => (
               <SlMenuItem key={value.key} value={value.key}>
                 {value.value}
+                <img slot="prefix" src={civImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
               </SlMenuItem>
             ))}
           </SlMenu>
         </SlDropdown>
-      </div>
+      </Container>
 
       <Container>
-        <ListWrapper>
-          <ListItem key={uniqueUnit.key}>{uniqueUnit.value}</ListItem>
-          {visibleUnits.map((visableUnit: IUnitData) => (
-            <ListItem key={visableUnit.key}>{visableUnit.value}</ListItem>
+        <UnitsPresentationFlex>
+          {unitsByCiv?.map((v, _index) => (
+            <UnitPresentation unitCivData={v} showCivName={false} />
           ))}
-        </ListWrapper>
+        </UnitsPresentationFlex>
       </Container>
+
     </>
   )
 }
 
-function UnitPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
+function civImgUrl(civKey: string) {
+  return `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`
+}
+
+function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData, showCivName: boolean }) {
   return (
     <>
       <div className={
-        ["flex flex-col space-y-0 rounded-md p-1",
+        ["flex flex-col rounded-md p-1",
           unitCivData.unit.isImperialAgeUniqueUnit ? "bg-blue-400 dark:bg-blue-700" : "bg-zinc-300 dark:bg-zinc-700"
         ].join(" ")}>
-        <div className="flex flex-row gap-1 items-center">
-          <img src={`https://aoe2techtree.net/img/Civs/${unitCivData.civ.value.toLowerCase()}.png`}
-            className="w-6 h-6 ml-1 flex-shrink-0 mt-[2px]" />
-          <div className="leading-none">{unitCivData.civ.value}</div>
-        </div>
-        <div className="px-1 leading-none">{unitCivData.unit.value}<span className="opacity-50 ml-1 text-xs">{unitCivData.unit.key}</span></div>
-        <div className="px-1 leading-none text-xs opacity-30">
+        {showCivName ?
+          <UnitDisplayLineItemsCentered>
+            <img src={civImgUrl(unitCivData.civ.key)}
+              className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+            <div className="leading-none">{unitCivData.civ.value}</div>
+          </UnitDisplayLineItemsCentered>
+          : <></>
+        }
+        <UnitDisplayLineItemsCentered>
+          <img src={`https://aoe2techtree.net/img/Units/${unitCivData.unit.id}.png`}
+            className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-50 ml-[4px]" />
+          {unitCivData.unit.value}
+          <span className="opacity-50 ml-1 text-xs">
+            {unitCivData.unit.id}
+          </span>
+        </UnitDisplayLineItemsCentered>
+        <UnitDisplayLine className="text-xs opacity-80 mt-1">
           <CostPresentation unitCivData={unitCivData} />
-        </div>
+        </UnitDisplayLine>
       </div>
     </>
   )
@@ -119,12 +135,18 @@ function UnitPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
 
 function CostPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
   return (
-    <div className="flex flex-row gap-1">
-      <span>F{unitCivData.unitStats.cost.food}</span>
-      <span>W{unitCivData.unitStats.cost.wood}</span>
-      <span>G{unitCivData.unitStats.cost.gold}</span>
-      <span>S{unitCivData.unitStats.cost.stone}</span>
-    </div>
+    <FlexWrap>
+      <SingleCostPresenter type="f" amount={unitCivData.unitStats.cost.food} />
+      <SingleCostPresenter type="w" amount={unitCivData.unitStats.cost.wood} />
+      <SingleCostPresenter type="g" amount={unitCivData.unitStats.cost.gold} />
+      <SingleCostPresenter type="s" amount={unitCivData.unitStats.cost.stone} />
+    </FlexWrap>
+  )
+}
+
+function SingleCostPresenter({ type, amount }: { type: string, amount: number }) {
+  return (
+    <span className={amount == 0 ? "opacity-30" : ""}>{type}{amount}</span>
   )
 }
 
