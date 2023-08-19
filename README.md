@@ -14,6 +14,10 @@ Playground for a future app that digs into AOE2 data and presents it in a user f
     - `pnpm i` - install dependencies.
     - `pnpm dev` - start server in development mode.
 
+## VSCode Extensions
+
+- [styled-components.vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components) for Styled Components
+
 ## Data Sources
 
 - https://github.com/HSZemi/aoe2dat is the source for SiegeEngineers.
