@@ -2,14 +2,14 @@ import { SlButton, SlDropdown, SlInput, SlMenu, SlMenuItem } from "@shoelace-sty
 import "@shoelace-style/shoelace/dist/themes/dark.css"
 import "@shoelace-style/shoelace/dist/themes/light.css"
 import { useEffect, useMemo, useState } from "react"
-import { IUnitCivData, allCivUnits, getAllCivs, searchUnits } from "../../data/model"
+import { IUnitCivData, allCivUnits, allCivs, searchUnits } from "../../data/model"
 import { DarkModeButton } from "./DarkMode"
 import { Debouncer } from "./debouncer"
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles"
 
 function App() {
   const [selectedCivKey, setCiv] = useState("Aztecs")
-  const allCivs = getAllCivs()
+  const civsList = allCivs()
 
   useEffect(() => {
     document.body.classList.add("ready")
@@ -76,7 +76,7 @@ function App() {
               setCiv(event.detail.item.value)
             }}
           >
-            {allCivs.map((value) => (
+            {civsList.map((value) => (
               <SlMenuItem key={value.key} value={value.key}>
                 {value.value}
                 <img slot="prefix" src={civImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />

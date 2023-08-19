@@ -33,7 +33,7 @@ export interface ICivData {
   value: string;
 }
 
-function allCivs(): ICivData[] {
+export function allCivs(): ICivData[] {
   let entries: ICivData[] = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
