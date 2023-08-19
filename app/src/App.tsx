@@ -14,8 +14,9 @@ function App() {
   useEffect(() => {
     document.body.classList.add("ready")
   })
+
   const visibleUnits = useMemo(() => allUnits(civ), [civ])
-  const uniqueUnite = useMemo(() => imperialAgeUniqueUnit(civ), [civ])
+  const uniqueUnit = useMemo(() => imperialAgeUniqueUnit(civ), [civ])
 
   // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
   //
@@ -85,7 +86,7 @@ function App() {
 
       <Container>
         <ListWrapper>
-          <ListItem key={uniqueUnite.key}>{uniqueUnite.value}</ListItem>
+          <ListItem key={uniqueUnit.key}>{uniqueUnit.value}</ListItem>
           {visibleUnits.map((visableUnit: IUnitData) => (
             <ListItem key={visableUnit.key}>{visableUnit.value}</ListItem>
           ))}
@@ -95,12 +96,7 @@ function App() {
   )
 }
 
-interface UnitPresentationProps {
-  unitCivData: IUnitCivData
-}
-
-function UnitPresentation(props: UnitPresentationProps) {
-  let unitCivData: IUnitCivData = props.unitCivData
+function UnitPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
   return (
     <>
       <div className={
