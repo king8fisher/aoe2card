@@ -51,7 +51,7 @@ let armours: armoursData = data.data.units[561].Armours // [ { "Amount": 0, "Cla
 // Root for data for a civ
 data.techtrees.Mongols
 
-export function allCivs() {
+export function getAllCivs() {
   let entries = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
