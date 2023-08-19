@@ -1,35 +1,17 @@
 import data from './data.json';
 import strings from './strings.json';
 
-// Currently a mess consisting of exploring json files and scaffolding functions
-// to make it easy to access data.
+// This will have to be at some point converted into the dynamic json files load.
 
-type attackData = {
+export type attackData = {
   Amount: number;
   Class: number;
 }
-type attacksData = attackData[]
-type armourData = {
+
+export type armourData = {
   Amount: number;
   Class: number;
 }
-type armoursData = armourData[]
-
-// Unit data for unit_id
-data.data.unit_upgrades[561].internal_name // "Elite Mangudai"
-unitNameByID(561) // "Elite Mangudai"
-data.data.unit_upgrades[561].ResearchTime // 50
-data.data.units[561].internal_name // "UMOSU"
-data.data.units[561].Cost // { "Gold": 65, "Wood": 55 }
-data.data.units[561].HP // 60
-data.data.units[561].LineOfSight // 6
-data.data.units[561].Attack // 8
-data.data.units[561].MeleeArmor // 1
-data.data.units[561].PierceArmor // 0
-data.data.units[561].GarrisonCapacity // 0
-data.data.units[561].TrainTime // 26
-data.data.units[561].Speed // 1.4
-data.data.units[561].ReloadTime // 2.1
 
 export function unitNameByID(unitId: number): string {
   // data.data.units[561].LanguageNameId // 5458
@@ -44,63 +26,74 @@ export function techNameByID(techId: number): string {
   return strings[data.data.techs[techId].LanguageNameId];
 }
 
-let attacks: attacksData = data.data.units[561].Attacks // [ { "Amount": 1, "Class": 27 }, { "Amount": 0, "Class": 21 }, ... ]
-let armours: armoursData = data.data.units[561].Armours // [ { "Amount": 0, "Class": 28 }, { "Amount": 1, "Class": 4 }, ... ]
-// ...
+interface civData {
+  /** internal_name value for civ used everywhere */
+  key: string;
+  /** localized name for civ, not to be used for data keys */
+  value: string;
+}
 
-// Root for data for a civ
-data.techtrees.Mongols
-
-export function allCivs() {
-  let entries = [];
-  Object.entries(data["civ_names"]).forEach((v, _k) => {
+export function allCivs(): civData[] {
+  let entries: civData[] = [];
+  Object.entries(data["civ_names"]).forEach((v: string[], _k) => {
     // {key: internal_name, value: strings_localized_value}
-    entries.push({key: v[0], value: strings[v[1]]});
+    entries.push({ key: v[0], value: strings[v[1]] });
   })
   return entries;
 }
 
-// [unit_id, ...]
-let units = data.techtrees.Mongols.units
+export interface unitData {
+  key: number;
+  value: string;
+  isImperialAgeUniqueUnit: boolean;
+}
 
-export function allUnits(civ: string) {
-  let entries = [];
-  data.techtrees[civ].units.forEach((v) => {
-    entries.push({key: v, value: unitNameByID(v)})
+export function allUnits(civ: string): unitData[] {
+  let entries: unitData[] = [];
+  data.techtrees[civ].units.forEach((v: number) => {
+    entries.push({ key: v, value: unitNameByID(v), isImperialAgeUniqueUnit: false })
   })
   return entries;
 }
 
-// console.log("--Regular Units--")
-// units.forEach((v) => {
-//   console.log(unitNameByID(v as number));
-// })
-// console.log("--Unique Unit--")
-// console.log(unitNameByID(data.techtrees.Mongols.unique.imperialAgeUniqueUnit))
-
-// Unique Techtree 
-
-// 487
-let castleAgeUniqueTech = data.techtrees.Mongols.unique.castleAgeUniqueTech
-
-// 11
-let castleAgeUniqueUnit = data.techtrees.Mongols.unique.castleAgeUniqueUnit
-data.data.units[11].internal_name // MOSUN
-data.data.units[11] // Rest of data for the unit
-
-// 6
-let imperialAgeUniqueTech = data.techtrees.Mongols.unique.imperialAgeUniqueTech
-data.data.techs[6].internal_name // "Mongol Siege Drill"
-data.data.techs[6].Cost // { "Gold": 450, "Wood": 500 }
-data.data.techs[6].ResearchTime // 60
-
-// 561
-data.techtrees.Mongols.unique.imperialAgeUniqueUnit
-data.data.unit_upgrades[561] // Data for update cost, time, name
-data.data.units[561] // Rest of the data about the unit
-
-export function imperialAgeUniqueUnit(civ: string) {
+export function imperialAgeUniqueUnit(civ: string): unitData {
   let id = data.techtrees[civ].unique.imperialAgeUniqueUnit
-  return {key: id, value: unitNameByID(id)}
+  return { key: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true }
 }
 
+export interface unitStatsData {
+  cost: { gold: number, wood: number, food: number, stone: number }
+}
+
+export interface unitCivData {
+  civ: civData
+  unit: unitData
+  unitStats: unitStatsData
+}
+
+export function searchUnits(like: string): unitCivData[] {
+  like = like.toLowerCase().trim();
+  if (like == '') return []
+  let result: unitCivData[] = []
+  allCivs().forEach((c) => {
+    [imperialAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
+      // TODO: Turn this into fuzzy search
+      if (u.value.toLowerCase().indexOf(like) >= 0) {
+        let cost = data.data.units[u.key].Cost
+        result.push({
+          civ: c,
+          unit: u,
+          unitStats: {
+            cost: {
+              food: cost["Food"] || 0,
+              gold: cost["Gold"] || 0,
+              stone: cost["Stone"] || 0,
+              wood: cost["Wood"] || 0,
+            }
+          }
+        })
+      }
+    })
+  })
+  return result
+}
