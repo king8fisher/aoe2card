@@ -4,8 +4,8 @@ import "@shoelace-style/shoelace/dist/themes/light.css"
 import { useEffect, useMemo, useState } from "react"
 import { IUnitCivData, allCivUnits, allCivs, searchUnits } from "../../data/model"
 import { DarkModeButton } from "./DarkMode"
-import { Debouncer } from "./debouncer"
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles"
+import { createDebouncer } from "./helpers/tools"
 
 function App() {
   const [selectedCivKey, setCiv] = useState("Aztecs")
@@ -23,20 +23,23 @@ function App() {
   //   }
   // }, []);
 
-  const searchDebouncer = new Debouncer();
+  const searchDebouncer = createDebouncer()
+  const { destroyDebouncer, runDebouncer } = searchDebouncer || {}
   useEffect(() => {
-    return () => { searchDebouncer.destroy() }
+    return () => {
+      destroyDebouncer()
+    }
   })
 
-  const [search, setSearch] = useState('');
-  const [searchResult, setSearchResult] = useState<IUnitCivData[]>();
+  const [search, setSearch] = useState("")
+  const [searchResult, setSearchResult] = useState<IUnitCivData[]>()
   const unitsByCiv: IUnitCivData[] = useMemo(() => {
     return allCivUnits(selectedCivKey)
   }, [selectedCivKey])
 
   useMemo(() => {
-    let result = searchUnits(search)
-    setSearchResult(result);
+    const result = searchUnits(search)
+    setSearchResult(result)
   }, [search])
 
   return (
@@ -45,21 +48,33 @@ function App() {
         <Container className="flex flex-row items-center justify-between max-w-3xl mx-auto">
           <a href="/">Aoe2 Card</a>
           <div className="flex flex-row items-center gap-1">
-            <SlInput clearable placeholder="Search" value={search} autoFocus
+            <SlInput
+              clearable
+              placeholder="Search"
+              value={search}
+              autoFocus
               onInput={(e) => {
-                let v = e.currentTarget.value;
-                searchDebouncer.run(() => { setSearch(v) }, 200)
+                const searchValue = e?.currentTarget?.value
+                runDebouncer({
+                  fn: () => {
+                    setSearch(searchValue)
+                  },
+                  delay: 200,
+                })
               }}
-              onSlClear={(_e) => {
-                searchDebouncer.run(() => { setSearch('') }, 200)
-              }}>
-
-            </SlInput>
+              onSlClear={() => {
+                runDebouncer({
+                  fn: () => {
+                    setSearch("")
+                  },
+                  delay: 200,
+                })
+              }}
+            ></SlInput>
           </div>
           <DarkModeButton />
         </Container>
-
-      </div >
+      </div>
       <Container>
         <UnitsPresentationFlex>
           {searchResult?.map((v, _index) => (
@@ -93,7 +108,6 @@ function App() {
           ))}
         </UnitsPresentationFlex>
       </Container>
-
     </>
   )
 }
@@ -102,28 +116,30 @@ function civImgUrl(civKey: string) {
   return `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`
 }
 
-function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData, showCivName: boolean }) {
+function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) {
   return (
     <>
-      <div className={
-        ["flex flex-col rounded-md p-1",
-          unitCivData.unit.isImperialAgeUniqueUnit ? "bg-blue-400 dark:bg-blue-700" : "bg-zinc-300 dark:bg-zinc-700"
-        ].join(" ")}>
-        {showCivName ?
+      <div
+        className={[
+          "flex flex-col rounded-md p-1",
+          unitCivData.unit.isImperialAgeUniqueUnit ? "bg-blue-400 dark:bg-blue-700" : "bg-zinc-300 dark:bg-zinc-700",
+        ].join(" ")}
+      >
+        {showCivName ? (
           <UnitDisplayLineItemsCentered>
-            <img src={civImgUrl(unitCivData.civ.key)}
-              className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+            <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
             <div className="leading-none">{unitCivData.civ.value}</div>
           </UnitDisplayLineItemsCentered>
-          : <></>
-        }
+        ) : (
+          <></>
+        )}
         <UnitDisplayLineItemsCentered>
-          <img src={`https://aoe2techtree.net/img/Units/${unitCivData.unit.id}.png`}
-            className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-50 ml-[4px]" />
+          <img
+            src={`https://aoe2techtree.net/img/Units/${unitCivData.unit.id}.png`}
+            className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-50 ml-[4px]"
+          />
           {unitCivData.unit.value}
-          <span className="opacity-50 ml-1 text-xs">
-            {unitCivData.unit.id}
-          </span>
+          <span className="opacity-50 ml-1 text-xs">{unitCivData.unit.id}</span>
         </UnitDisplayLineItemsCentered>
         <UnitDisplayLine className="text-xs opacity-80 mt-1">
           <CostPresentation unitCivData={unitCivData} />
@@ -134,19 +150,26 @@ function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivD
 }
 
 function CostPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
+  const shouldShowFoodCost = unitCivData.unitStats.cost.food > 0
+  const shouldShowWoodCost = unitCivData.unitStats.cost.wood > 0
+  const shouldShowGoldCost = unitCivData.unitStats.cost.gold > 0
+  const shouldShowStoneCost = unitCivData.unitStats.cost.stone > 0
   return (
     <FlexWrap>
-      <SingleCostPresenter type="f" amount={unitCivData.unitStats.cost.food} />
-      <SingleCostPresenter type="w" amount={unitCivData.unitStats.cost.wood} />
-      <SingleCostPresenter type="g" amount={unitCivData.unitStats.cost.gold} />
-      <SingleCostPresenter type="s" amount={unitCivData.unitStats.cost.stone} />
+      {shouldShowFoodCost && <SingleCostPresenter type="f" amount={unitCivData.unitStats.cost.food} />}
+      {shouldShowWoodCost && <SingleCostPresenter type="w" amount={unitCivData.unitStats.cost.wood} />}
+      {shouldShowGoldCost && <SingleCostPresenter type="g" amount={unitCivData.unitStats.cost.gold} />}
+      {shouldShowStoneCost && <SingleCostPresenter type="s" amount={unitCivData.unitStats.cost.stone} />}
     </FlexWrap>
   )
 }
 
-function SingleCostPresenter({ type, amount }: { type: string, amount: number }) {
+function SingleCostPresenter({ type, amount }: { type: string; amount: number }) {
   return (
-    <span className={amount == 0 ? "opacity-30" : ""}>{type}{amount}</span>
+    <span className={amount == 0 ? "opacity-30" : ""}>
+      {type}
+      {amount}
+    </span>
   )
 }
 
