@@ -65,7 +65,6 @@ function App() {
             <UnitPresentation unitCivData={v} />
           ))}
         </div>
-
         <SlDropdown className="shadow-lg">
           <SlButton slot="trigger" caret>
             {civ}
@@ -82,9 +81,7 @@ function App() {
             ))}
           </SlMenu>
         </SlDropdown>
-        <DarkModeButton />
       </div>
-    
 
       <Container>
         <ListWrapper>
