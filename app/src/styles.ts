@@ -41,13 +41,13 @@ export const ListItem = styled.div`
 `;
 
 export const UnitDisplayLine = styled.div`
-  display: flex; 
-  flex-direction: row; 
-  gap: 0.25rem; 
-  align-items: baseline; 
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  align-items: baseline;
   padding-left: 0.25rem;
-  padding-right: 0.25rem; 
-  line-height: 100%; 
+  padding-right: 0.25rem;
+  line-height: 100%;
   width: 240px;
   ${breakpoints.xsDown} {
     width: 90vw;
@@ -55,20 +55,20 @@ export const UnitDisplayLine = styled.div`
 `;
 
 export const UnitDisplayLineItemsCentered = styled(UnitDisplayLine)`
-  align-items: center; 
+  align-items: center;
 `;
 
 export const FlexWrap = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.25rem/* 4px */;
-`
+  gap: 0.25rem /* 4px */;
+`;
 
 export const UnitsPresentationFlex = styled.div`
- display: flex; 
+  display: flex;
   padding-top: 0.5rem;
-  padding-bottom: 0.5rem; 
-  flex-direction: row; 
-  flex-wrap: wrap; 
-  gap: 0.25rem; 
-`
+  padding-bottom: 0.5rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+`;

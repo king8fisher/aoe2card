@@ -1,12 +1,12 @@
 interface RunDebouncerProps {
   fn: () => void;
   delay: number;
-} 
+}
 
 export const createDebouncer = () => {
   let timerId: number | null | undefined = null;
 
-  function runDebouncer({fn, delay}: RunDebouncerProps) {
+  function runDebouncer({ fn, delay }: RunDebouncerProps) {
     destroyDebouncer();
     timerId = setTimeout(function () {
       fn();
@@ -22,4 +22,4 @@ export const createDebouncer = () => {
   }
 
   return { runDebouncer, destroyDebouncer };
-}
+};
