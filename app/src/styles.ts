@@ -48,7 +48,7 @@ export const UnitDisplayLine = styled.div`
   padding-left: 0.25rem;
   padding-right: 0.25rem; 
   line-height: 100%; 
-  width: 220px;
+  width: 240px;
   ${breakpoints.xsDown} {
     width: 90vw;
   }
