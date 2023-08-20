@@ -47,9 +47,7 @@ function App() {
       <Navbar search={search} setSearch={setSearch} runDebouncer={runDebouncer} />
       <Container>
         <UnitsPresentationFlex>
-          {searchResult?.map((v, _index) => (
-            <UnitPresentation unitCivData={v} showCivName={true} />
-          ))}
+          {searchResult?.map((v, _index) => <UnitPresentation unitCivData={v} showCivName={true} />)}
         </UnitsPresentationFlex>
         <SlDropdown className="shadow-lg">
           <SlButton slot="trigger" caret>
@@ -73,9 +71,7 @@ function App() {
 
       <Container>
         <UnitsPresentationFlex>
-          {unitsByCiv?.map((v, _index) => (
-            <UnitPresentation unitCivData={v} showCivName={false} />
-          ))}
+          {unitsByCiv?.map((v, _index) => <UnitPresentation unitCivData={v} showCivName={false} />)}
         </UnitsPresentationFlex>
       </Container>
     </>
