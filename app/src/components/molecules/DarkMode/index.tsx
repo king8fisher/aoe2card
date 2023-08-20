@@ -70,11 +70,12 @@ const setupThemeToggle = () => {
     } catch (_err) {}
   };
   toggleVisibility(isDark());
-  document.getElementById("dark-theme-toggle")?.addEventListener("click", newFunction);
-  return () => {
-    document.getElementById("dark-theme-toggle")?.removeEventListener("click", newFunction);
-  };
-  function newFunction(this: HTMLElement, _ev: MouseEvent): void {
+  function onClick(this: HTMLElement, _ev: MouseEvent): void {
     toggleVisibility(!isDark());
   }
+  document.getElementById("dark-theme-toggle")?.addEventListener("click", onClick);
+  // Return a cleanup function
+  return () => {
+    document.getElementById("dark-theme-toggle")?.removeEventListener("click", onClick);
+  };
 };
