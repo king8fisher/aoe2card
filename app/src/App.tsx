@@ -1,19 +1,19 @@
-import { SlButton, SlDropdown, SlInput, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react"
-import "@shoelace-style/shoelace/dist/themes/dark.css"
-import "@shoelace-style/shoelace/dist/themes/light.css"
-import { useEffect, useMemo, useState } from "react"
-import { IUnitCivData, allCivUnits, allCivs, searchUnits } from "../../data/model"
-import { DarkModeButton } from "./DarkMode"
-import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles"
-import { createDebouncer } from "./helpers/tools"
+import { SlButton, SlDropdown, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react";
+import "@shoelace-style/shoelace/dist/themes/dark.css";
+import "@shoelace-style/shoelace/dist/themes/light.css";
+import { useEffect, useMemo, useState } from "react";
+import { IUnitCivData, allCivUnits, allCivs, searchUnits } from "../../data/model";
+import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
+import { createDebouncer } from "./helpers/tools";
+import Navbar from "./components/molecules/Navbar";
 
 function App() {
-  const [selectedCivKey, setCiv] = useState("Aztecs")
-  const civsList = allCivs()
+  const [selectedCivKey, setCiv] = useState("Aztecs");
+  const civsList = allCivs();
 
   useEffect(() => {
-    document.body.classList.add("ready")
-  })
+    document.body.classList.add("ready");
+  });
 
   // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
   //
@@ -23,58 +23,28 @@ function App() {
   //   }
   // }, []);
 
-  const searchDebouncer = createDebouncer()
-  const { destroyDebouncer, runDebouncer } = searchDebouncer || {}
+  const searchDebouncer = createDebouncer();
+  const { destroyDebouncer, runDebouncer } = searchDebouncer || {};
   useEffect(() => {
     return () => {
-      destroyDebouncer()
-    }
-  })
+      destroyDebouncer();
+    };
+  });
 
-  const [search, setSearch] = useState("")
-  const [searchResult, setSearchResult] = useState<IUnitCivData[]>()
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState<IUnitCivData[]>();
   const unitsByCiv: IUnitCivData[] = useMemo(() => {
-    return allCivUnits(selectedCivKey)
-  }, [selectedCivKey])
+    return allCivUnits(selectedCivKey);
+  }, [selectedCivKey]);
 
   useMemo(() => {
-    const result = searchUnits(search)
-    setSearchResult(result)
-  }, [search])
+    const result = searchUnits(search);
+    setSearchResult(result);
+  }, [search]);
 
   return (
     <>
-      <div className="px-2 py-2 bg-zinc-300 dark:bg-zinc-800">
-        <Container className="flex flex-row items-center justify-between max-w-3xl mx-auto">
-          <a href="/">Aoe2 Card</a>
-          <div className="flex flex-row items-center gap-1">
-            <SlInput
-              clearable
-              placeholder="Search"
-              value={search}
-              autoFocus
-              onInput={(e) => {
-                const searchValue = e?.currentTarget?.value
-                runDebouncer({
-                  fn: () => {
-                    setSearch(searchValue)
-                  },
-                  delay: 200,
-                })
-              }}
-              onSlClear={() => {
-                runDebouncer({
-                  fn: () => {
-                    setSearch("")
-                  },
-                  delay: 200,
-                })
-              }}
-            ></SlInput>
-          </div>
-          <DarkModeButton />
-        </Container>
-      </div>
+      <Navbar search={search} setSearch={setSearch} runDebouncer={runDebouncer} />
       <Container>
         <UnitsPresentationFlex>
           {searchResult?.map((v, _index) => (
@@ -88,7 +58,7 @@ function App() {
           </SlButton>
           <SlMenu
             onSlSelect={(event) => {
-              setCiv(event.detail.item.value)
+              setCiv(event.detail.item.value);
             }}
           >
             {civsList.map((value) => (
@@ -109,11 +79,11 @@ function App() {
         </UnitsPresentationFlex>
       </Container>
     </>
-  )
+  );
 }
 
 function civImgUrl(civKey: string) {
-  return `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`
+  return `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 }
 
 function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) {
@@ -146,14 +116,14 @@ function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivD
         </UnitDisplayLine>
       </div>
     </>
-  )
+  );
 }
 
 function CostPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
-  const shouldShowFoodCost = unitCivData.unitStats.cost.food > 0
-  const shouldShowWoodCost = unitCivData.unitStats.cost.wood > 0
-  const shouldShowGoldCost = unitCivData.unitStats.cost.gold > 0
-  const shouldShowStoneCost = unitCivData.unitStats.cost.stone > 0
+  const shouldShowFoodCost = unitCivData.unitStats.cost.food > 0;
+  const shouldShowWoodCost = unitCivData.unitStats.cost.wood > 0;
+  const shouldShowGoldCost = unitCivData.unitStats.cost.gold > 0;
+  const shouldShowStoneCost = unitCivData.unitStats.cost.stone > 0;
   return (
     <FlexWrap>
       {shouldShowFoodCost && <SingleCostPresenter type="f" amount={unitCivData.unitStats.cost.food} />}
@@ -161,7 +131,7 @@ function CostPresentation({ unitCivData }: { unitCivData: IUnitCivData }) {
       {shouldShowGoldCost && <SingleCostPresenter type="g" amount={unitCivData.unitStats.cost.gold} />}
       {shouldShowStoneCost && <SingleCostPresenter type="s" amount={unitCivData.unitStats.cost.stone} />}
     </FlexWrap>
-  )
+  );
 }
 
 function SingleCostPresenter({ type, amount }: { type: string; amount: number }) {
@@ -170,7 +140,7 @@ function SingleCostPresenter({ type, amount }: { type: string; amount: number })
       {type}
       {amount}
     </span>
-  )
+  );
 }
 
-export default App
+export default App;
