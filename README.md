@@ -16,6 +16,8 @@ https://aoe2card.vercel.app/
   - `cd app`
     - `pnpm i` - install dependencies.
     - `pnpm dev` - start server in development mode.
+- `pnpm install -g prettier` for:
+  - `prettier -w **/*` inside `app` & `data`. Running from root should be doing nothing.
 
 ## VSCode Extensions
 
@@ -40,8 +42,9 @@ SiegeEngineers combine/copy those:
   - `cd ` into
   - `pnpm i`
   - `pnpm dev`
-- Create `data` folder
-  - Pull current `data.json` into it from SeigeEngineers:
+- Create `data` folder.
+  - Step in.
+  - Pull current `data.json` from SeigeEngineers:
     ```powershell
     > iwr -outf data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
     > iwr -outf strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
@@ -52,5 +55,5 @@ SiegeEngineers combine/copy those:
     $ wget https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
     $ wget https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
     ```
-  - Format both files for uniformness in searches.
+  - Format json files for uniformness in searches (`prettier -w **/*`).
 - `tsx data/model.ts` to run the file in `node` for quick console.log outputs.
