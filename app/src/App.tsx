@@ -3,9 +3,9 @@ import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import { useEffect, useMemo, useState } from "react";
 import { IUnitCivData, allCivUnits, allCivs, searchUnits } from "../../data/model";
-import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
-import { createDebouncer } from "./helpers/tools";
 import Navbar from "./components/molecules/Navbar";
+import { createDebouncer } from "./helpers/tools";
+import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
 
 function App() {
   const [selectedCivKey, setCiv] = useState("Aztecs");
@@ -47,7 +47,9 @@ function App() {
       <Navbar search={search} setSearch={setSearch} runDebouncer={runDebouncer} />
       <Container>
         <UnitsPresentationFlex>
-          {searchResult?.map((v, _index) => <UnitPresentation unitCivData={v} showCivName={true} />)}
+          {searchResult?.map((v, _index) => (
+            <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCivName={true} />
+          ))}
         </UnitsPresentationFlex>
         <SlDropdown className="shadow-lg">
           <SlButton slot="trigger" caret>
@@ -71,7 +73,9 @@ function App() {
 
       <Container>
         <UnitsPresentationFlex>
-          {unitsByCiv?.map((v, _index) => <UnitPresentation unitCivData={v} showCivName={false} />)}
+          {unitsByCiv?.map((v, _index) => (
+            <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCivName={false} />
+          ))}
         </UnitsPresentationFlex>
       </Container>
     </>
