@@ -57,3 +57,4 @@ SiegeEngineers combine/copy those:
     ```
   - Format json files for uniformness in searches (`prettier -w **/*`).
 - `tsx data/model.ts` to run the file in `node` for quick console.log outputs.
+
