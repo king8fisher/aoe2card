@@ -67,8 +67,24 @@ export function imperialAgeUniqueUnit(civKey: string): IUnitData {
   return { id: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true };
 }
 
+export interface ICost {
+  food: number;
+  gold: number;
+  stone: number;
+  wood: number;
+}
+
+function emptyCost(): ICost {
+  return {
+    food: 0,
+    gold: 0,
+    stone: 0,
+    wood: 0,
+  };
+}
+
 export interface IUnitStatsData {
-  cost: { gold: number; wood: number; food: number; stone: number };
+  cost: ICost;
 }
 
 export interface IUnitCivData {
@@ -83,6 +99,43 @@ export function searchUnits(like: string): IUnitCivData[] {
   // TODO: Turn this into fuzzy search
   return matchUnits(allCivs(), (u) => {
     return u.value.toLowerCase().indexOf(like) >= 0;
+  });
+}
+
+export interface IGroupByUnitData {
+  unit: IUnitData;
+  civs: IUnitCivData[];
+  mostCommonUnitStats: IUnitStatsData;
+}
+
+export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
+  let result: IGroupByUnitData[] = [];
+  for (let i = 0; i < units.length; i++) {
+    const next = units[i];
+    const found = result.find((v) => v.unit.id == next.unit.id);
+    if (found) {
+      found.civs.push(next);
+    } else {
+      result.push({ unit: next.unit, civs: [next], mostCommonUnitStats: { cost: emptyCost() } });
+    }
+  }
+  patchCalculateMostCommon(result);
+  return result;
+}
+
+function patchCalculateMostCommon(result: IGroupByUnitData[]) {
+  result.forEach((r) => {
+    let st: Map<ICost, number> = new Map();
+    r.civs.forEach((c) => {
+      const cost = c.unitStats.cost;
+      if (st.has(cost)) {
+        st.set(cost, st.get(cost)! + 1);
+      } else {
+        st.set(cost, 1);
+      }
+    });
+    let a = [...st.entries()].sort((a, b) => b[1] - a[1]);
+    r.mostCommonUnitStats.cost = a[0][0];
   });
 }
 
