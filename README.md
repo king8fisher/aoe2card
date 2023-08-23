@@ -35,6 +35,17 @@ SiegeEngineers combine/copy those:
 - [halfon](https://halfon.aoe2.se/) project:
   - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json - seems to be equal to https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
 
+## Intricacies
+
+- Sicilians. Several "same" units can be produced from different buildings: Castle & Donjon
+  - Pikeman shows as 2 IDs: 358 & 1787.
+  - Spearman shows as 2 IDs: 93 & 1786.
+  - Halberdier shows as 2 IDs: 359 & 1788.
+  - Serjeant shows as 2 IDs: 1660 & 1658.
+    - Elite Serjeant shows as 2 IDs: 1659 & 1661.
+- Huns. Castle upgrade "Marauders" "Enables you to create Tarkans at Stables".
+- Goths. Castle upgrade "Anarchy" "Allows Huskarls to be created at the Barracks.".
+
 ## CHANGELOG
 
 - `pnpm create vite aoe2-card-app-react-ts --template react-ts`
