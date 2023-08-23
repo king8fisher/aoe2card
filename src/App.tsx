@@ -3,7 +3,7 @@ import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/molecules/Navbar";
-import { Cost, IGroupByUnitData, IUnitCivData, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
+import { Cost, IGroupByUnitData, IUnitCivData, IUnitData, UnitType, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
 import { createPromiseDebouncer } from "./helpers/debouncers";
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
 
@@ -138,9 +138,7 @@ function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupB
       <div
         className={[
           "flex flex-col rounded-md p-1",
-          groupByUnitData.unit.isImperialAgeUniqueUnit
-            ? "bg-blue-400 dark:bg-blue-700"
-            : "bg-zinc-300 dark:bg-zinc-700",
+          styleForUnit(groupByUnitData.unit),
         ].join(" ")}
       >
         <UnitDisplayLineItemsCentered>
@@ -174,13 +172,21 @@ function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupB
   );
 }
 
+function styleForUnit(unit: IUnitData) {
+  return unit.unitType == UnitType.ImperialAgeUniqueUnit
+    ? "bg-blue-400 dark:bg-blue-700"
+    : unit.unitType == UnitType.CastleAgeUniqueUnit
+      ? "bg-green-400 dark:bg-green-700" :
+      "bg-zinc-300 dark:bg-zinc-700";
+}
+
 function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) {
   return (
     <>
       <div
         className={[
           "flex flex-col rounded-md p-1",
-          unitCivData.unit.isImperialAgeUniqueUnit ? "bg-blue-400 dark:bg-blue-700" : "bg-zinc-300 dark:bg-zinc-700",
+          styleForUnit(unitCivData.unit)
         ].join(" ")}
       >
         {showCivName ? (

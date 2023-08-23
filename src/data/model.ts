@@ -48,23 +48,43 @@ export function civByName(civ: string): ICivData | null {
   return { key: civ, value: strings[found] };
 }
 
+export enum UnitType {
+  RegularUnit,
+  CastleAgeUniqueUnit,
+  ImperialAgeUniqueUnit,
+}
+
 export interface IUnitData {
   id: number;
+  /** Localized name of the unit */
   value: string;
-  isImperialAgeUniqueUnit: boolean;
+  unitType: UnitType;
 }
 
 export function allUnits(civKey: string): IUnitData[] {
   let entries: IUnitData[] = [];
   data.techtrees[civKey].units.forEach((v: number) => {
-    entries.push({ id: v, value: unitNameByID(v), isImperialAgeUniqueUnit: false });
+    entries.push({
+      id: v,
+      value: unitNameByID(v),
+      unitType: UnitType.RegularUnit,
+    });
   });
   return entries;
 }
 
 export function imperialAgeUniqueUnit(civKey: string): IUnitData {
   let id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true };
+  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit };
+}
+
+export function castleAgeUniqueUnit(civKey: string): IUnitData {
+  let id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
+  return {
+    id: id,
+    value: unitNameByID(id),
+    unitType: UnitType.CastleAgeUniqueUnit,
+  };
 }
 
 export class Cost {
@@ -106,7 +126,7 @@ export function searchUnits(like: string): IUnitCivData[] {
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
   return matchUnits(allCivs(), (u) => {
-    return u.value.toLowerCase().indexOf(like) >= 0;
+    return u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like;
   });
 }
 
@@ -163,7 +183,7 @@ export function allCivUnits(civKey: string): IUnitCivData[] {
 export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] {
   let result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [imperialAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
+    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
       if (match(u)) {
         let cost = data.data.units[u.id].Cost;
         result.push({
