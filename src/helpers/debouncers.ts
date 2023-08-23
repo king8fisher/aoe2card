@@ -7,15 +7,15 @@ interface IRunDebouncedProps<T> {
 export const createDebouncer = <T>() => {
   let timerId: number | null | undefined = null;
 
-  function runDebounced({ calc, assign, delay }: IRunDebouncedProps<T>) {
+  const runDebounced = ({ calc, assign, delay }: IRunDebouncedProps<T>) => {
     destroyDebouncer();
-    timerId = setTimeout(function () {
+    timerId = setTimeout(() => {
       assign(calc());
       timerId = null;
     }, delay);
   }
 
-  function destroyDebouncer() {
+  const destroyDebouncer = () => {
     if (timerId !== null) {
       clearTimeout(timerId);
       timerId = null;
@@ -25,9 +25,7 @@ export const createDebouncer = <T>() => {
   return { runDebounced, destroyDebouncer };
 };
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class createPromiseDebouncer<T> {
   private counter: number = 0;
@@ -52,11 +50,11 @@ export class createPromiseDebouncer<T> {
     this.destroyDebouncer();
     const localCounter = this.counter;
     const ref = this;
-    this.timerId = setTimeout(function () {
+    this.timerId = setTimeout(() => {
       createPromiseDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
         // We might be cancelled by assigning another timer at this point,
         // so we want to never perform the assign step
-        let [r, refCounter] = v;
+        const [r, refCounter] = v;
         if (refCounter === ref.counter) {
           assign(r);
         } else {

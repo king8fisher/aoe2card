@@ -2,10 +2,8 @@ import { useEffect } from "react";
 
 const localStorageKey = "theme";
 
-export function DarkModeButton() {
-  useEffect(() => {
-    return setupThemeToggle();
-  });
+export const DarkModeButton = () => {
+  useEffect(() => setupThemeToggle());
   return (
     <>
       <button
@@ -39,7 +37,7 @@ export function DarkModeButton() {
       </button>
     </>
   );
-}
+};
 
 const isDark = () => {
   if (localStorage.getItem(localStorageKey) === "dark") return true;
@@ -74,7 +72,7 @@ const setupThemeToggle = () => {
   return () => {
     document.getElementById("dark-theme-toggle")?.removeEventListener("click", newFunction);
   };
-  function newFunction(this: HTMLElement, _ev: MouseEvent): void {
+  const newFunction = (this: HTMLElement, _ev: MouseEvent): void => {
     toggleVisibility(!isDark());
-  }
+  };
 };

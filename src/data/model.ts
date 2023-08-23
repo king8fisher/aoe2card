@@ -13,13 +13,12 @@ export type armourData = {
   Class: number;
 };
 
-export function unitNameByID(unitId: number): string {
+export const unitNameByID = (unitId: number): string => 
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
-  return strings[data.data.units[unitId].LanguageNameId];
-}
+   strings[data.data.units[unitId].LanguageNameId]
 
-export function unitHelpByID(unitId: number): IUnitHelp {
+export const unitHelpByID = (unitId: number): IUnitHelp => {
   const about: string = strings[data.data.units[unitId].LanguageHelpId] ?? "";
   const sw = strongWeak(about);
   return {
@@ -32,7 +31,7 @@ export function unitHelpByID(unitId: number): IUnitHelp {
 const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)", "gmiu");
 const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
 
-function strongWeak(about: string): { strong: string; weak: string } {
+const strongWeak = (about: string): { strong: string; weak: string } => {
   // Resetting regex
   strongEnRegex.lastIndex = 0;
   weakEnRegex.lastIndex = 0;
@@ -53,12 +52,12 @@ function strongWeak(about: string): { strong: string; weak: string } {
   return { strong: strong, weak: weak };
 }
 
-export function techNameByID(techId: number): string {
+export const techNameByID = (techId: number): string => 
   // data.data.techs[6].internal_name // "Mongol Siege Drill"
   // data.data.techs[6].LanguageNameId // 7422
   // strings[7422] // "Drill"
-  return strings[data.data.techs[techId].LanguageNameId];
-}
+   strings[data.data.techs[techId].LanguageNameId]
+
 
 export interface ICivData {
   /** internal_name value for civ used everywhere */
@@ -69,8 +68,8 @@ export interface ICivData {
   help: string;
 }
 
-export function allCivs(): ICivData[] {
-  let entries: ICivData[] = [];
+export const allCivs = (): ICivData[] => {
+  const entries: ICivData[] = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
     const help = strings[data["civ_helptexts"][v[0]]];
@@ -83,8 +82,8 @@ export function allCivs(): ICivData[] {
   return entries;
 }
 
-export function civByKey(civKey: string): ICivData | null {
-  let found = data["civ_names"][civKey];
+export const civByKey = (civKey: string): ICivData | null => {
+  const found = data["civ_names"][civKey];
   if (found == null) return null;
   return {
     key: civKey,
@@ -113,9 +112,9 @@ export interface IUnitData {
   help: IUnitHelp;
 }
 
-export function allUnits(civKey: string): IUnitData[] {
-  let entries: IUnitData[] = [];
-  data.techtrees[civKey].units.forEach((id: number) => {
+export const allUnits = (civKey: string): IUnitData[] => {
+  const entries: IUnitData[] = [];
+  data.techtrees[civKey].units.forEach((v: number) => {
     entries.push({
       id: id,
       value: unitNameByID(id),
@@ -126,18 +125,13 @@ export function allUnits(civKey: string): IUnitData[] {
   return entries;
 }
 
-export function imperialAgeUniqueUnit(civKey: string): IUnitData {
-  let id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return {
-    id: id,
-    value: unitNameByID(id),
-    unitType: UnitType.ImperialAgeUniqueUnit,
-    help: unitHelpByID(id),
-  };
+export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
+  const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
+  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit, help: unitHelpByID(id), };
 }
 
-export function castleAgeUniqueUnit(civKey: string): IUnitData {
-  let id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
+export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
+  const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
   return {
     id: id,
     value: unitNameByID(id),
@@ -166,9 +160,7 @@ export class Cost {
   }
 }
 
-function emptyCost(): Cost {
-  return new Cost(0, 0, 0, 0);
-}
+const emptyCost = (): Cost => new Cost(0, 0, 0, 0);
 
 export interface IUnitStatsData {
   cost: Cost;
@@ -180,13 +172,11 @@ export interface IUnitCivData {
   unitStats: IUnitStatsData;
 }
 
-export function searchUnits(like: string): IUnitCivData[] {
+export const searchUnits = (like: string): IUnitCivData[] => {
   like = like.toLowerCase().trim();
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
-  return matchUnits(allCivs(), (u) => {
-    return u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like;
-  });
+  return matchUnits(allCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
 }
 
 export interface IGroupByUnitData {
@@ -195,8 +185,8 @@ export interface IGroupByUnitData {
   mostCommonUnitStats: IUnitStatsData;
 }
 
-export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
-  let result: IGroupByUnitData[] = [];
+export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
+  const result: IGroupByUnitData[] = [];
   for (let i = 0; i < units.length; i++) {
     const next = units[i];
     const found = result.find((v) => v.unit.id == next.unit.id);
@@ -210,9 +200,9 @@ export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
   return result;
 }
 
-function patchCalculateMostCommon(result: IGroupByUnitData[]) {
+const patchCalculateMostCommon = (result: IGroupByUnitData[]) => {
   result.forEach((r) => {
-    let st: Map<string, [Cost, number]> = new Map();
+    const st: Map<string, [Cost, number]> = new Map();
     r.civs.forEach((c) => {
       const costKey = c.unitStats.cost.toKey();
       if (st.has(costKey)) {
@@ -228,23 +218,23 @@ function patchCalculateMostCommon(result: IGroupByUnitData[]) {
       // the most common price?
       console.error(`Unexpected map size: ${st}`);
     }
-    let a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
+    const a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
     r.mostCommonUnitStats.cost = a[0][1][0];
   });
 }
 
-export function allCivUnits(civKey: string): IUnitCivData[] {
-  let civ_ = civByKey(civKey);
+export const allCivUnits = (civKey: string): IUnitCivData[] => {
+  const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
   return matchUnits([civ_], (_u) => true);
 }
 
-export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] {
-  let result: IUnitCivData[] = [];
+export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
+  const result: IUnitCivData[] = [];
   civs.forEach((c) => {
     [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
       if (match(u)) {
-        let cost = data.data.units[u.id].Cost;
+        const cost = data.data.units[u.id].Cost;
         result.push({
           civ: c,
           unit: u,
