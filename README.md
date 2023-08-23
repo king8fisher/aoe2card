@@ -30,7 +30,7 @@ https://aoe2card.vercel.app/
 
 SiegeEngineers combine/copy those:
 
-- [aoe2techtree](https://aoe2techtree.net) projct:
+- [aoe2techtree](https://aoe2techtree.net) project:
   - https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json - processed data
 - [halfon](https://halfon.aoe2.se/) project:
   - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json - seems to be equal to https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
@@ -41,7 +41,7 @@ SiegeEngineers combine/copy those:
   - `cd ` into
   - `pnpm i`
   - `pnpm dev`
-- Created `data` folder (which is now `src/data`).
+- Create `data` folder (which is now `src/data`).
   - Step in.
   - Pull current data from **SeigeEngineers** and **HSZemi**:
     ```powershell

@@ -37,7 +37,7 @@ export class createPromiseDebouncer<T> {
     return new Promise((resolve, _reject) => {
       // This delay is to mimic out-of-sync calculations
       // TODO: Remove it after making tests that emulate this and test for correctness.
-      delay(Math.random() * 200).then(() => {
+      delay(Math.random() * 50).then(() => {
         resolve([fn(), counter]);
       });
     });
