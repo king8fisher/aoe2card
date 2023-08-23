@@ -5,10 +5,9 @@ import { DarkModeButton } from "../DarkMode";
 interface NavbarProps {
   search: string;
   setSearch: (value: string) => void;
-  runDebouncer: (value: { fn: () => void; delay: number }) => void;
 }
 
-const Navbar = ({ search, setSearch, runDebouncer }: NavbarProps): JSX.Element => (
+const Navbar = ({ search, setSearch }: NavbarProps): JSX.Element => (
   <div className="py-2 bg-zinc-300 dark:bg-zinc-800">
     <Container className="flex flex-row gap-2 items-center justify-between">
       <a
@@ -33,20 +32,10 @@ const Navbar = ({ search, setSearch, runDebouncer }: NavbarProps): JSX.Element =
           autoFocus
           onInput={(e) => {
             const searchValue = e?.currentTarget?.value;
-            runDebouncer({
-              fn: () => {
-                setSearch(searchValue);
-              },
-              delay: 200,
-            });
+            setSearch(searchValue);
           }}
           onSlClear={() => {
-            runDebouncer({
-              fn: () => {
-                setSearch("");
-              },
-              delay: 200,
-            });
+            setSearch("");
           }}
         ></SlInput>
       </div>

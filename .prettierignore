@@ -1,3 +1,2 @@
-# Ignore all if run from this folder
-**/*
-
+# Ignore lock file
+pnpm-lock.yaml

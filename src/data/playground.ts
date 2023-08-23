@@ -51,4 +51,7 @@ function playground() {
   data.techtrees.Mongols.unique.imperialAgeUniqueUnit;
   data.data.unit_upgrades[561]; // Data for update cost, time, name
   data.data.units[561]; // Rest of the data about the unit
+
+  // Magyar Huszar missing for the reason of not tapping into castleAgeUniqueUnit
+  data.techtrees.Magyars.unique.castleAgeUniqueUnit;
 }

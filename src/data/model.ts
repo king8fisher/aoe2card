@@ -48,43 +48,71 @@ export function civByName(civ: string): ICivData | null {
   return { key: civ, value: strings[found] };
 }
 
+export enum UnitType {
+  RegularUnit,
+  CastleAgeUniqueUnit,
+  ImperialAgeUniqueUnit,
+}
+
 export interface IUnitData {
   id: number;
+  /** Localized name of the unit */
   value: string;
-  isImperialAgeUniqueUnit: boolean;
+  unitType: UnitType;
 }
 
 export function allUnits(civKey: string): IUnitData[] {
   let entries: IUnitData[] = [];
   data.techtrees[civKey].units.forEach((v: number) => {
-    entries.push({ id: v, value: unitNameByID(v), isImperialAgeUniqueUnit: false });
+    entries.push({
+      id: v,
+      value: unitNameByID(v),
+      unitType: UnitType.RegularUnit,
+    });
   });
   return entries;
 }
 
 export function imperialAgeUniqueUnit(civKey: string): IUnitData {
   let id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true };
+  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit };
 }
 
-export interface ICost {
+export function castleAgeUniqueUnit(civKey: string): IUnitData {
+  let id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
+  return {
+    id: id,
+    value: unitNameByID(id),
+    unitType: UnitType.CastleAgeUniqueUnit,
+  };
+}
+
+export class Cost {
   food: number;
   gold: number;
   stone: number;
   wood: number;
+
+  constructor(food: number, gold: number, stone: number, wood: number) {
+    this.food = food;
+    this.gold = gold;
+    this.stone = stone;
+    this.wood = wood;
+  }
+  toKey(): string {
+    return `f${this.food}g${this.gold}s${this.stone}w${this.wood}`;
+  }
+  static key(food: number, gold: number, stone: number, wood: number): string {
+    return new Cost(food, gold, stone, wood).toKey();
+  }
 }
 
-function emptyCost(): ICost {
-  return {
-    food: 0,
-    gold: 0,
-    stone: 0,
-    wood: 0,
-  };
+function emptyCost(): Cost {
+  return new Cost(0, 0, 0, 0);
 }
 
 export interface IUnitStatsData {
-  cost: ICost;
+  cost: Cost;
 }
 
 export interface IUnitCivData {
@@ -98,7 +126,7 @@ export function searchUnits(like: string): IUnitCivData[] {
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
   return matchUnits(allCivs(), (u) => {
-    return u.value.toLowerCase().indexOf(like) >= 0;
+    return u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like;
   });
 }
 
@@ -125,17 +153,24 @@ export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
 
 function patchCalculateMostCommon(result: IGroupByUnitData[]) {
   result.forEach((r) => {
-    let st: Map<ICost, number> = new Map();
+    let st: Map<string, [Cost, number]> = new Map();
     r.civs.forEach((c) => {
-      const cost = c.unitStats.cost;
-      if (st.has(cost)) {
-        st.set(cost, st.get(cost)! + 1);
+      const costKey = c.unitStats.cost.toKey();
+      if (st.has(costKey)) {
+        const [c, n] = st.get(costKey)!;
+        st.set(costKey, [c, n + 1]);
       } else {
-        st.set(cost, 1);
+        st.set(costKey, [c.unitStats.cost, 1]);
       }
     });
-    let a = [...st.entries()].sort((a, b) => b[1] - a[1]);
-    r.mostCommonUnitStats.cost = a[0][0];
+    if (st.size > 1) {
+      // TODO: Run this through tests. If we always have the same price
+      // for every single unit, why bothering with this sorting / calculating
+      // the most common price?
+      console.error(`Unexpected map size: ${st}`);
+    }
+    let a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
+    r.mostCommonUnitStats.cost = a[0][1][0];
   });
 }
 
@@ -148,19 +183,14 @@ export function allCivUnits(civKey: string): IUnitCivData[] {
 export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] {
   let result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [imperialAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
+    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
       if (match(u)) {
         let cost = data.data.units[u.id].Cost;
         result.push({
           civ: c,
           unit: u,
           unitStats: {
-            cost: {
-              food: cost["Food"] || 0,
-              gold: cost["Gold"] || 0,
-              stone: cost["Stone"] || 0,
-              wood: cost["Wood"] || 0,
-            },
+            cost: new Cost(cost["Food"] || 0, cost["Gold"] || 0, cost["Stone"] || 0, cost["Wood"] || 0),
           },
         });
       }

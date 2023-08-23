@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "format": "prettier . --write",
+    "format": "prettier -w .",
     "test": "echo \"Debug: no test implemented.\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
