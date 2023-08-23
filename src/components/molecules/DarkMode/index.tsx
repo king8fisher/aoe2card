@@ -72,7 +72,8 @@ const setupThemeToggle = () => {
   return () => {
     document.getElementById("dark-theme-toggle")?.removeEventListener("click", newFunction);
   };
-  const newFunction = (this: HTMLElement, _ev: MouseEvent): void => {
+  // TODO: This is a hack to get around the fact that the function is not defined in the same scope as the event listener
+  function newFunction(this: HTMLElement, _ev: MouseEvent): void {
     toggleVisibility(!isDark());
-  };
+  }
 };
