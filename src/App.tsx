@@ -2,6 +2,7 @@ import { SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem } from "@shoela
 import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import { useEffect, useMemo, useState } from "react";
+import Navbar from "./components/molecules/Navbar";
 import {
   ICost,
   IGroupByUnitData,
@@ -10,10 +11,11 @@ import {
   allCivs,
   groupByUnitType,
   searchUnits,
-} from "../../data/model";
-import Navbar from "./components/molecules/Navbar";
-import { createDebouncer } from "./helpers/tools";
+} from "./data/model";
+import { createPromiseDebouncer } from "./helpers/tools";
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
+
+const debouncer = new createPromiseDebouncer<IUnitCivData[]>();
 
 function App() {
   const [selectedCivKey, setCiv] = useState("Aztecs");
@@ -34,11 +36,9 @@ function App() {
   const [groupedView, setGroupedView] = useState(true);
   const [civView, setCivView] = useState(false);
 
-  const searchDebouncer = createDebouncer();
-  const { destroyDebouncer, runDebouncer } = searchDebouncer || {};
   useEffect(() => {
     return () => {
-      destroyDebouncer();
+      debouncer.destroyDebouncer();
     };
   });
 
@@ -49,21 +49,29 @@ function App() {
 
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState<ISearchResult>();
+
   const unitsByCiv: IUnitCivData[] = useMemo(() => {
     return allCivUnits(selectedCivKey);
   }, [selectedCivKey]);
 
-  useMemo(() => {
-    let units = searchUnits(search);
-    setSearchResult({
-      units: units,
-      grouped: groupByUnitType(units),
-    });
-  }, [search]);
+  useEffect(() => {
+    debouncer.runDebounced({
+      run: () => {
+        return searchUnits(search);
+      },
+      assign: (v) => {
+        setSearchResult({
+          grouped: groupByUnitType(v),
+          units: v,
+        })
+      },
+      delay: 300
+    })
+  }, [search])
 
   return (
     <>
-      <Navbar search={search} setSearch={setSearch} runDebouncer={runDebouncer} />
+      <Navbar search={search} setSearch={setSearch} />
       <Container>
         <SlButtonGroup className="mt-2">
           <SlButton size="small" variant={groupedView ? "primary" : "default"} onClick={(_) => setGroupedView(true)}>

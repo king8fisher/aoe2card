@@ -125,17 +125,20 @@ export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
 
 function patchCalculateMostCommon(result: IGroupByUnitData[]) {
   result.forEach((r) => {
-    let st: Map<ICost, number> = new Map();
+    let st: Map<string, number> = new Map();
     r.civs.forEach((c) => {
-      const cost = c.unitStats.cost;
+      const cost = JSON.stringify(c.unitStats.cost);
       if (st.has(cost)) {
         st.set(cost, st.get(cost)! + 1);
       } else {
         st.set(cost, 1);
       }
     });
+    if (st.size > 1) {
+      throw new Error(JSON.stringify(st));
+    }
     let a = [...st.entries()].sort((a, b) => b[1] - a[1]);
-    r.mostCommonUnitStats.cost = a[0][0];
+    // r.mostCommonUnitStats.cost = a[0][0];
   });
 }
 
@@ -168,3 +171,4 @@ export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean
   });
   return result;
 }
+ 
