@@ -114,7 +114,7 @@ export interface IUnitData {
 
 export const allUnits = (civKey: string): IUnitData[] => {
   const entries: IUnitData[] = [];
-  data.techtrees[civKey].units.forEach((v: number) => {
+  data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
       id: id,
       value: unitNameByID(id),
