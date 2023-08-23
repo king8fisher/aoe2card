@@ -67,24 +67,32 @@ export function imperialAgeUniqueUnit(civKey: string): IUnitData {
   return { id: id, value: unitNameByID(id), isImperialAgeUniqueUnit: true };
 }
 
-export interface ICost {
+export class Cost {
   food: number;
   gold: number;
   stone: number;
   wood: number;
+
+  constructor(food: number, gold: number, stone: number, wood: number) {
+    this.food = food;
+    this.gold = gold;
+    this.stone = stone;
+    this.wood = wood;
+  }
+  toKey(): string {
+    return `f${this.food}g${this.gold}s${this.stone}w${this.wood}`;
+  }
+  static key(food: number, gold: number, stone: number, wood: number): string {
+    return new Cost(food, gold, stone, wood).toKey();
+  }
 }
 
-function emptyCost(): ICost {
-  return {
-    food: 0,
-    gold: 0,
-    stone: 0,
-    wood: 0,
-  };
+function emptyCost(): Cost {
+  return new Cost(0, 0, 0, 0);
 }
 
 export interface IUnitStatsData {
-  cost: ICost;
+  cost: Cost;
 }
 
 export interface IUnitCivData {
@@ -125,20 +133,24 @@ export function groupByUnitType(units: IUnitCivData[]): IGroupByUnitData[] {
 
 function patchCalculateMostCommon(result: IGroupByUnitData[]) {
   result.forEach((r) => {
-    let st: Map<string, number> = new Map();
+    let st: Map<string, [Cost, number]> = new Map();
     r.civs.forEach((c) => {
-      const cost = JSON.stringify(c.unitStats.cost);
-      if (st.has(cost)) {
-        st.set(cost, st.get(cost)! + 1);
+      const costKey = c.unitStats.cost.toKey();
+      if (st.has(costKey)) {
+        const [c, n] = st.get(costKey)!;
+        st.set(costKey, [c, n + 1]);
       } else {
-        st.set(cost, 1);
+        st.set(costKey, [c.unitStats.cost, 1]);
       }
     });
     if (st.size > 1) {
-      throw new Error(JSON.stringify(st));
+      // TODO: Run this through tests. If we always have the same price
+      // for every single unit, why bothering with this sorting / calculating
+      // the most common price?
+      console.error(`Unexpected map size: ${st}`);
     }
-    let a = [...st.entries()].sort((a, b) => b[1] - a[1]);
-    // r.mostCommonUnitStats.cost = a[0][0];
+    let a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
+    r.mostCommonUnitStats.cost = a[0][1][0];
   });
 }
 
@@ -158,12 +170,7 @@ export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean
           civ: c,
           unit: u,
           unitStats: {
-            cost: {
-              food: cost["Food"] || 0,
-              gold: cost["Gold"] || 0,
-              stone: cost["Stone"] || 0,
-              wood: cost["Wood"] || 0,
-            },
+            cost: new Cost(cost["Food"] || 0, cost["Gold"] || 0, cost["Stone"] || 0, cost["Wood"] || 0),
           },
         });
       }
@@ -171,4 +178,3 @@ export function matchUnits(civs: ICivData[], match: (unit: IUnitData) => boolean
   });
   return result;
 }
- 

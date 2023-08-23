@@ -13,11 +13,10 @@ https://aoe2card.vercel.app/
 - Optional (if `tsx` desired):
   - `pnpm install -g tsx` (Will tell if environment PATH lacks an entry, fix accordingly).
 - Compile project for development:
-  - `cd app`
-    - `pnpm i` - install dependencies.
-    - `pnpm dev` - start server in development mode.
+  - `pnpm i` - install dependencies.
+  - `pnpm dev` - start server in development mode.
 - `pnpm install -g prettier` for:
-  - `prettier -w **/*` inside `app` & `data`. Running from root should be doing nothing.
+  - `prettier -w .` (which can be run with `pnpm format` as well, being a task in `package.json`)
 
 ## VSCode Extensions
 
@@ -42,9 +41,9 @@ SiegeEngineers combine/copy those:
   - `cd ` into
   - `pnpm i`
   - `pnpm dev`
-- Create `data` folder.
+- Created `data` folder (which is now `src/data`).
   - Step in.
-  - Pull current `data.json` from SeigeEngineers:
+  - Pull current data from **SeigeEngineers** and **HSZemi**:
     ```powershell
     > iwr -outf data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
     > iwr -outf strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
@@ -55,8 +54,8 @@ SiegeEngineers combine/copy those:
     $ wget https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
     $ wget https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
     ```
-  - Format json files for uniformness in searches (`prettier -w **/*`).
-- `tsx data/model.ts` to run the file in `node` for quick console.log outputs.
+  - Format json files for uniformness in searches (`prettier -w .`).
+- `tsx data/model.ts` to run the file in `node` for quick `console.log` outputs.
 
 ## From Vite Template
 

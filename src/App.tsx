@@ -3,15 +3,7 @@ import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/molecules/Navbar";
-import {
-  ICost,
-  IGroupByUnitData,
-  IUnitCivData,
-  allCivUnits,
-  allCivs,
-  groupByUnitType,
-  searchUnits,
-} from "./data/model";
+import { Cost, IGroupByUnitData, IUnitCivData, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
 import { createPromiseDebouncer } from "./helpers/tools";
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
 
@@ -56,18 +48,18 @@ function App() {
 
   useEffect(() => {
     debouncer.runDebounced({
-      run: () => {
+      calc: () => {
         return searchUnits(search);
       },
       assign: (v) => {
         setSearchResult({
           grouped: groupByUnitType(v),
           units: v,
-        })
+        });
       },
-      delay: 300
-    })
-  }, [search])
+      delay: 300,
+    });
+  }, [search]);
 
   return (
     <>
@@ -169,8 +161,10 @@ function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupB
               {JSON.stringify(c.unitStats.cost) == stringifiedCommon ? (
                 <></>
               ) : (
-                // Doesn't seem to ever kick in
-                <CostPresentation cost={c.unitStats.cost} />
+                // TODO: Doesn't seem to ever kick in
+                <UnitDisplayLine className="text-xs opacity-80 mt-1">
+                  <CostPresentation cost={c.unitStats.cost} />
+                </UnitDisplayLine>
               )}
             </div>
           ))}
@@ -213,7 +207,7 @@ function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivD
   );
 }
 
-function CostPresentation({ cost }: { cost: ICost }) {
+function CostPresentation({ cost }: { cost: Cost }) {
   const shouldShowFoodCost = cost.food > 0;
   const shouldShowWoodCost = cost.wood > 0;
   const shouldShowGoldCost = cost.gold > 0;
