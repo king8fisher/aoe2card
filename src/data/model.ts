@@ -19,6 +19,40 @@ export function unitNameByID(unitId: number): string {
   return strings[data.data.units[unitId].LanguageNameId];
 }
 
+export function unitHelpByID(unitId: number): IUnitHelp {
+  const about: string = strings[data.data.units[unitId].LanguageHelpId] ?? "";
+  const sw = strongWeak(about);
+  return {
+    about: about,
+    strong: sw.strong,
+    weak: sw.weak,
+  };
+}
+
+const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)", "gmiu");
+const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
+
+function strongWeak(about: string): { strong: string; weak: string } {
+  // Resetting regex
+  strongEnRegex.lastIndex = 0;
+  weakEnRegex.lastIndex = 0;
+
+  let m;
+  let strong = "";
+  if ((m = strongEnRegex.exec(about)) !== null) {
+    if (m.index !== strongEnRegex.lastIndex) {
+      strong = m[1];
+    }
+  }
+  let weak = "";
+  if ((m = weakEnRegex.exec(about)) !== null) {
+    if (m.index !== weakEnRegex.lastIndex) {
+      weak = m[1];
+    }
+  }
+  return { strong: strong, weak: weak };
+}
+
 export function techNameByID(techId: number): string {
   // data.data.techs[6].internal_name // "Mongol Siege Drill"
   // data.data.techs[6].LanguageNameId // 7422
@@ -32,17 +66,18 @@ export interface ICivData {
   /** localized name for civ, not to be used for data keys */
   value: string;
   /** help string about the civilization */
-  about: string;
+  help: string;
 }
 
 export function allCivs(): ICivData[] {
   let entries: ICivData[] = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
+    const help = strings[data["civ_helptexts"][v[0]]];
     entries.push({
       key: v[0],
       value: strings[v[1]],
-      about: strings[data["civ_helptexts"][v[0]]],
+      help: help,
     });
   });
   return entries;
@@ -54,7 +89,7 @@ export function civByKey(civKey: string): ICivData | null {
   return {
     key: civKey,
     value: strings[found],
-    about: data["civ_helptexts"][civKey],
+    help: data["civ_helptexts"][civKey],
   };
 }
 
@@ -64,20 +99,28 @@ export enum UnitType {
   ImperialAgeUniqueUnit,
 }
 
+export interface IUnitHelp {
+  about: string;
+  strong: string;
+  weak: string;
+}
+
 export interface IUnitData {
   id: number;
   /** Localized name of the unit */
   value: string;
   unitType: UnitType;
+  help: IUnitHelp;
 }
 
 export function allUnits(civKey: string): IUnitData[] {
   let entries: IUnitData[] = [];
-  data.techtrees[civKey].units.forEach((v: number) => {
+  data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
-      id: v,
-      value: unitNameByID(v),
+      id: id,
+      value: unitNameByID(id),
       unitType: UnitType.RegularUnit,
+      help: unitHelpByID(id),
     });
   });
   return entries;
@@ -85,7 +128,12 @@ export function allUnits(civKey: string): IUnitData[] {
 
 export function imperialAgeUniqueUnit(civKey: string): IUnitData {
   let id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit };
+  return {
+    id: id,
+    value: unitNameByID(id),
+    unitType: UnitType.ImperialAgeUniqueUnit,
+    help: unitHelpByID(id),
+  };
 }
 
 export function castleAgeUniqueUnit(civKey: string): IUnitData {
@@ -94,6 +142,7 @@ export function castleAgeUniqueUnit(civKey: string): IUnitData {
     id: id,
     value: unitNameByID(id),
     unitType: UnitType.CastleAgeUniqueUnit,
+    help: unitHelpByID(id),
   };
 }
 
