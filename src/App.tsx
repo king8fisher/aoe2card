@@ -1,9 +1,26 @@
-import { SlButton, SlButtonGroup, SlDropdown, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react";
+import {
+  SlButton,
+  SlButtonGroup,
+  SlDropdown,
+  SlMenu,
+  SlMenuItem,
+  SlTooltip,
+} from "@shoelace-style/shoelace/dist/react";
 import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/molecules/Navbar";
-import { Cost, IGroupByUnitData, IUnitCivData, IUnitData, UnitType, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
+import {
+  Cost,
+  IGroupByUnitData,
+  IUnitCivData,
+  IUnitData,
+  UnitType,
+  allCivUnits,
+  allCivs,
+  groupByUnitType,
+  searchUnits,
+} from "./data/model";
 import { createPromiseDebouncer } from "./helpers/debouncers";
 import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
 
@@ -135,12 +152,7 @@ function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupB
   let commonCostKey = groupByUnitData.mostCommonUnitStats.cost.toKey();
   return (
     <>
-      <div
-        className={[
-          "flex flex-col rounded-md p-1",
-          styleForUnit(groupByUnitData.unit),
-        ].join(" ")}
-      >
+      <div className={["flex flex-col rounded-md p-1", styleForUnit(groupByUnitData.unit)].join(" ")}>
         <UnitDisplayLineItemsCentered>
           <img
             src={`https://aoe2techtree.net/img/Units/${groupByUnitData.unit.id}.png`}
@@ -154,17 +166,23 @@ function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupB
         </UnitDisplayLine>
         <div className="grid grid-cols-8 gap-1 p-1 mt-1">
           {groupByUnitData?.civs.map((c, _index) => (
-            <div className="flex flex-col items-center" title={c.civ.value}>
-              <img src={civImgUrl(c.civ.key)} className="w-7 h-7" />
-              {c.unitStats.cost.toKey() == commonCostKey ? (
-                <></>
-              ) : (
-                // TODO: Doesn't seem to ever kick in
-                <UnitDisplayLine className="text-xs mt-1">
-                  <CostPresentation cost={c.unitStats.cost} />
-                </UnitDisplayLine>
-              )}
-            </div>
+            <SlTooltip>
+              <div className="flex flex-col gap-1" slot="content">
+                <span className="font-bold leading-6">{c.civ.value}</span>
+                <span dangerouslySetInnerHTML={{ __html: c.civ.about }} />
+              </div>
+              <div className="flex flex-col items-center">
+                <img src={civImgUrl(c.civ.key)} className="w-7 h-7" />
+                {c.unitStats.cost.toKey() == commonCostKey ? (
+                  <></>
+                ) : (
+                  // TODO: Doesn't seem to ever kick in
+                  <UnitDisplayLine className="text-xs mt-1">
+                    <CostPresentation cost={c.unitStats.cost} />
+                  </UnitDisplayLine>
+                )}
+              </div>
+            </SlTooltip>
           ))}
         </div>
       </div>
@@ -176,19 +194,14 @@ function styleForUnit(unit: IUnitData) {
   return unit.unitType == UnitType.ImperialAgeUniqueUnit
     ? "bg-blue-400 dark:bg-blue-700"
     : unit.unitType == UnitType.CastleAgeUniqueUnit
-      ? "bg-green-400 dark:bg-green-700" :
-      "bg-zinc-300 dark:bg-zinc-700";
+    ? "bg-green-400 dark:bg-green-700"
+    : "bg-zinc-300 dark:bg-zinc-700";
 }
 
 function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) {
   return (
     <>
-      <div
-        className={[
-          "flex flex-col rounded-md p-1",
-          styleForUnit(unitCivData.unit)
-        ].join(" ")}
-      >
+      <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
         {showCivName ? (
           <UnitDisplayLineItemsCentered>
             <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
@@ -230,10 +243,7 @@ function CostPresentation({ cost }: { cost: Cost }) {
 
 function SingleCostPresenter({ type, amount }: { type: string; amount: number }) {
   return (
-    <span className={[
-      "flex flex-col gap-0 items-center",
-      amount == 0 ? "opacity-30" : "",
-    ].join(" ")} title={type}>
+    <span className={["flex flex-col gap-0 items-center", amount == 0 ? "opacity-30" : ""].join(" ")} title={type}>
       <img src={`${type}.png`} className="w-5 h-5" />
       {amount}
     </span>

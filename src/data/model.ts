@@ -31,21 +31,31 @@ export interface ICivData {
   key: string;
   /** localized name for civ, not to be used for data keys */
   value: string;
+  /** help string about the civilization */
+  about: string;
 }
 
 export function allCivs(): ICivData[] {
   let entries: ICivData[] = [];
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
-    entries.push({ key: v[0], value: strings[v[1]] });
+    entries.push({
+      key: v[0],
+      value: strings[v[1]],
+      about: strings[data["civ_helptexts"][v[0]]],
+    });
   });
   return entries;
 }
 
-export function civByName(civ: string): ICivData | null {
-  let found = data["civ_names"][civ];
+export function civByKey(civKey: string): ICivData | null {
+  let found = data["civ_names"][civKey];
   if (found == null) return null;
-  return { key: civ, value: strings[found] };
+  return {
+    key: civKey,
+    value: strings[found],
+    about: data["civ_helptexts"][civKey],
+  };
 }
 
 export enum UnitType {
@@ -175,7 +185,7 @@ function patchCalculateMostCommon(result: IGroupByUnitData[]) {
 }
 
 export function allCivUnits(civKey: string): IUnitCivData[] {
-  let civ_ = civByName(civKey);
+  let civ_ = civByKey(civKey);
   if (civ_ == null) return [];
   return matchUnits([civ_], (_u) => true);
 }
