@@ -44,7 +44,7 @@ export const UnitDisplayLine = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0.25rem;
-  align-items: baseline;
+  align-items: center;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
   line-height: 100%;

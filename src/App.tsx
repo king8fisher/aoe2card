@@ -22,7 +22,7 @@ import {
   searchUnits,
 } from "./data/model";
 import { createPromiseDebouncer } from "./helpers/debouncers";
-import { Container, FlexWrap, UnitDisplayLine, UnitDisplayLineItemsCentered, UnitsPresentationFlex } from "./styles";
+import { Container, FlexWrap, UnitDisplayLine, UnitsPresentationFlex } from "./styles";
 
 const debouncer = new createPromiseDebouncer<IUnitCivData[]>();
 
@@ -148,41 +148,40 @@ function civImgUrl(civKey: string) {
   return `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 }
 
+function unitImgUrl(unitId: number) {
+  return `https://aoe2techtree.net/img/Units/${unitId}.png`;
+}
+
 function GroupedUnitPresentation({ groupByUnitData }: { groupByUnitData: IGroupByUnitData }) {
   let commonCostKey = groupByUnitData.mostCommonUnitStats.cost.toKey();
   return (
     <>
       <div className={["flex flex-col rounded-md p-1", styleForUnit(groupByUnitData.unit)].join(" ")}>
-        <UnitDisplayLineItemsCentered>
-          <img
-            src={`https://aoe2techtree.net/img/Units/${groupByUnitData.unit.id}.png`}
-            className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-50 ml-[4px]"
-          />
-          {groupByUnitData.unit.value}
-          <span className="opacity-50 ml-1 text-xs">{groupByUnitData.unit.id}</span>
-        </UnitDisplayLineItemsCentered>
+        <UnitLine unit={groupByUnitData.unit} />
         <UnitDisplayLine className="text-xs mt-1">
           <CostPresentation cost={groupByUnitData.mostCommonUnitStats.cost} />
         </UnitDisplayLine>
         <div className="grid grid-cols-8 gap-1 p-1 mt-1">
           {groupByUnitData?.civs.map((c, _index) => (
-            <SlTooltip>
-              <div className="flex flex-col gap-1" slot="content">
-                <span className="font-bold leading-6">{c.civ.value}</span>
-                <span dangerouslySetInnerHTML={{ __html: c.civ.about }} />
-              </div>
-              <div className="flex flex-col items-center">
-                <img src={civImgUrl(c.civ.key)} className="w-7 h-7" />
-                {c.unitStats.cost.toKey() == commonCostKey ? (
-                  <></>
-                ) : (
-                  // TODO: Doesn't seem to ever kick in
-                  <UnitDisplayLine className="text-xs mt-1">
-                    <CostPresentation cost={c.unitStats.cost} />
-                  </UnitDisplayLine>
-                )}
-              </div>
-            </SlTooltip>
+            <div key={`${c.civ.key}`}>
+              <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+                <div className="flex flex-col gap-1" slot="content">
+                  <span className="font-bold leading-6">{c.civ.value}</span>
+                  <span dangerouslySetInnerHTML={{ __html: c.civ.help }} />
+                </div>
+                <div className="flex flex-col items-center">
+                  <img src={civImgUrl(c.civ.key)} className="w-7 h-7" />
+                  {c.unitStats.cost.toKey() == commonCostKey ? (
+                    <></>
+                  ) : (
+                    // TODO: Doesn't seem to ever kick in
+                    <UnitDisplayLine className="text-xs mt-1">
+                      <CostPresentation cost={c.unitStats.cost} />
+                    </UnitDisplayLine>
+                  )}
+                </div>
+              </SlTooltip>
+            </div>
           ))}
         </div>
       </div>
@@ -203,24 +202,57 @@ function UnitPresentation({ unitCivData, showCivName }: { unitCivData: IUnitCivD
     <>
       <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
         {showCivName ? (
-          <UnitDisplayLineItemsCentered>
-            <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
-            <div className="leading-none">{unitCivData.civ.value}</div>
-          </UnitDisplayLineItemsCentered>
+          <UnitDisplayLine>
+            <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+              <div className="flex flex-col gap-1" slot="content">
+                <span className="font-bold leading-6">{unitCivData.civ.value}</span>
+                <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
+              </div>
+              <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+              <div className="leading-none">{unitCivData.civ.value}</div>
+            </SlTooltip>
+          </UnitDisplayLine>
         ) : (
           <></>
         )}
-        <UnitDisplayLineItemsCentered>
-          <img
-            src={`https://aoe2techtree.net/img/Units/${unitCivData.unit.id}.png`}
-            className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-50 ml-[4px]"
-          />
-          {unitCivData.unit.value}
-          <span className="opacity-50 ml-1 text-xs">{unitCivData.unit.id}</span>
-        </UnitDisplayLineItemsCentered>
+        <UnitLine unit={unitCivData.unit} />
         <UnitDisplayLine className="text-xs mt-1">
           <CostPresentation cost={unitCivData.unitStats.cost} />
         </UnitDisplayLine>
+      </div>
+    </>
+  );
+}
+
+function UnitLine({ unit }: { unit: IUnitData }) {
+  return (
+    <>
+      <UnitDisplayLine>
+        <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+          <div className="flex flex-col gap-1" slot="content">
+            <span className="font-bold leading-6">{unit.value}</span>
+            <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
+          </div>
+          <img src={unitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-80 ml-[4px]" />
+          <span className="ml-[4px]">{unit.value}</span>
+          <span className="opacity-50 ml-[4px] text-xs mt-[0.18rem]">{unit.id}</span>
+        </SlTooltip>
+      </UnitDisplayLine>
+      <div className="text-sm leading-1 flex flex-col gap-0 px-2 mt-1">
+        {unit.help.strong !== "" ? (
+          <span className="w-3/4 bg-gradient-to-br via-30% from-green-800/40 to-green-800/0 rounded-md flex-grow p-1 whitespace-normal">
+            {unit.help.strong}
+          </span>
+        ) : (
+          <></>
+        )}
+        {unit.help.weak !== "" ? (
+          <span className="w-3/4 bg-gradient-to-br via-30% from-orange-800/40 to-orange-800/0 rounded-md flex-grow p-1 whitespace-normal">
+            {unit.help.weak}
+          </span>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
@@ -243,7 +275,7 @@ function CostPresentation({ cost }: { cost: Cost }) {
 
 function SingleCostPresenter({ type, amount }: { type: string; amount: number }) {
   return (
-    <span className={["flex flex-col gap-0 items-center", amount == 0 ? "opacity-30" : ""].join(" ")} title={type}>
+    <span className={["flex flex-col gap-0 items-center", amount == 0 ? "opacity-30" : ""].join(" ")}>
       <img src={`${type}.png`} className="w-5 h-5" />
       {amount}
     </span>
