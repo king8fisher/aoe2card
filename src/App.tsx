@@ -34,14 +34,6 @@ function App() {
     document.body.classList.add("ready");
   });
 
-  // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
-  //
-  // const searchInput = useCallback((inputElement: HTMLElement) => {
-  //   if (inputElement) {
-  //     inputElement.focus();
-  //   }
-  // }, []);
-
   const [groupedView, setGroupedView] = useState(true);
   const [civView, setCivView] = useState(false);
 

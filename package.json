@@ -13,16 +13,16 @@
   },
   "dependencies": {
     "@lit-labs/react": "^2.0.1",
-    "@shoelace-style/shoelace": "^2.7.0",
+    "@shoelace-style/shoelace": "^2.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.7"
   },
   "devDependencies": {
-    "@types/react": "^18.2.20",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "eslint": "^8.47.0",
