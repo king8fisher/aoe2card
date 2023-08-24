@@ -9,8 +9,8 @@ interface NavbarProps {
 }
 
 const Navbar = ({ search, setSearch }: NavbarProps): JSX.Element => {
-  // TODO: ref={searchInput} when shoelace fixes incompatibility with ref
-  //
+  // TODO: Figure out how to override `any`
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const searchInput = useCallback((inputElement: any) => {
     if (inputElement) {
       if (inputElement.input) {

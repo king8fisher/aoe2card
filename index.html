@@ -18,6 +18,22 @@
   </head>
 
   <body class="sl-theme-dark text-zinc-800 bg-zinc-200 dark:text-white dark:bg-zinc-900 antialiased bg-cover">
+    <script>
+      (() => {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = localStorage.getItem("theme") || "auto";
+        const dark = theme === "dark" || (theme === "auto" && prefersDark);
+        if (dark) {
+          document.documentElement.classList.add("dark");
+          document.body.classList.add("sl-theme-dark");
+          document.body.classList.remove("sl-theme-light");
+        } else {
+          document.documentElement.classList.remove("dark");
+          document.body.classList.remove("sl-theme-dark");
+          document.body.classList.add("sl-theme-light");
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

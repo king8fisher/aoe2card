@@ -5,3 +5,28 @@
 :not(:defined) {
   visibility: hidden;
 }
+
+@layer utilities {
+  #theme-selector:not(:defined) {
+    /* Hide when not defined to prevent extra wide icon toolbar while loading */
+    display: none;
+  }
+
+  #theme-selector sl-menu {
+    /* Set an initial size to prevent width being too small when first opening on small screen width */
+    width: 140px;
+  }
+
+  body.sl-theme-dark .only-light,
+  body:not(.sl-theme-dark) .only-dark {
+    display: none !important;
+  }
+
+  #theme-selector sl-button::part(label) {
+    padding: 0rem;
+  }
+
+  #theme-toggle sl-button::part(label) {
+    padding: 0rem;
+  }
+}

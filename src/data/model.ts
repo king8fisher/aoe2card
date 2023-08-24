@@ -13,10 +13,10 @@ export type armourData = {
   Class: number;
 };
 
-export const unitNameByID = (unitId: number): string => 
+export const unitNameByID = (unitId: number): string =>
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
-   strings[data.data.units[unitId].LanguageNameId]
+  strings[data.data.units[unitId].LanguageNameId];
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
   const about: string = strings[data.data.units[unitId].LanguageHelpId] ?? "";
@@ -26,7 +26,7 @@ export const unitHelpByID = (unitId: number): IUnitHelp => {
     strong: sw.strong,
     weak: sw.weak,
   };
-}
+};
 
 const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)", "gmiu");
 const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
@@ -50,14 +50,13 @@ const strongWeak = (about: string): { strong: string; weak: string } => {
     }
   }
   return { strong: strong, weak: weak };
-}
+};
 
-export const techNameByID = (techId: number): string => 
+export const techNameByID = (techId: number): string =>
   // data.data.techs[6].internal_name // "Mongol Siege Drill"
   // data.data.techs[6].LanguageNameId // 7422
   // strings[7422] // "Drill"
-   strings[data.data.techs[techId].LanguageNameId]
-
+  strings[data.data.techs[techId].LanguageNameId];
 
 export interface ICivData {
   /** internal_name value for civ used everywhere */
@@ -80,7 +79,7 @@ export const allCivs = (): ICivData[] => {
     });
   });
   return entries;
-}
+};
 
 export const civByKey = (civKey: string): ICivData | null => {
   const found = data["civ_names"][civKey];
@@ -90,7 +89,7 @@ export const civByKey = (civKey: string): ICivData | null => {
     value: strings[found],
     help: data["civ_helptexts"][civKey],
   };
-}
+};
 
 export enum UnitType {
   RegularUnit,
@@ -123,12 +122,12 @@ export const allUnits = (civKey: string): IUnitData[] => {
     });
   });
   return entries;
-}
+};
 
 export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit, help: unitHelpByID(id), };
-}
+  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit, help: unitHelpByID(id) };
+};
 
 export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
@@ -138,7 +137,7 @@ export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
     unitType: UnitType.CastleAgeUniqueUnit,
     help: unitHelpByID(id),
   };
-}
+};
 
 export class Cost {
   food: number;
@@ -177,7 +176,7 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
   return matchUnits(allCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
-}
+};
 
 export interface IGroupByUnitData {
   unit: IUnitData;
@@ -198,7 +197,7 @@ export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
   }
   patchCalculateMostCommon(result);
   return result;
-}
+};
 
 const patchCalculateMostCommon = (result: IGroupByUnitData[]) => {
   result.forEach((r) => {
@@ -221,13 +220,13 @@ const patchCalculateMostCommon = (result: IGroupByUnitData[]) => {
     const a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
     r.mostCommonUnitStats.cost = a[0][1][0];
   });
-}
+};
 
 export const allCivUnits = (civKey: string): IUnitCivData[] => {
   const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
   return matchUnits([civ_], (_u) => true);
-}
+};
 
 export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
   const result: IUnitCivData[] = [];
@@ -246,4 +245,4 @@ export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean
     });
   });
   return result;
-}
+};
