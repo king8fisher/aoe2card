@@ -58,12 +58,6 @@ export const UnitDisplayLineItemsCentered = styled(UnitDisplayLine)`
   align-items: center;
 `;
 
-export const FlexWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0.25rem /* 4px */;
-`;
-
 export const UnitsPresentationFlex = styled.div`
   display: flex;
   padding-top: 0.5rem;
