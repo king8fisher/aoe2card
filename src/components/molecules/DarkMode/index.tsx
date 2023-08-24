@@ -50,8 +50,8 @@ export const DarkModeButton = () => {
         }}
         className="pr-2"
       >
-        <SlIcon className="only-light w-full h-full" name="sun-fill"></SlIcon>
-        <SlIcon className="only-dark w-full h-full" name="moon-fill"></SlIcon>
+        <SlIcon className="only-light" name="sun-fill"></SlIcon>
+        <SlIcon className="only-dark" name="moon-fill"></SlIcon>
       </SlButton>
       <SlDropdown id="theme-dropdown" placement="bottom-end" distance={0}>
         <SlButton slot="trigger" size="medium" variant="text" caret></SlButton>
