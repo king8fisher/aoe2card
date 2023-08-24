@@ -13,14 +13,14 @@ export const createDebouncer = <T>() => {
       assign(calc());
       timerId = null;
     }, delay);
-  }
+  };
 
   const destroyDebouncer = () => {
     if (timerId !== null) {
       clearTimeout(timerId);
       timerId = null;
     }
-  }
+  };
 
   return { runDebounced, destroyDebouncer };
 };
@@ -49,20 +49,19 @@ export class createPromiseDebouncer<T> {
     this.counter++;
     this.destroyDebouncer();
     const localCounter = this.counter;
-    const ref = this;
     this.timerId = setTimeout(() => {
       createPromiseDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
         // We might be cancelled by assigning another timer at this point,
         // so we want to never perform the assign step
         const [r, refCounter] = v;
-        if (refCounter === ref.counter) {
+        if (refCounter === this.counter) {
           assign(r);
         } else {
           // We are out of sync with the most recent call to run debouncer.
           // Skipping the assignment step
           // console.warn(["dropping", refCounter, ref.counter])
         }
-        ref.destroyDebouncer();
+        this.destroyDebouncer();
       });
     }, delay);
   }

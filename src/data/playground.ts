@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable func-style */
- 
 import data from "./data.json";
 import { armourData, attackData, unitNameByID } from "./model";
 
 // Playground for messing with json file structure and scaffolding functions
 // to make it easy to access data.
 
+// eslint-disable-next-line func-style
 function playground() {
   // Unit data for unit_id
   data.data.unit_upgrades[561].internal_name; // "Elite Mangudai"

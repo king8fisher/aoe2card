@@ -1,3 +1,8 @@
+import { setBasePath } from "@shoelace-style/shoelace";
+
+import "@shoelace-style/shoelace/dist/themes/dark.css";
+import "@shoelace-style/shoelace/dist/themes/light.css";
+
 import {
   SlButton,
   SlButtonGroup,
@@ -6,8 +11,7 @@ import {
   SlMenuItem,
   SlTooltip,
 } from "@shoelace-style/shoelace/dist/react";
-import "@shoelace-style/shoelace/dist/themes/dark.css";
-import "@shoelace-style/shoelace/dist/themes/light.css";
+
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/molecules/Navbar";
 import {
@@ -23,6 +27,8 @@ import {
 } from "./data/model";
 import { createPromiseDebouncer } from "./helpers/debouncers";
 import { Container, FlexWrap, UnitDisplayLine, UnitsPresentationFlex } from "./styles";
+
+setBasePath("/shoelace");
 
 const debouncer = new createPromiseDebouncer<IUnitCivData[]>();
 
@@ -135,7 +141,7 @@ const civImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKe
 const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
 
 const GroupedUnitPresentation = ({ groupByUnitData }: { groupByUnitData: IGroupByUnitData }) => {
-  let commonCostKey = groupByUnitData.mostCommonUnitStats.cost.toKey();
+  const commonCostKey = groupByUnitData.mostCommonUnitStats.cost.toKey();
   return (
     <div className={["flex flex-col rounded-md p-1", styleForUnit(groupByUnitData.unit)].join(" ")}>
       <UnitLine unit={groupByUnitData.unit} />
@@ -145,7 +151,7 @@ const GroupedUnitPresentation = ({ groupByUnitData }: { groupByUnitData: IGroupB
       <div className="grid grid-cols-8 gap-1 p-1 mt-1">
         {groupByUnitData?.civs.map((c, _index) => (
           <div key={`${c.civ.key}`}>
-            <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+            <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
               <div className="flex flex-col gap-1" slot="content">
                 <span className="font-bold leading-6">{c.civ.value}</span>
                 <span dangerouslySetInnerHTML={{ __html: c.civ.help }} />
@@ -181,7 +187,7 @@ const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IUnitCivD
     <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
       {showCivName ? (
         <UnitDisplayLine>
-          <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+          <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
             <div className="flex flex-col gap-1" slot="content">
               <span className="font-bold leading-6">{unitCivData.civ.value}</span>
               <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
@@ -204,7 +210,7 @@ const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IUnitCivD
 const UnitLine = ({ unit }: { unit: IUnitData }) => (
   <>
     <UnitDisplayLine>
-      <SlTooltip style={{ ["--show-delay" as any]: "400" }}>
+      <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
         <div className="flex flex-col gap-1" slot="content">
           <span className="font-bold leading-6">{unit.value}</span>
           <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
