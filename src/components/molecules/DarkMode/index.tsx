@@ -39,7 +39,7 @@ export const DarkModeButton = () => {
   };
 
   return (
-    <div id="theme-selector" className="flex flex-row gap-0 items-center">
+    <div id="theme-selector" className="flex flex-row gap-0 items-center shrink-0">
       <SlButton
         id="theme-toggle"
         slot="trigger"
