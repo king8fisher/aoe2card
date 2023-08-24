@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable func-style */
+ 
 import data from "./data.json";
 import { armourData, attackData, unitNameByID } from "./model";
 
@@ -21,28 +24,28 @@ function playground() {
   data.data.units[561].Speed; // 1.4
   data.data.units[561].ReloadTime; // 2.1
 
-  let attacks: attackData[] = data.data.units[561].Attacks; // [ { "Amount": 1, "Class": 27 }, { "Amount": 0, "Class": 21 }, ... ]
-  let armours: armourData[] = data.data.units[561].Armours; // [ { "Amount": 0, "Class": 28 }, { "Amount": 1, "Class": 4 }, ... ]
+  const attacks: attackData[] = data.data.units[561].Attacks; // [ { "Amount": 1, "Class": 27 }, { "Amount": 0, "Class": 21 }, ... ]
+  const armours: armourData[] = data.data.units[561].Armours; // [ { "Amount": 0, "Class": 28 }, { "Amount": 1, "Class": 4 }, ... ]
   // ...
 
   // Root for data for a civ
   data.techtrees.Mongols;
 
   // [unit_id, ...]
-  let units = data.techtrees.Mongols.units;
+  const units = data.techtrees.Mongols.units;
 
   // Unique Techtree
 
   // 487
-  let castleAgeUniqueTech = data.techtrees.Mongols.unique.castleAgeUniqueTech;
+  const castleAgeUniqueTech = data.techtrees.Mongols.unique.castleAgeUniqueTech;
 
   // 11
-  let castleAgeUniqueUnit = data.techtrees.Mongols.unique.castleAgeUniqueUnit;
+  const castleAgeUniqueUnit = data.techtrees.Mongols.unique.castleAgeUniqueUnit;
   data.data.units[11].internal_name; // MOSUN
   data.data.units[11]; // Rest of data for the unit
 
   // 6
-  let imperialAgeUniqueTech = data.techtrees.Mongols.unique.imperialAgeUniqueTech;
+  const imperialAgeUniqueTech = data.techtrees.Mongols.unique.imperialAgeUniqueTech;
   data.data.techs[6].internal_name; // "Mongol Siege Drill"
   data.data.techs[6].Cost; // { "Gold": 450, "Wood": 500 }
   data.data.techs[6].ResearchTime; // 60

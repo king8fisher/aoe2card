@@ -7,5 +7,11 @@ module.exports = {
   plugins: ["react-refresh"],
   rules: {
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+    "prefer-arrow-callback": "error",
+    "prefer-const": "warn",
+    "no-var": "warn",
+    "arrow-body-style": ["error", "as-needed"],
+    "prefer-arrow-callback": ["error"],
+    "func-style": ["error", "expression", { "allowArrowFunctions": true }]
   },
 };
