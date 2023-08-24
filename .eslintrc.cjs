@@ -12,6 +12,14 @@ module.exports = {
     "no-var": "warn",
     "arrow-body-style": ["error", "as-needed"],
     "prefer-arrow-callback": ["error"],
-    "func-style": ["error", "expression", { "allowArrowFunctions": true }]
+    "func-style": ["error", "expression", { allowArrowFunctions: true }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn", // or "error"
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
   },
 };
