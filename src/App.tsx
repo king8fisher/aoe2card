@@ -4,14 +4,13 @@ import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Navbar from "./components/molecules/Navbar";
-import { IGroupByUnitData, IUnitCivData, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
-import { debounce } from "./helpers/debounce";
-import { Container, UnitsPresentationFlex } from "./styles";
-import { UnitPresentation } from "./components/molecules/UnitPresentation";
-import { GroupedUnitPresentation } from "./components/molecules/GroupedUnitPresentation";
-import { CivView } from "./components/molecules/CivView";
 import { ButtonGroup } from "./components/molecules/ButtonGroup";
+import { CivView } from "./components/molecules/CivView";
+import { GroupedUnitPresentation } from "./components/molecules/GroupedUnitPresentation";
+import Navbar from "./components/molecules/Navbar";
+import { UnitPresentation } from "./components/molecules/UnitPresentation";
+import { IGroupByUnitData, IUnitCivData, allCivUnits, allCivs, groupByUnitType, searchUnits } from "./data/model";
+import { Container, UnitsPresentationFlex } from "./styles";
 
 setBasePath("/shoelace");
 
@@ -30,7 +29,7 @@ const App = () => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => () => {
+  useEffect(() => {
     document.body.classList.add("ready");
   });
 
