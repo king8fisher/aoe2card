@@ -82,7 +82,7 @@ const App = () => {
           isCivViewActive={isCivViewActive}
           setIsCivViewActive={setIsCivViewActive}
         />
-        {!isCivViewActive && (isLoading ? <div>Loading...</div> : renderSearchResults())}
+        {isLoading ? <div>Loading...</div> : renderSearchResults()}
         {isCivViewActive && (
           <CivView selectedCivKey={selectedCivKey} civsList={civsList} setCiv={setCiv} unitsByCiv={unitsByCiv} />
         )}
