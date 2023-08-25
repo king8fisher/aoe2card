@@ -18,4 +18,4 @@ export const debounce = <A = unknown, R = void>(
     }
   };
   return [debouncedFunc, cancel];
-}
+};
