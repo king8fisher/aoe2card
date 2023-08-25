@@ -47,8 +47,8 @@ const App = () => {
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setIsLoading(true);
       const newSearchTerm = event.target.value;
+      newSearchTerm && setIsLoading(true);
       setSearchTerm(newSearchTerm);
 
       if (timer) {
