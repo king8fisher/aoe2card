@@ -3,18 +3,11 @@ import { SlButton, SlButtonGroup } from "@shoelace-style/shoelace/dist/react";
 interface IButtonGroupProps {
   isGroupedView: boolean;
   setIsGroupedView: (isGroupedView: boolean) => void;
-  isCivViewActive: boolean;
-  setIsCivViewActive: (isCivViewActive: boolean) => void;
 }
 
-export const ButtonGroup = ({
-  isGroupedView,
-  setIsGroupedView,
-  isCivViewActive,
-  setIsCivViewActive,
-}: IButtonGroupProps) => (
-  <>
-    <SlButtonGroup className="mt-2">
+export const ButtonGroup = ({ isGroupedView, setIsGroupedView }: IButtonGroupProps) => (
+  <div className="flex flex-row items-center">
+    <SlButtonGroup>
       <SlButton size="small" variant={isGroupedView ? "primary" : "default"} onClick={(_) => setIsGroupedView(true)}>
         Grouped
       </SlButton>
@@ -22,15 +15,5 @@ export const ButtonGroup = ({
         Linear
       </SlButton>
     </SlButtonGroup>
-
-    <SlButtonGroup className="mt-2 ml-2">
-      <SlButton
-        size="small"
-        variant={isCivViewActive ? "primary" : "default"}
-        onClick={(_) => setIsCivViewActive(!isCivViewActive)}
-      >
-        Civ
-      </SlButton>
-    </SlButtonGroup>
-  </>
+  </div>
 );

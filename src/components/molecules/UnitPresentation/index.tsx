@@ -1,12 +1,12 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { IUnitCivData } from "../../../data/model";
-import { getCivImgUrl, getStyleForUnit } from "../../../helpers/tools";
+import { civImgUrl, styleForUnit } from "../../../helpers/tools";
 import { UnitDisplayLine } from "../../../styles";
-import { UnitLine } from "../UnitLine";
 import { CostPresentation } from "../../atoms/UnitCost";
+import { UnitLine } from "../UnitLine";
 
 export const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) => (
-  <div className={["flex flex-col rounded-md p-1", getStyleForUnit(unitCivData.unit)].join(" ")}>
+  <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
     {showCivName && (
       <UnitDisplayLine>
         <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
@@ -14,7 +14,7 @@ export const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IU
             <span className="font-bold leading-6">{unitCivData.civ.value}</span>
             <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
           </div>
-          <img src={getCivImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+          <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
           <div className="leading-none">{unitCivData.civ.value}</div>
         </SlTooltip>
       </UnitDisplayLine>

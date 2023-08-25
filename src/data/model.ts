@@ -67,27 +67,29 @@ export interface ICivData {
   help: string;
 }
 
+const _cachedAllCivs: ICivData[] = [];
+
 export const allCivs = (): ICivData[] => {
-  const entries: ICivData[] = [];
+  if (_cachedAllCivs.length > 0) return _cachedAllCivs;
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
     const help = strings[data["civ_helptexts"][v[0]]];
-    entries.push({
+    _cachedAllCivs.push({
       key: v[0],
       value: strings[v[1]],
       help: help,
     });
   });
-  return entries;
+  return _cachedAllCivs;
 };
 
-export const civByKey = (civKey: string): ICivData | null => {
+export const civByKey = (civKey: string): ICivData => {
   const found = data["civ_names"][civKey];
   if (found == null) return null;
   return {
     key: civKey,
     value: strings[found],
-    help: data["civ_helptexts"][civKey],
+    help: strings[data["civ_helptexts"][civKey]],
   };
 };
 
@@ -160,7 +162,7 @@ export class Cost {
   }
 }
 
-const emptyCost = (): Cost => new Cost(0, 0, 0, 0);
+// const emptyCost = (): Cost => new Cost(0, 0, 0, 0);
 
 export interface IUnitStatsData {
   cost: Cost;
@@ -181,7 +183,8 @@ export const searchUnits = (like: string): IUnitCivData[] => {
 
 export interface IGroupByUnitData {
   unit: IUnitData;
-  civs: IUnitCivData[];
+  /** key is civKey */
+  civs: Map<string, boolean>;
   mostCommonUnitStats: IUnitStatsData;
 }
 
@@ -191,37 +194,40 @@ export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
     const next = units[i];
     const found = result.find((v) => v.unit.id == next.unit.id);
     if (found) {
-      found.civs.push(next);
+      found.civs.set(next.civ.key, true);
+      // found.civs.push(next);
     } else {
-      result.push({ unit: next.unit, civs: [next], mostCommonUnitStats: { cost: emptyCost() } });
+      const m = new Map<string, boolean>();
+      m.set(next.civ.key, true);
+      result.push({ unit: next.unit, civs: m, mostCommonUnitStats: { cost: next.unitStats.cost } });
     }
   }
-  patchCalculateMostCommon(result);
+  // patchCalculateMostCommon(result);
   return result;
 };
 
-const patchCalculateMostCommon = (result: IGroupByUnitData[]) => {
-  result.forEach((r) => {
-    const st: Map<string, [Cost, number]> = new Map();
-    r.civs.forEach((c) => {
-      const costKey = c.unitStats.cost.toKey();
-      if (st.has(costKey)) {
-        const [c, n] = st.get(costKey)!;
-        st.set(costKey, [c, n + 1]);
-      } else {
-        st.set(costKey, [c.unitStats.cost, 1]);
-      }
-    });
-    if (st.size > 1) {
-      // TODO: Run this through tests. If we always have the same price
-      // for every single unit, why bothering with this sorting / calculating
-      // the most common price?
-      console.error(`Unexpected map size: ${st}`);
-    }
-    const a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
-    r.mostCommonUnitStats.cost = a[0][1][0];
-  });
-};
+// const patchCalculateMostCommon = (result: IGroupByUnitData[]) => {
+//   result.forEach((r) => {
+//     const st: Map<string, [Cost, number]> = new Map();
+//     r.civs.forEach((c, _civKey) => {
+//       const costKey = c.unitStats.cost.toKey();
+//       if (st.has(costKey)) {
+//         const [c, n] = st.get(costKey)!;
+//         st.set(costKey, [c, n + 1]);
+//       } else {
+//         st.set(costKey, [c.unitStats.cost, 1]);
+//       }
+//     });
+//     if (st.size > 1) {
+//       // TODO: Run this through tests. If we always have the same price
+//       // for every single unit, why bothering with this sorting / calculating
+//       // the most common price?
+//       console.error(`Unexpected map size: ${st}`);
+//     }
+//     const a = [...st.entries()].sort((a, b) => b[1][1] - a[1][1]);
+//     r.mostCommonUnitStats.cost = a[0][1][0];
+//   });
+// };
 
 export const allCivUnits = (civKey: string): IUnitCivData[] => {
   const civ_ = civByKey(civKey);
@@ -244,6 +250,26 @@ export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean
         });
       }
     });
+  });
+  return result;
+};
+
+export const searchCivs = (like: string): ICivData[] => {
+  like = like.toLowerCase().trim();
+  if (like == "") return [];
+  // TODO: Turn this into fuzzy search
+  return matchCivs(
+    allCivs(),
+    (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.key.toLowerCase().indexOf(like) >= 0
+  );
+};
+
+export const matchCivs = (civs: ICivData[], match: (civ: ICivData) => boolean): ICivData[] => {
+  const result: ICivData[] = [];
+  civs.forEach((c) => {
+    if (match(c)) {
+      result.push(c);
+    }
   });
   return result;
 };

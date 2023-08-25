@@ -1,14 +1,15 @@
-import { SlInput } from "@shoelace-style/shoelace/dist/react";
+import { SlIcon, SlInput, SlSpinner } from "@shoelace-style/shoelace/dist/react";
 import { useCallback } from "react";
 import { Container } from "../../../styles";
 import { DarkModeButton } from "../DarkMode";
 
-interface NavbarProps {
-  search: string;
-  setSearch: (value: string) => void;
-}
+type NavbarProps = {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  isLoading: boolean;
+};
 
-const Navbar = ({ search, setSearch }: NavbarProps): JSX.Element => {
+const Navbar = ({ searchTerm, setSearchTerm, isLoading }: NavbarProps): JSX.Element => {
   // TODO: Figure out how to override `any`
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const searchInput = useCallback((inputElement: any) => {
@@ -40,17 +41,19 @@ const Navbar = ({ search, setSearch }: NavbarProps): JSX.Element => {
             className="w-full"
             clearable
             placeholder="Search"
-            value={search}
+            value={searchTerm}
             autoFocus
             onInput={(e) => {
               const searchValue = e?.currentTarget?.value;
-              setSearch(searchValue);
+              setSearchTerm(searchValue);
             }}
             onSlClear={() => {
-              setSearch("");
+              setSearchTerm("");
             }}
             ref={searchInput}
-          ></SlInput>
+          >
+            {isLoading ? <SlSpinner slot="prefix"></SlSpinner> : <SlIcon name="search" slot="prefix"></SlIcon>}
+          </SlInput>
         </div>
         <DarkModeButton />
       </Container>

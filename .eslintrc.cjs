@@ -10,7 +10,7 @@ module.exports = {
     "prefer-arrow-callback": "error",
     "prefer-const": "warn",
     "no-var": "warn",
-    "arrow-body-style": ["error", "as-needed"],
+    // "arrow-body-style": ["error", "as-needed"],
     "prefer-arrow-callback": ["error"],
     "func-style": ["error", "expression", { allowArrowFunctions: true }],
     "@typescript-eslint/no-unused-vars": [
