@@ -54,10 +54,6 @@ export const UnitDisplayLine = styled.div`
   }
 `;
 
-export const UnitDisplayLineItemsCentered = styled(UnitDisplayLine)`
-  align-items: center;
-`;
-
 export const UnitsPresentationFlex = styled.div`
   display: flex;
   padding-top: 0.5rem;
