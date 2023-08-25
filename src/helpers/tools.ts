@@ -13,4 +13,3 @@ export const getStyleForUnit = (unit: IUnitData) => {
 
 export const getCivImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 export const getUnitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
-
