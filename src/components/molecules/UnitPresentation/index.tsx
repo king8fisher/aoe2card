@@ -23,9 +23,5 @@ export const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IU
     <UnitDisplayLine className="text-xs mt-1">
       <CostPresentation cost={unitCivData.unitStats.cost} />
     </UnitDisplayLine>
-    <UnitLine unit={unitCivData.unit} />
-    <UnitDisplayLine className="text-xs mt-1">
-      <CostPresentation cost={unitCivData.unitStats.cost} />
-    </UnitDisplayLine>
   </div>
 );
