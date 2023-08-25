@@ -15,18 +15,18 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/molecules/Navbar";
 import {
-  Cost,
   IGroupByUnitData,
   IUnitCivData,
   IUnitData,
-  UnitType,
   allCivUnits,
   allCivs,
   groupByUnitType,
   searchUnits,
 } from "./data/model";
 import { createPromiseDebouncer } from "./helpers/debouncers";
-import { Container, FlexWrap, UnitDisplayLine, UnitsPresentationFlex } from "./styles";
+import { Container, UnitDisplayLine, UnitsPresentationFlex } from "./styles";
+import { getCivImgUrl, getStyleForUnit, getUnitImgUrl } from "./helpers/tools";
+import { CostPresentation } from "./components/atoms/UnitCost";
 
 setBasePath("/shoelace");
 
@@ -88,26 +88,22 @@ const App = () => {
             Civ
           </SlButton>
         </SlButtonGroup>
-        {groupedView ? (
-          <UnitsPresentationFlex>
-            {searchResult?.grouped.map((v, _index) => (
-              <GroupedUnitPresentation key={`${v.unit.id}`} groupByUnitData={v} />
-            ))}
-          </UnitsPresentationFlex>
-        ) : (
-          <UnitsPresentationFlex>
-            {searchResult?.units.map((v, _index) => (
-              <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCivName={true} />
-            ))}
-          </UnitsPresentationFlex>
-        )}
+        <UnitsPresentationFlex>
+          {groupedView
+            ? searchResult?.grouped.map((v, _index) => (
+                <GroupedUnitPresentation key={`${v.unit.id}`} groupByUnitData={v} />
+              ))
+            : searchResult?.units.map((v, _index) => (
+                <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCivName={true} />
+              ))}
+        </UnitsPresentationFlex>
       </Container>
 
-      {civView ? (
+      {civView && (
         <Container>
           <SlDropdown className="shadow-lg">
             <SlButton slot="trigger" caret>
-              <img slot="prefix" src={civImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
+              <img slot="prefix" src={getCivImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
               {selectedCivKey}
             </SlButton>
             <SlMenu
@@ -118,7 +114,7 @@ const App = () => {
               {civsList.map((value) => (
                 <SlMenuItem key={value.key} value={value.key}>
                   {value.value}
-                  <img slot="prefix" src={civImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
+                  <img slot="prefix" src={getCivImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
                 </SlMenuItem>
               ))}
             </SlMenu>
@@ -129,21 +125,15 @@ const App = () => {
             ))}
           </UnitsPresentationFlex>
         </Container>
-      ) : (
-        <></>
       )}
     </>
   );
 };
 
-const civImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
-
-const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
-
 const GroupedUnitPresentation = ({ groupByUnitData }: { groupByUnitData: IGroupByUnitData }) => {
   const commonCostKey = groupByUnitData.mostCommonUnitStats.cost.toKey();
   return (
-    <div className={["flex flex-col rounded-md p-1", styleForUnit(groupByUnitData.unit)].join(" ")}>
+    <div className={["flex flex-col rounded-md p-1", getStyleForUnit(groupByUnitData.unit)].join(" ")}>
       <UnitLine unit={groupByUnitData.unit} />
       <UnitDisplayLine className="text-xs mt-1">
         <CostPresentation cost={groupByUnitData.mostCommonUnitStats.cost} />
@@ -157,10 +147,8 @@ const GroupedUnitPresentation = ({ groupByUnitData }: { groupByUnitData: IGroupB
                 <span dangerouslySetInnerHTML={{ __html: c.civ.help }} />
               </div>
               <div className="flex flex-col items-center">
-                <img src={civImgUrl(c.civ.key)} className="w-7 h-7" />
-                {c.unitStats.cost.toKey() == commonCostKey ? (
-                  <></>
-                ) : (
+                <img src={getCivImgUrl(c.civ.key)} className="w-7 h-7" />
+                {c.unitStats.cost.toKey() !== commonCostKey && (
                   // TODO: Doesn't seem to ever kick in
                   <UnitDisplayLine className="text-xs mt-1">
                     <CostPresentation cost={c.unitStats.cost} />
@@ -175,36 +163,29 @@ const GroupedUnitPresentation = ({ groupByUnitData }: { groupByUnitData: IGroupB
   );
 };
 
-const styleForUnit = (unit: IUnitData) =>
-  unit.unitType == UnitType.ImperialAgeUniqueUnit
-    ? "bg-blue-400 dark:bg-blue-700"
-    : unit.unitType == UnitType.CastleAgeUniqueUnit
-    ? "bg-green-400 dark:bg-green-700"
-    : "bg-zinc-300 dark:bg-zinc-700";
-
 const UnitPresentation = ({ unitCivData, showCivName }: { unitCivData: IUnitCivData; showCivName: boolean }) => (
-  <>
-    <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
-      {showCivName ? (
-        <UnitDisplayLine>
-          <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
-            <div className="flex flex-col gap-1" slot="content">
-              <span className="font-bold leading-6">{unitCivData.civ.value}</span>
-              <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
-            </div>
-            <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
-            <div className="leading-none">{unitCivData.civ.value}</div>
-          </SlTooltip>
-        </UnitDisplayLine>
-      ) : (
-        <></>
-      )}
-      <UnitLine unit={unitCivData.unit} />
-      <UnitDisplayLine className="text-xs mt-1">
-        <CostPresentation cost={unitCivData.unitStats.cost} />
+  <div className={["flex flex-col rounded-md p-1", getStyleForUnit(unitCivData.unit)].join(" ")}>
+    {showCivName && (
+      <UnitDisplayLine>
+        <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
+          <div className="flex flex-col gap-1" slot="content">
+            <span className="font-bold leading-6">{unitCivData.civ.value}</span>
+            <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
+          </div>
+          <img src={getCivImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+          <div className="leading-none">{unitCivData.civ.value}</div>
+        </SlTooltip>
       </UnitDisplayLine>
-    </div>
-  </>
+    )}
+    <UnitLine unit={unitCivData.unit} />
+    <UnitDisplayLine className="text-xs mt-1">
+      <CostPresentation cost={unitCivData.unitStats.cost} />
+    </UnitDisplayLine>
+    <UnitLine unit={unitCivData.unit} />
+    <UnitDisplayLine className="text-xs mt-1">
+      <CostPresentation cost={unitCivData.unitStats.cost} />
+    </UnitDisplayLine>
+  </div>
 );
 
 const UnitLine = ({ unit }: { unit: IUnitData }) => (
@@ -215,50 +196,24 @@ const UnitLine = ({ unit }: { unit: IUnitData }) => (
           <span className="font-bold leading-6">{unit.value}</span>
           <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
         </div>
-        <img src={unitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-80 ml-[4px]" />
+        <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-md opacity-80 ml-[4px]" />
         <span className="ml-[4px]">{unit.value}</span>
         <span className="opacity-50 ml-[4px] text-xs mt-[0.18rem]">{unit.id}</span>
       </SlTooltip>
     </UnitDisplayLine>
     <div className="text-sm leading-1 flex flex-col gap-0 px-2 mt-1">
-      {unit.help.strong !== "" ? (
+      {unit.help.strong !== "" && (
         <span className="w-3/4 bg-gradient-to-br via-30% from-green-800/40 to-green-800/0 rounded-md flex-grow p-1 whitespace-normal">
           {unit.help.strong}
         </span>
-      ) : (
-        <></>
       )}
-      {unit.help.weak !== "" ? (
+      {unit.help.weak !== "" && (
         <span className="w-3/4 bg-gradient-to-br via-30% from-orange-800/40 to-orange-800/0 rounded-md flex-grow p-1 whitespace-normal">
           {unit.help.weak}
         </span>
-      ) : (
-        <></>
       )}
     </div>
   </>
-);
-
-const CostPresentation = ({ cost }: { cost: Cost }) => {
-  const shouldShowFoodCost = cost.food > 0;
-  const shouldShowWoodCost = cost.wood > 0;
-  const shouldShowGoldCost = cost.gold > 0;
-  const shouldShowStoneCost = cost.stone > 0;
-  return (
-    <FlexWrap>
-      {shouldShowFoodCost && <SingleCostPresenter type="food" amount={cost.food} />}
-      {shouldShowWoodCost && <SingleCostPresenter type="wood" amount={cost.wood} />}
-      {shouldShowGoldCost && <SingleCostPresenter type="gold" amount={cost.gold} />}
-      {shouldShowStoneCost && <SingleCostPresenter type="stone" amount={cost.stone} />}
-    </FlexWrap>
-  );
-};
-
-const SingleCostPresenter = ({ type, amount }: { type: string; amount: number }) => (
-  <span className={["flex flex-col gap-0 items-center", amount == 0 ? "opacity-30" : ""].join(" ")}>
-    <img src={`${type}.png`} className="w-5 h-5" />
-    {amount}
-  </span>
 );
 
 export default App;

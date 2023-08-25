@@ -139,6 +139,7 @@ export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   };
 };
 
+// TODO: Refactor this into a function
 export class Cost {
   food: number;
   gold: number;
