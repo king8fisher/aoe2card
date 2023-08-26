@@ -36,9 +36,8 @@ const Navbar = ({ searchTerm, setSearchTerm, isLoading }: NavbarProps): JSX.Elem
             </span>
           </div>
         </a>
-        <div className="flex flex-row w-full max-w-[500px] items-center gap-1">
+        <div className="flex flex-row max-w-[500px] items-center gap-1">
           <SlInput
-            className="w-full"
             clearable
             placeholder="Search"
             value={searchTerm}

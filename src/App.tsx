@@ -19,12 +19,12 @@ import {
   searchCivs,
   searchUnits,
 } from "./data/model";
-import { cancellableDebouncer } from "./helpers/debouncers";
+import { CancellableDebouncer } from "./helpers/debouncers";
 import { Container, UnitsPresentationFlex } from "./styles";
 
 setBasePath("/shoelace");
 
-const debouncer = new cancellableDebouncer<[IUnitCivData[], ICivData[]]>();
+const debouncer = new CancellableDebouncer<[IUnitCivData[], ICivData[]]>();
 
 interface ISearchResult {
   grouped: IGroupByUnitData[];
@@ -41,12 +41,9 @@ const App = () => {
   const [isLoading, setLoading] = useState(false);
   const [showDropdown] = useState(false);
 
-  useEffect(() => {
-    document.body.classList.add("ready");
-  });
-
   useEffect(
     () => {
+      document.body.classList.add("ready");
       // Return cleanup function
       return () => {
         debouncer.destroyDebouncer();
@@ -68,9 +65,10 @@ const App = () => {
           units: v,
           civs: c,
         });
-        setLoading(false);
       },
       reject: (_) => {
+      },
+      destroy: () => {
         setLoading(false);
       },
       delay: 300,

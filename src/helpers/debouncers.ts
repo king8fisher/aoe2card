@@ -24,12 +24,13 @@ interface IRunDebouncedProps<T> {
   calc: () => T;
   assign: (v: T) => void;
   reject: (v: T) => void;
+  destroy: () => void;
   delay: number;
 }
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export class cancellableDebouncer<T> {
+export class CancellableDebouncer<T> {
   private destroyed: boolean = false;
   // counter to ensure we properly deal with the most recent call to `calc` to be the source of truth.
   private counter: number = 0;
@@ -55,13 +56,16 @@ export class cancellableDebouncer<T> {
    * is cached so when the actual `calc` step is executed, the captured value corresponds to the time
    * when `runDebounced` has been called.
    */
-  runDebounced({ calc, assign, reject, delay }: IRunDebouncedProps<T>) {
-    if (this.destroyed) return; // Silently fail
+  runDebounced({ calc, assign, reject, destroy, delay }: IRunDebouncedProps<T>) {
+    if (this.destroyed) {
+      destroy();
+      return; // Silently fail with destroy still called.
+    }
     this.counter++;
     this.destroyTimer();
     const localCounter = this.counter;
     this.timerId = setTimeout(() => {
-      cancellableDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
+      CancellableDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
         // We might be cancelled by assigning another timer at this point,
         // so we want to never perform the assign step
         const [r, refCounter] = v;
@@ -77,6 +81,7 @@ export class cancellableDebouncer<T> {
           reject(r);
         }
         this.destroyTimer();
+        destroy();
       });
     }, delay);
   }
