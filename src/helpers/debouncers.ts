@@ -30,6 +30,7 @@ interface IRunDebouncedProps<T> {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class cancellableDebouncer<T> {
+  private destroyed: boolean = false;
   // counter to ensure we properly deal with the most recent call to `calc` to be the source of truth.
   private counter: number = 0;
   private timerId: NodeJS.Timeout | null = null;
@@ -49,13 +50,17 @@ export class cancellableDebouncer<T> {
   /** runDebounced splits calculation and assignment into 2 steps by chaining result of `calc` into `assign`. This
    * allows for debouncer to interrupt the assignment step when another kicks in later while the first one is still
    * not done with its `calc` step.
+   *
+   * As `calc` will most likely depend on some of the state, it is essential to ensure that the state
+   * is cached so when the actual `calc` step is executed, the captured value corresponds to the time
+   * when `runDebounced` has been called.
    */
-  runDebounced({ calc, assign, reject, delay }: IRunDebouncedProps<T>, ref: string = "") {
+  runDebounced({ calc, assign, reject, delay }: IRunDebouncedProps<T>) {
+    if (this.destroyed) return; // Silently fail
     this.counter++;
-    this.destroyDebouncer();
+    this.destroyTimer();
     const localCounter = this.counter;
     this.timerId = setTimeout(() => {
-      if (ref != "") console.log(ref);
       cancellableDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
         // We might be cancelled by assigning another timer at this point,
         // so we want to never perform the assign step
@@ -71,16 +76,17 @@ export class cancellableDebouncer<T> {
           console.warn(["dropping", refCounter, this.counter]);
           reject(r);
         }
-        this.destroyDebouncer();
+        this.destroyTimer();
       });
     }, delay);
   }
 
   destroyDebouncer() {
     this.destroyTimer();
+    this.destroyed = true;
   }
 
-  destroyTimer() {
+  private destroyTimer() {
     if (this.timerId !== null) {
       clearTimeout(this.timerId);
       this.timerId = null;

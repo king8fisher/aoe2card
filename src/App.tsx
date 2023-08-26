@@ -58,26 +58,23 @@ const App = () => {
   useEffect(() => {
     setLoading(true);
     const s = searchTerm; // Cache search term copy
-    debouncer.runDebounced(
-      {
-        calc: () => {
-          return [searchUnits(s), searchCivs(s)];
-        },
-        assign: ([v, c]) => {
-          setSearchResult({
-            grouped: groupByUnitType(v),
-            units: v,
-            civs: c,
-          });
-          setLoading(false);
-        },
-        reject: (_) => {
-          setLoading(false);
-        },
-        delay: 300,
+    debouncer.runDebounced({
+      calc: () => {
+        return [searchUnits(s), searchCivs(s)];
       },
-      s
-    );
+      assign: ([v, c]) => {
+        setSearchResult({
+          grouped: groupByUnitType(v),
+          units: v,
+          civs: c,
+        });
+        setLoading(false);
+      },
+      reject: (_) => {
+        setLoading(false);
+      },
+      delay: 300,
+    });
   }, [searchTerm]);
 
   const renderSearchResults = () => {
