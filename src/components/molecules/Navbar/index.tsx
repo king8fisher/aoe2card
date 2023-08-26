@@ -1,5 +1,5 @@
 import { SlIcon, SlInput, SlSpinner } from "@shoelace-style/shoelace/dist/react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Container } from "../../../styles";
 import { DarkModeButton } from "../DarkMode";
 
@@ -11,14 +11,23 @@ type NavbarProps = {
 
 const Navbar = ({ searchTerm, setSearchTerm, isLoading }: NavbarProps): JSX.Element => {
   // TODO: Figure out how to override `any`
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const searchInput = useCallback((inputElement: any) => {
-    if (inputElement) {
-      if (inputElement.input) {
-        inputElement.focus();
+
+  const [focusedOnce, setFocusedOnce] = useState(false);
+
+  const searchInput = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (inputElement: any) => {
+      if (!focusedOnce) {
+        if (inputElement) {
+          if (inputElement.input) {
+            inputElement.focus();
+            setFocusedOnce(true);
+          }
+        }
       }
-    }
-  }, []);
+    },
+    [focusedOnce]
+  );
 
   return (
     <div className="py-2 bg-zinc-300 dark:bg-zinc-800">
