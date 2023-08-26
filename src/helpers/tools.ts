@@ -11,5 +11,8 @@ export const styleForUnit = (unit: IUnitData) => {
   }
 };
 
-export const civImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
-export const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
+export const resImgUrl = (type: string) => `r/${type}.png`;
+// export const civImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
+export const civImgUrl = (civKey: string) => `c/${civKey}.png`;
+// export const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
+export const unitImgUrl = (unitId: number) => `u/${unitId}.png`;
