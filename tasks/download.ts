@@ -1,3 +1,4 @@
+import * as child_process from "child_process";
 import * as fs from "fs";
 import { move } from "fs-extra";
 import * as https from "https";
@@ -21,8 +22,9 @@ allCivs().forEach((c) => {
 });
 
 // await taskGetUnitImgs();
-// await taskMoveUnitImgs();
-await taskGetCivsImgs();
+// await taskRemoveBlackFromUnitImgs();
+await taskMoveUnitImgs();
+// await taskGetCivsImgs();
 
 async function taskGetUnitImgs() {
   const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
@@ -57,6 +59,18 @@ async function taskGetUnitImgs() {
     });
   }
   await getImgs();
+}
+
+async function taskRemoveBlackFromUnitImgs() {
+  makeDir(`${uDir}/a`);
+  fs.readdir(uDir, function (err, files) {
+    if (err) {
+      return console.log(`Unable to scan ${uDir}`, err);
+    }
+    files.forEach(function (file) {
+      child_process.exec(`gm.exe convert ${uDir}/${file} -fuzz 5% -transparent "#000" ${uDir}/a/${file}`);
+    });
+  });
 }
 
 async function taskGetCivsImgs() {
