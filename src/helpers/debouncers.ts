@@ -31,7 +31,6 @@ interface IRunDebouncedProps<T> {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class CancellableDebouncer<T> {
-  private destroyed: boolean = false;
   // counter to ensure we properly deal with the most recent call to `calc` to be the source of truth.
   private counter: number = 0;
   private timerId: NodeJS.Timeout | null = null;
@@ -57,10 +56,6 @@ export class CancellableDebouncer<T> {
    * when `runDebounced` has been called.
    */
   runDebounced({ calc, assign, reject, destroy, delay }: IRunDebouncedProps<T>) {
-    if (this.destroyed) {
-      destroy();
-      return; // Silently fail with destroy still called.
-    }
     this.counter++;
     this.destroyTimer();
     const localCounter = this.counter;
@@ -77,7 +72,7 @@ export class CancellableDebouncer<T> {
           // this result or do something else about it.
           //
           // Uncomment me to see dropping in action
-          console.warn(["dropping", refCounter, this.counter]);
+          // console.warn(["dropping", refCounter, this.counter]);
           reject(r);
         }
         this.destroyTimer();
@@ -87,8 +82,8 @@ export class CancellableDebouncer<T> {
   }
 
   destroyDebouncer() {
+    this.counter++; // Force still running jobs to only call `reject` and `destroy`
     this.destroyTimer();
-    this.destroyed = true;
   }
 
   private destroyTimer() {

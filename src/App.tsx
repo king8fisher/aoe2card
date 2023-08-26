@@ -66,8 +66,7 @@ const App = () => {
           civs: c,
         });
       },
-      reject: (_) => {
-      },
+      reject: (_) => {},
       destroy: () => {
         setLoading(false);
       },
