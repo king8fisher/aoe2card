@@ -58,9 +58,9 @@ const App = () => {
     const s = nextSearchTerm; // Cache search term copy
     debouncer.runDebounced({
       calc: () => {
-        if (s.trim().length < 2) {
-          return [[], []];
-        }
+        // if (s.trim().length < 2) {
+        //   return [[], []];
+        // }
         // const t0 = performance.now();
         const u = searchUnits(s);
         const c = searchCivs(s);
