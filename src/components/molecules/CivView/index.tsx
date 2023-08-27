@@ -1,13 +1,13 @@
 import { SlButton, SlDetails, SlDropdown, SlIcon, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { ICivData, IUnitCivData, allCivUnits, civByKey } from "../../../data/model";
 import { civImgUrl } from "../../../helpers/tools";
 import { UnitsPresentationFlex } from "../../../styles";
 import { UnitPresentation } from "../UnitPresentation";
 
-export const CivSingleView = ({ civ }: { civ: ICivData }) => {
+export const CivSingleView = memo(({ civ }: { civ: ICivData }) => {
   return (
-    <SlDetails className="w-full">
+    <SlDetails className="sl-details w-full">
       <SlIcon name="plus-square" slot="expand-icon" />
       <SlIcon name="dash-square" slot="collapse-icon" />
       <span slot="summary" className="flex flex-row gap-3 items-center">
@@ -17,27 +17,23 @@ export const CivSingleView = ({ civ }: { civ: ICivData }) => {
       <CivDetailsView civ={civ} />
     </SlDetails>
   );
-};
+});
 
-export const CivDetailsView = ({ civ }: { civ: ICivData }) => {
+export const CivDetailsView = memo(({ civ }: { civ: ICivData }) => {
   const unitsByCiv: IUnitCivData[] = useMemo(() => allCivUnits(civ.key), [civ]);
   return (
     <>
-      {(civ?.help || "") == "" ? (
-        <></>
-      ) : (
-        <div className="text-xs">
-          <span dangerouslySetInnerHTML={{ __html: civ?.help || "" }} />
-        </div>
+      {(civ?.help || "") != "" && (
+        <div className="text-sm pb-3">{<span dangerouslySetInnerHTML={{ __html: civ?.help || "" }} />}</div>
       )}
       <UnitsPresentationFlex>
         {unitsByCiv?.map((v, _index) => (
-          <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCivName={false} />
+          <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCiv={false} />
         ))}
       </UnitsPresentationFlex>
     </>
   );
-};
+});
 
 interface ICivViewProps {
   civsList: { key: string; value: string }[];
@@ -45,12 +41,11 @@ interface ICivViewProps {
   setSelectedCivKey: (civ: string) => void;
 }
 
-export const CivView = ({ civsList, selectedCivKey, setSelectedCivKey }: ICivViewProps) => {
+export const CivView = memo(({ civsList, selectedCivKey, setSelectedCivKey }: ICivViewProps) => {
   const civ = useMemo(() => civByKey(selectedCivKey), [selectedCivKey]);
-
   return (
     <>
-      <SlDetails>
+      <SlDetails className="sl-details">
         <SlIcon name="plus-square" slot="expand-icon" />
         <SlIcon name="dash-square" slot="collapse-icon" />
         <SlDropdown className="shadow-lg" slot="summary">
@@ -75,4 +70,4 @@ export const CivView = ({ civsList, selectedCivKey, setSelectedCivKey }: ICivVie
       </SlDetails>
     </>
   );
-};
+});
