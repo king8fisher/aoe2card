@@ -70,7 +70,9 @@ export interface ICivData {
 const _cachedAllCivs: ICivData[] = [];
 
 export const allCivs = (): ICivData[] => {
-  if (_cachedAllCivs.length > 0) return _cachedAllCivs;
+  if (_cachedAllCivs.length > 0) {
+    return _cachedAllCivs;
+  }
   Object.entries(data["civ_names"]).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
     const help = strings[data["civ_helptexts"][v[0]]];
@@ -83,14 +85,21 @@ export const allCivs = (): ICivData[] => {
   return _cachedAllCivs;
 };
 
+const _cachedCivByKey: Map<string, ICivData> = new Map();
+
 export const civByKey = (civKey: string): ICivData => {
+  if (_cachedCivByKey.has(civKey)) {
+    return _cachedCivByKey.get(civKey)!;
+  }
   const found = data["civ_names"][civKey];
   if (found == null) return null;
-  return {
+  let result = {
     key: civKey,
     value: strings[found],
     help: strings[data["civ_helptexts"][civKey]],
   };
+  _cachedCivByKey.set(civKey, result);
+  return result;
 };
 
 export enum UnitType {
@@ -113,7 +122,12 @@ export interface IUnitData {
   help: IUnitHelp;
 }
 
+const _cacheAllUnitsByCivKey: Map<string, IUnitData[]> = new Map();
+
 export const allUnits = (civKey: string): IUnitData[] => {
+  if (_cacheAllUnitsByCivKey.has(civKey)) {
+    return _cacheAllUnitsByCivKey.get(civKey)!;
+  }
   const entries: IUnitData[] = [];
   data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
@@ -123,6 +137,7 @@ export const allUnits = (civKey: string): IUnitData[] => {
       help: unitHelpByID(id),
     });
   });
+  _cacheAllUnitsByCivKey.set(civKey, entries);
   return entries;
 };
 
@@ -183,8 +198,8 @@ export const searchUnits = (like: string): IUnitCivData[] => {
 
 export interface IGroupByUnitData {
   unit: IUnitData;
-  /** key is civKey */
-  civs: Map<string, boolean>;
+  /** civKey stored in the set */
+  civs: Set<string>;
   mostCommonUnitStats: IUnitStatsData;
 }
 
@@ -194,11 +209,11 @@ export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
     const next = units[i];
     const found = result.find((v) => v.unit.id == next.unit.id);
     if (found) {
-      found.civs.set(next.civ.key, true);
+      found.civs.add(next.civ.key);
       // found.civs.push(next);
     } else {
-      const m = new Map<string, boolean>();
-      m.set(next.civ.key, true);
+      const m = new Set<string>();
+      m.add(next.civ.key);
       result.push({ unit: next.unit, civs: m, mostCommonUnitStats: { cost: next.unitStats.cost } });
     }
   }
