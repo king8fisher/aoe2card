@@ -1,28 +1,27 @@
+import { memo } from "react";
 import { Cost } from "../../../data/model";
+import { resImgUrl } from "../../../helpers/tools";
 import { FlexWrap } from "./styles";
 
 type CostType = keyof Cost;
 
-export const CostPresentation = ({ cost }: { cost: Cost }) => {
-  const shouldShowFoodCost = cost.food > 0;
-  const shouldShowWoodCost = cost.wood > 0;
-  const shouldShowGoldCost = cost.gold > 0;
-  const shouldShowStoneCost = cost.stone > 0;
+// TODO: Confirm that purely functional components, located within main component,
+// don't slow down rendering. If not, convert back.
 
-  const renderSingleCostPresenter = (type: CostType) => (
-    <span className={["flex flex-col gap-0 items-center", cost[type] == 0 ? "opacity-30" : ""].join(" ")}>
-      <img src={`${type}.png`} className="w-5 h-5" />
-      {/* TODO: Refactor Cost class into function */}
-      {`${cost[type]}`}
-    </span>
-  );
+const RenderSingleCostPresenter = memo(({ cost, type }: { cost: Cost; type: CostType }) => (
+  <span className={["flex flex-col gap-0 items-center", cost[type] == 0 ? "opacity-30" : ""].join(" ")}>
+    <img src={resImgUrl(type)} className="w-5 h-5" />
+    {`${cost[type]}`}
+  </span>
+));
 
+export const CostPresentation = memo(({ cost }: { cost: Cost }) => {
   return (
     <FlexWrap>
-      {shouldShowFoodCost && renderSingleCostPresenter("food")}
-      {shouldShowWoodCost && renderSingleCostPresenter("wood")}
-      {shouldShowGoldCost && renderSingleCostPresenter("gold")}
-      {shouldShowStoneCost && renderSingleCostPresenter("stone")}
+      {cost.food > 0 && <RenderSingleCostPresenter cost={cost} type="food" />}
+      {cost.wood > 0 && <RenderSingleCostPresenter cost={cost} type="wood" />}
+      {cost.gold > 0 && <RenderSingleCostPresenter cost={cost} type="gold" />}
+      {cost.stone > 0 && <RenderSingleCostPresenter cost={cost} type="stone" />}
     </FlexWrap>
   );
-};
+});

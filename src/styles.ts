@@ -48,16 +48,17 @@ export const UnitDisplayLine = styled.div`
   padding-left: 0.25rem;
   padding-right: 0.25rem;
   line-height: 100%;
-  width: 240px;
-  ${breakpoints.xsDown} {
-    width: 90vw;
-  }
+`;
+
+export const UnitLineDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem /* 4px */;
+  align-items: flex-start;
 `;
 
 export const UnitsPresentationFlex = styled.div`
   display: flex;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.25rem;

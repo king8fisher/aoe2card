@@ -1,39 +1,45 @@
+export const genericDebouncer = <A = unknown, R = void>(
+  fn: (args: A) => R,
+  ms: number
+): [(args: A) => Promise<R>, () => void] => {
+  let timer: NodeJS.Timeout;
+  const debouncedFunc = (args: A): Promise<R> =>
+    new Promise((resolve) => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        resolve(fn(args));
+      }, ms);
+    });
+  const cancel = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  };
+  return [debouncedFunc, cancel];
+};
+
 interface IRunDebouncedProps<T> {
   calc: () => T;
   assign: (v: T) => void;
+  reject: (v: T) => void;
+  destroy: () => void;
   delay: number;
 }
 
-export const createDebouncer = <T>() => {
-  let timerId: number | null | undefined = null;
-
-  const runDebounced = ({ calc, assign, delay }: IRunDebouncedProps<T>) => {
-    destroyDebouncer();
-    timerId = setTimeout(() => {
-      assign(calc());
-      timerId = null;
-    }, delay);
-  };
-
-  const destroyDebouncer = () => {
-    if (timerId !== null) {
-      clearTimeout(timerId);
-      timerId = null;
-    }
-  };
-
-  return { runDebounced, destroyDebouncer };
-};
-
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export class createPromiseDebouncer<T> {
+export class CancellableDebouncer<T> {
+  // counter to ensure we properly deal with the most recent call to `calc` to be the source of truth.
   private counter: number = 0;
-  private timerId: number | null = null;
+  private timerId: NodeJS.Timeout | null = null;
 
   static runBackgroundJob<T>(fn: () => T, counter: number): Promise<[T, number]> {
     return new Promise((resolve, _reject) => {
-      // This delay is to mimic out-of-sync calculations
+      // This delay is to mimic out-of-sync calculations. Increasing the delay allows to see
+      // out-of-sync promises happening which in real applications requires care in handling them.
+      //
       // TODO: Remove it after making tests that emulate this and test for correctness.
       delay(Math.random() * 50).then(() => {
         resolve([fn(), counter]);
@@ -44,33 +50,43 @@ export class createPromiseDebouncer<T> {
   /** runDebounced splits calculation and assignment into 2 steps by chaining result of `calc` into `assign`. This
    * allows for debouncer to interrupt the assignment step when another kicks in later while the first one is still
    * not done with its `calc` step.
+   *
+   * As `calc` will most likely depend on some of the state, it is essential to ensure that the state
+   * is cached so when the actual `calc` step is executed, the captured value corresponds to the time
+   * when `runDebounced` has been called.
    */
-  runDebounced({ calc, assign, delay }: IRunDebouncedProps<T>) {
+  runDebounced({ calc, assign, reject, destroy, delay }: IRunDebouncedProps<T>) {
     this.counter++;
-    this.destroyDebouncer();
+    this.destroyTimer();
     const localCounter = this.counter;
     this.timerId = setTimeout(() => {
-      createPromiseDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
+      CancellableDebouncer.runBackgroundJob(calc, localCounter).then((v) => {
         // We might be cancelled by assigning another timer at this point,
         // so we want to never perform the assign step
         const [r, refCounter] = v;
         if (refCounter === this.counter) {
           assign(r);
         } else {
-          // We are out of sync with the most recent call to run debouncer.
-          // Skipping the assignment step
-          // console.warn(["dropping", refCounter, ref.counter])
+          // We are out of sync with the most recent call to run the calc through this debouncer.
+          // By calling `reject` we ensure that the calling party has the opportunity to drop
+          // this result or do something else about it.
+          //
+          // Uncomment me to see dropping in action
+          // console.warn(["dropping", refCounter, this.counter]);
+          reject(r);
         }
-        this.destroyDebouncer();
+        this.destroyTimer();
+        destroy();
       });
     }, delay);
   }
 
   destroyDebouncer() {
+    this.counter++; // Force still running jobs to only call `reject` and `destroy`
     this.destroyTimer();
   }
 
-  destroyTimer() {
+  private destroyTimer() {
     if (this.timerId !== null) {
       clearTimeout(this.timerId);
       this.timerId = null;

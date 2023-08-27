@@ -29,4 +29,16 @@
   #theme-toggle sl-button::part(label) {
     padding: 0rem;
   }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .search-input::part(input) {
+    width: 100%;
+  }
+
+  .sl-details::part(content) {
+    padding-top: 0;
+  }
 }

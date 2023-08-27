@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:react-hooks/recommended"],
-  ignorePatterns: ["dist", ".eslintrc.cjs"],
+  ignorePatterns: ["dist", ".eslintrc.cjs", "tasks"],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],
   rules: {
@@ -10,7 +10,7 @@ module.exports = {
     "prefer-arrow-callback": "error",
     "prefer-const": "warn",
     "no-var": "warn",
-    "arrow-body-style": ["error", "as-needed"],
+    // "arrow-body-style": ["error", "as-needed"],
     "prefer-arrow-callback": ["error"],
     "func-style": ["error", "expression", { allowArrowFunctions: true }],
     "@typescript-eslint/no-unused-vars": [
