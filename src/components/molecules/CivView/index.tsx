@@ -7,7 +7,7 @@ import { UnitPresentation } from "../UnitPresentation";
 
 export const CivSingleView = memo(({ civ }: { civ: ICivData }) => {
   return (
-    <SlDetails className="sl-details w-full">
+    <SlDetails className="details w-full mt-2">
       <SlIcon name="plus-square" slot="expand-icon" />
       <SlIcon name="dash-square" slot="collapse-icon" />
       <span slot="summary" className="flex flex-row gap-3 items-center">
@@ -45,7 +45,7 @@ export const CivView = memo(({ civsList, selectedCivKey, setSelectedCivKey }: IC
   const civ = useMemo(() => civByKey(selectedCivKey), [selectedCivKey]);
   return (
     <>
-      <SlDetails className="sl-details">
+      <SlDetails className="details">
         <SlIcon name="plus-square" slot="expand-icon" />
         <SlIcon name="dash-square" slot="collapse-icon" />
         <SlDropdown className="shadow-lg" slot="summary">

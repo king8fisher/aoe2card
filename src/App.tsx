@@ -93,7 +93,7 @@ const App = () => {
       <Container>
         {(searchResult?.grouped.length || 0) > 0 && (
           <SlDetails
-            className="sl-details w-full"
+            className="sl-details w-full mt-2"
             open={groupViewOpen}
             // onSlShow={() => setGroupViewOpen(true)}
             // onSlHide={() => setGroupViewOpen(false)}
@@ -105,6 +105,7 @@ const App = () => {
                 {searchResult?.grouped.map((v, _index) => {
                   return (
                     <img
+                      key={v.unit.id}
                       src={unitImgUrl(v.unit.id)}
                       className="w-8 h-8 flex-shrink-0 rounded-full border-white dark:border-zinc-400 border-2 bg-zinc-300 dark:bg-zinc-700 shadow-sm"
                     />

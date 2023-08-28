@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "debug": "vite --port 4000",
+    "expose": "vite --port 8080 --host",
     "build": "vite build",
     "format": "prettier -w .",
     "test": "echo \"Debug: no test implemented.\"",

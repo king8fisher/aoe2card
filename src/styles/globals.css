@@ -38,7 +38,7 @@
     width: 100%;
   }
 
-  .sl-details::part(content) {
+  sl-details.details::part(content) {
     padding-top: 0;
   }
 }
