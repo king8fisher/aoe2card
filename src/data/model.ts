@@ -1,5 +1,9 @@
-import data from "./data.json";
-import strings from "./strings.json";
+import dataSrc from "./data.json";
+import { Data } from "./data_json_types";
+import stringsSrc from "./strings.json";
+
+const data = dataSrc as Data;
+const strings = stringsSrc as { [x: string]: string };
 
 // This will have to be at some point converted into the dynamic json files load.
 
@@ -13,14 +17,20 @@ export type armourData = {
   Class: number;
 };
 
-export const unitNameByID = (unitId: number): string =>
+export const unitNameByID = (unitId: number): string => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
-  strings[data.data.units[unitId].LanguageNameId];
+  return strings[data.data.units[unitId.toString()].LanguageNameId];
+};
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
-  const about: string = strings[data.data.units[unitId].LanguageHelpId] ?? "";
+  let about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
   const sw = strongWeak(about);
+  // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
+  const f = about.indexOf("(‹cost›)<br>\n");
+  if (f >= 0) {
+    about = about.substring(f + 13);
+  }
   return {
     about: about,
     strong: sw.strong,
@@ -73,9 +83,9 @@ export const allCivs = (): ICivData[] => {
   if (_cachedAllCivs.length > 0) {
     return _cachedAllCivs;
   }
-  Object.entries(data["civ_names"]).forEach((v, _k) => {
+  Object.entries(data.civ_names).forEach((v, _k) => {
     // {key: internal_name, value: strings_localized_value}
-    const help = strings[data["civ_helptexts"][v[0]]];
+    const help = strings[data.civ_helptexts[v[0]]];
     _cachedAllCivs.push({
       key: v[0],
       value: strings[v[1]],
@@ -91,12 +101,17 @@ export const civByKey = (civKey: string): ICivData => {
   if (_cachedCivByKey.has(civKey)) {
     return _cachedCivByKey.get(civKey)!;
   }
-  const found = data["civ_names"][civKey];
-  if (found == null) return null;
-  let result = {
+  const found = data.civ_names[civKey];
+  if (found == null)
+    return {
+      help: "",
+      key: "",
+      value: "",
+    };
+  const result = {
     key: civKey,
     value: strings[found],
-    help: strings[data["civ_helptexts"][civKey]],
+    help: strings[data.civ_helptexts[civKey]],
   };
   _cachedCivByKey.set(civKey, result);
   return result;
@@ -260,7 +275,12 @@ export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean
           civ: c,
           unit: u,
           unitStats: {
-            cost: new Cost(cost["Food"] || 0, cost["Gold"] || 0, cost["Stone"] || 0, cost["Wood"] || 0),
+            cost: new Cost(
+              cost["Food"] || 0,
+              cost["Gold"] || 0,
+              0, // FIXME: Units cost no stone ? Type doesn't appear to have stone. Confirm.
+              cost["Wood"] || 0
+            ),
           },
         });
       }
