@@ -42,19 +42,19 @@ export const DarkModeButton = () => {
     <div id="theme-selector" className="flex flex-row gap-0 items-center shrink-0">
       <SlButton
         id="theme-toggle"
+        className="pr-2 toolbar-button"
         slot="trigger"
         size="medium"
         variant="text"
         onClick={() => {
           setAndPush(isDark(theme) ? "light" : "dark");
         }}
-        className="pr-2"
       >
         <SlIcon className="only-light" name="sun-fill"></SlIcon>
         <SlIcon className="only-dark" name="moon-fill"></SlIcon>
       </SlButton>
       <SlDropdown id="theme-dropdown" placement="bottom-end" distance={0}>
-        <SlButton slot="trigger" size="medium" variant="text" caret></SlButton>
+        <SlButton slot="trigger" className="toolbar-button" size="medium" variant="text" caret></SlButton>
         <SlMenu
           onSlSelect={(v) => {
             setAndPush(v.detail.item.value);
