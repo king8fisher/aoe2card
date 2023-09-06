@@ -24,15 +24,10 @@ export const unitNameByID = (unitId: number): string => {
 };
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
-  let about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
-  const sw = strongWeak(about);
-  // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
-  const f = about.indexOf("(‹cost›)<br>\n");
-  if (f >= 0) {
-    about = about.substring(f + 13);
-  }
+  const about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
+  const sw = splitAbout(about);
   return {
-    about: about,
+    about: sw.about,
     strong: sw.strong,
     weak: sw.weak,
   };
@@ -41,7 +36,16 @@ export const unitHelpByID = (unitId: number): IUnitHelp => {
 const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)", "gmiu");
 const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
 
-const strongWeak = (about: string): { strong: string; weak: string } => {
+const splitAbout = (about: string): { about: string; strong: string; weak: string } => {
+  // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
+  //              |<  var  >|
+  //                 length
+  const f = about.indexOf("(‹cost›)<br>\n");
+  let aboutTrimmed = about;
+  if (f >= 0) {
+    aboutTrimmed = about.substring(f + 13);
+  }
+
   // Resetting regex
   strongEnRegex.lastIndex = 0;
   weakEnRegex.lastIndex = 0;
@@ -59,7 +63,7 @@ const strongWeak = (about: string): { strong: string; weak: string } => {
       weak = m[1];
     }
   }
-  return { strong: strong, weak: weak };
+  return { about: aboutTrimmed, strong: strong, weak: weak };
 };
 
 export const techNameByID = (techId: number): string =>
