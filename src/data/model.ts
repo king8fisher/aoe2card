@@ -105,16 +105,9 @@ export const civByKey = (civKey: string): ICivData => {
   if (_cachedCivByKey.has(civKey)) {
     return _cachedCivByKey.get(civKey)!;
   }
-  const found = data.civ_names[civKey];
-  if (found == null)
-    return {
-      help: "",
-      key: "",
-      value: "",
-    };
   const result = {
     key: civKey,
-    value: strings[found],
+    value: strings[data.civ_names[civKey]],
     help: strings[data.civ_helptexts[civKey]],
   };
   _cachedCivByKey.set(civKey, result);
