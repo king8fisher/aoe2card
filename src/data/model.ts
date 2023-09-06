@@ -38,8 +38,8 @@ const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
 
 const splitAbout = (about: string): { about: string; strong: string; weak: string } => {
   // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
-  //              |<  var  >|
-  //                 length
+  //              |   var   |
+  //              |  piece  |
   const f = about.indexOf("(‹cost›)<br>\n");
   let aboutTrimmed = about;
   if (f >= 0) {
