@@ -22,18 +22,14 @@ const GenericUnitsView = (props: IGenericUnitsViewProps) => {
       <SlIcon name="dash-square" slot="collapse-icon" />
       <span slot="summary">
         <div className="flex flex-row flex-wrap -space-x-2 pr-4">
-          {genericUnitsData?.grouped?.map((v, _index) => {
-            return (
-              <img
-                key={v.unit.id}
-                src={getUnitImgUrl(v.unit.id)}
-                className="w-8 h-8 flex-shrink-0 rounded-full border-white dark:border-zinc-400 border-2 bg-zinc-300 dark:bg-zinc-700 shadow-sm"
-              />
-            );
-          })}
+          {genericUnitsData?.grouped?.map((v, _index) => (
+            <img
+              key={v.unit.id}
+              src={getUnitImgUrl(v.unit.id)}
+              className="w-8 h-8 flex-shrink-0 rounded-full border-white dark:border-zinc-400 border-2 bg-zinc-300 dark:bg-zinc-700 shadow-sm"
+            />
+          ))}
         </div>
-
-        {/* Found: {isGroupedView ? searchResult?.grouped.length : searchResult?.units.length} */}
       </span>
       <div className="flex flex-col gap-2">
         <ButtonGroup isGroupedView={isGroupedView} setIsGroupedView={setIsGroupedView} />
