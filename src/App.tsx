@@ -78,11 +78,13 @@ const App = () => {
     });
   }, []);
 
+  const genericUnitsDataLength = searchResult?.grouped.length || 0;
+
   return (
     <>
       <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <Container>
-        <GenericUnitsView genericUnitsData={searchResult} />
+        {genericUnitsDataLength > 0 && <GenericUnitsView genericUnitsData={searchResult} />}
         {searchResult?.civs.map((c, _index) => {
           return <CivSingleView key={c.key} civ={c} />;
         })}
