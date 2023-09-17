@@ -1,22 +1,27 @@
 import { SlButton, SlButtonGroup } from "@shoelace-style/shoelace/dist/react";
-import { memo } from "react";
-
+import { WaysOfGroupingUnits } from "../../../helpers/constants";
 interface IButtonGroupProps {
-  isGroupedView: boolean;
-  setIsGroupedView: (isGroupedView: boolean) => void;
+  unitView: WaysOfGroupingUnits;
+  setUnitView: (unitView: WaysOfGroupingUnits) => void;
 }
 
-export const ButtonGroup = memo(({ isGroupedView, setIsGroupedView }: IButtonGroupProps) => {
-  return (
-    <div className="flex flex-row items-center">
-      <SlButtonGroup>
-        <SlButton size="small" variant={isGroupedView ? "primary" : "default"} onClick={(_) => setIsGroupedView(true)}>
-          Grouped
-        </SlButton>
-        <SlButton size="small" variant={isGroupedView ? "default" : "primary"} onClick={(_) => setIsGroupedView(false)}>
-          Linear
-        </SlButton>
-      </SlButtonGroup>
-    </div>
-  );
-});
+export const ButtonGroup = ({ unitView, setUnitView }: IButtonGroupProps) => (
+  <div className="flex flex-row items-center my-4">
+    <SlButtonGroup>
+      <SlButton
+        size="small"
+        variant={unitView === WaysOfGroupingUnits.all ? "primary" : "default"}
+        onClick={() => setUnitView(WaysOfGroupingUnits.all)}
+      >
+        All Units
+      </SlButton>
+      <SlButton
+        size="small"
+        variant={unitView === WaysOfGroupingUnits.byCiv ? "primary" : "default"}
+        onClick={() => setUnitView(WaysOfGroupingUnits.byCiv)}
+      >
+        Units by Civ
+      </SlButton>
+    </SlButtonGroup>
+  </div>
+);
