@@ -1,7 +1,7 @@
 import { SlButton, SlDetails, SlDropdown, SlIcon, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react";
 import { memo, useMemo } from "react";
 import { ICivData, IUnitCivData, allCivUnits, civByKey } from "../../../data/model";
-import { civImgUrl } from "../../../helpers/tools";
+import { getCivImgUrl } from "../../../helpers/tools";
 import { UnitsPresentationFlex } from "../../../styles";
 import { UnitPresentation } from "../UnitPresentation";
 
@@ -11,7 +11,7 @@ export const CivSingleView = memo(({ civ }: { civ: ICivData }) => {
       <SlIcon name="plus-square" slot="expand-icon" />
       <SlIcon name="dash-square" slot="collapse-icon" />
       <span slot="summary" className="flex flex-row gap-3 items-center">
-        <img src={civImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
+        <img src={getCivImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
         {civ.value}
       </span>
       <CivDetailsView civ={civ} />
@@ -50,7 +50,7 @@ export const CivView = memo(({ civsList, selectedCivKey, setSelectedCivKey }: IC
         <SlIcon name="dash-square" slot="collapse-icon" />
         <SlDropdown className="shadow-lg" slot="summary">
           <SlButton slot="trigger" caret>
-            <img slot="prefix" src={civImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
+            <img slot="prefix" src={getCivImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
             {selectedCivKey}
           </SlButton>
           <SlMenu
@@ -61,7 +61,7 @@ export const CivView = memo(({ civsList, selectedCivKey, setSelectedCivKey }: IC
             {civsList.map((value) => (
               <SlMenuItem key={value.key} value={value.key}>
                 {value.value}
-                <img slot="prefix" src={civImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
+                <img slot="prefix" src={getCivImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
               </SlMenuItem>
             ))}
           </SlMenu>

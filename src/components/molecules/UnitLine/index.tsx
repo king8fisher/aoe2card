@@ -2,7 +2,7 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { memo, useState } from "react";
 import { IUnitData } from "../../../data/model";
-import { unitImgUrl } from "../../../helpers/tools";
+import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 
 export const UnitLine = memo(({ unit }: { unit: IUnitData }) => {
@@ -16,14 +16,14 @@ export const UnitLine = memo(({ unit }: { unit: IUnitData }) => {
               <span className="font-bold leading-6">{unit.value}</span>
               <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
             </div>
-            <img src={unitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+            <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
             <span className="ml-[4px]">{unit.value}</span>
             <span className="opacity-50 ml-[4px] text-xs mt-[0.35rem]">{unit.id}</span>
           </SlTooltip>
         )}
         {!showTooltip && (
           <>
-            <img src={unitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+            <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
             <span className="ml-[4px]">{unit.value}</span>
             <span className="opacity-50 ml-[4px] text-xs mt-[0.35rem]">{unit.id}</span>
           </>
