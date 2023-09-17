@@ -1,7 +1,7 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { memo, useState } from "react";
 import { ICivData, IGroupByUnitData, allCivs } from "../../../data/model";
-import { civImgUrl, styleForUnit } from "../../../helpers/tools";
+import { getCivImgUrl, styleForUnit } from "../../../helpers/tools";
 import { UnitDisplayLine } from "../../../styles";
 import { CostPresentation } from "../../atoms/UnitCost";
 import { UnitLine } from "../UnitLine";
@@ -17,18 +17,18 @@ const SingleCivIcon = memo(({ highlight, c }: { highlight: boolean; c: ICivData 
             <span dangerouslySetInnerHTML={{ __html: c.help }} />
           </div>
           {highlight ? (
-            <img src={civImgUrl(c.key)} className="w-7 h-7" />
+            <img src={getCivImgUrl(c.key)} className="w-7 h-7" />
           ) : (
-            <img src={civImgUrl(c.key)} className="w-7 h-7 opacity-20" />
+            <img src={getCivImgUrl(c.key)} className="w-7 h-7 opacity-20" />
           )}
         </SlTooltip>
       )}
       {!showTooltip && (
         <>
           {highlight ? (
-            <img src={civImgUrl(c.key)} className="w-7 h-7" />
+            <img src={getCivImgUrl(c.key)} className="w-7 h-7" />
           ) : (
-            <img src={civImgUrl(c.key)} className="w-7 h-7 opacity-20" />
+            <img src={getCivImgUrl(c.key)} className="w-7 h-7 opacity-20" />
           )}
         </>
       )}

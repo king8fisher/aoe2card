@@ -1,7 +1,7 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { memo, useState } from "react";
 import { IUnitCivData } from "../../../data/model";
-import { civImgUrl, styleForUnit } from "../../../helpers/tools";
+import { getCivImgUrl, styleForUnit } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 import { CostPresentation } from "../../atoms/UnitCost";
 import { UnitLine } from "../UnitLine";
@@ -20,13 +20,13 @@ export const UnitPresentation = memo(({ unitCivData, showCiv }: { unitCivData: I
                 <span className="font-bold leading-6">{unitCivData.civ.value}</span>
                 <span dangerouslySetInnerHTML={{ __html: unitCivData.civ.help }} />
               </div>
-              <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+              <img src={getCivImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
               <div className="leading-none mt-[0.44rem]">{unitCivData.civ.value}</div>
             </SlTooltip>
           )}
           {!showTooltip && (
             <>
-              <img src={civImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+              <img src={getCivImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
               <div className="leading-none mt-[0.44rem]">{unitCivData.civ.value}</div>
             </>
           )}

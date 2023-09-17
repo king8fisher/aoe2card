@@ -27,7 +27,7 @@ await taskMoveUnitImgs();
 // await taskGetCivsImgs();
 
 async function taskGetUnitImgs() {
-  const unitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
+  const getUnitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
 
   rmDir(uDir);
   makeDir(uDir);
@@ -35,7 +35,7 @@ async function taskGetUnitImgs() {
   async function getImgs() {
     uniqueUnitIDs.forEach((id) => {
       new Promise<number>((resolve, reject) => {
-        https.get(unitImgUrl(id), (res: any) => {
+        https.get(getUnitImgUrl(id), (res: any) => {
           // Image will be stored at this path
           const path = `${uDir}/${id}.png`;
           const filePath = fs.createWriteStream(path);
@@ -74,7 +74,7 @@ async function taskRemoveBlackFromUnitImgs() {
 }
 
 async function taskGetCivsImgs() {
-  const civImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
+  const getCivImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 
   rmDir(cDir);
   makeDir(cDir);
@@ -82,7 +82,7 @@ async function taskGetCivsImgs() {
   async function getImgs() {
     allCivs().forEach((c) => {
       new Promise<string>((resolve, reject) => {
-        https.get(civImgUrl(c.key), (res: any) => {
+        https.get(getCivImgUrl(c.key), (res: any) => {
           // Image will be stored at this path
           const path = `${cDir}/${c.key}.png`;
           const filePath = fs.createWriteStream(path);
