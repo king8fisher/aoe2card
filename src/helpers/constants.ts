@@ -38,7 +38,7 @@ export const colors = {
   grayBrown: "#80746D",
 };
 
-export enum WaysOfGroupingUnits {
-  all = "all",
-  byCiv = "by-civ",
+export enum DataFilter {
+  units = "units",
+  civs = "civs",
 }

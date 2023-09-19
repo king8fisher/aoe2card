@@ -1,26 +1,26 @@
 import { SlButton, SlButtonGroup } from "@shoelace-style/shoelace/dist/react";
-import { WaysOfGroupingUnits } from "../../../helpers/constants";
+import { DataFilter } from "../../../helpers/constants";
 interface IButtonGroupProps {
-  unitView: WaysOfGroupingUnits;
-  setUnitView: (unitView: WaysOfGroupingUnits) => void;
+  filter: DataFilter;
+  setFilter: (unitView: DataFilter) => void;
 }
 
-export const ButtonGroup = ({ unitView, setUnitView }: IButtonGroupProps) => (
+export const ButtonGroup = ({ filter, setFilter }: IButtonGroupProps) => (
   <div className="flex flex-row items-center my-4">
     <SlButtonGroup>
       <SlButton
         size="small"
-        variant={unitView === WaysOfGroupingUnits.all ? "primary" : "default"}
-        onClick={() => setUnitView(WaysOfGroupingUnits.all)}
+        variant={filter === DataFilter.units ? "primary" : "default"}
+        onClick={() => setFilter(DataFilter.units)}
       >
-        All Units
+        Units
       </SlButton>
       <SlButton
         size="small"
-        variant={unitView === WaysOfGroupingUnits.byCiv ? "primary" : "default"}
-        onClick={() => setUnitView(WaysOfGroupingUnits.byCiv)}
+        variant={filter === DataFilter.civs ? "primary" : "default"}
+        onClick={() => setFilter(DataFilter.civs)}
       >
-        Units by Civ
+        Civs
       </SlButton>
     </SlButtonGroup>
   </div>

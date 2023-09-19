@@ -10,7 +10,7 @@ import Navbar from "./components/molecules/Navbar";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "./data/model";
 import { CancellableDebouncer } from "./helpers/debouncers";
 import { Container } from "./styles";
-import { WaysOfGroupingUnits } from "./helpers/constants";
+import { DataFilter } from "./helpers/constants";
 import GenericUnitsView from "./components/molecules/GenericUnitsView";
 
 setBasePath("/shoelace");
@@ -25,7 +25,7 @@ export interface ISearchResult {
 
 const App = () => {
   // const [selectedCivKey, setSelectedCivKey] = useState("Aztecs");
-  const [unitView, setUnitView] = useState<WaysOfGroupingUnits>(WaysOfGroupingUnits.all);
+  const [filter, setFilter] = useState<DataFilter>(DataFilter.units);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<ISearchResult>();
   const [isLoading, setLoading] = useState(false);
@@ -76,10 +76,9 @@ const App = () => {
     <>
       <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <Container>
-        <ButtonGroup unitView={unitView} setUnitView={setUnitView} />
-        {unitView === WaysOfGroupingUnits.all && <GenericUnitsView genericUnitsData={searchResult} />}
-        {unitView === WaysOfGroupingUnits.byCiv &&
-          searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
+        <ButtonGroup filter={filter} setFilter={setFilter} />
+        {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
+        {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
       </Container>
     </>
   );
