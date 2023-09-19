@@ -3,15 +3,15 @@ import { setBasePath } from "@shoelace-style/shoelace";
 import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 
-import { useCallback, useEffect, useState } from "react";
-import { ButtonGroup } from "./components/molecules/ButtonGroup";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ButtonGroup, IFilterStats } from "./components/molecules/ButtonGroup";
 import { CivSingleView } from "./components/molecules/CivView";
+import GenericUnitsView from "./components/molecules/GenericUnitsView";
 import Navbar from "./components/molecules/Navbar";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "./data/model";
+import { DataFilter } from "./helpers/constants";
 import { CancellableDebouncer } from "./helpers/debouncers";
 import { Container } from "./styles";
-import { DataFilter } from "./helpers/constants";
-import GenericUnitsView from "./components/molecules/GenericUnitsView";
 
 setBasePath("/shoelace");
 
@@ -24,7 +24,6 @@ export interface ISearchResult {
 }
 
 const App = () => {
-  // const [selectedCivKey, setSelectedCivKey] = useState("Aztecs");
   const [filter, setFilter] = useState<DataFilter>(DataFilter.units);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<ISearchResult>();
@@ -72,11 +71,18 @@ const App = () => {
     });
   }, []);
 
+  const stats: IFilterStats = useMemo(() => {
+    return {
+      unitsFoundAmount: searchResult?.grouped.length || 0,
+      civsFoundAmount: searchResult?.civs.length || 0,
+    };
+  }, [searchResult]);
+
   return (
     <>
       <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <Container>
-        <ButtonGroup filter={filter} setFilter={setFilter} />
+        <ButtonGroup filter={filter} setFilter={setFilter} stats={stats} />
         {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
         {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
       </Container>
