@@ -37,3 +37,8 @@ export const colors = {
   lightgray: "#D3D3D3",
   grayBrown: "#80746D",
 };
+
+export enum DataFilter {
+  units = "units",
+  civs = "civs",
+}

@@ -1,22 +1,27 @@
 import { SlButton, SlButtonGroup } from "@shoelace-style/shoelace/dist/react";
-import { memo } from "react";
-
+import { DataFilter } from "../../../helpers/constants";
 interface IButtonGroupProps {
-  isGroupedView: boolean;
-  setIsGroupedView: (isGroupedView: boolean) => void;
+  filter: DataFilter;
+  setFilter: (unitView: DataFilter) => void;
 }
 
-export const ButtonGroup = memo(({ isGroupedView, setIsGroupedView }: IButtonGroupProps) => {
-  return (
-    <div className="flex flex-row items-center">
-      <SlButtonGroup>
-        <SlButton size="small" variant={isGroupedView ? "primary" : "default"} onClick={(_) => setIsGroupedView(true)}>
-          Grouped
-        </SlButton>
-        <SlButton size="small" variant={isGroupedView ? "default" : "primary"} onClick={(_) => setIsGroupedView(false)}>
-          Linear
-        </SlButton>
-      </SlButtonGroup>
-    </div>
-  );
-});
+export const ButtonGroup = ({ filter, setFilter }: IButtonGroupProps) => (
+  <div className="flex flex-row items-center my-4">
+    <SlButtonGroup>
+      <SlButton
+        size="small"
+        variant={filter === DataFilter.units ? "primary" : "default"}
+        onClick={() => setFilter(DataFilter.units)}
+      >
+        Units
+      </SlButton>
+      <SlButton
+        size="small"
+        variant={filter === DataFilter.civs ? "primary" : "default"}
+        onClick={() => setFilter(DataFilter.civs)}
+      >
+        Civs
+      </SlButton>
+    </SlButtonGroup>
+  </div>
+);

@@ -4,19 +4,13 @@ import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 
 import { useCallback, useEffect, useState } from "react";
-import { CivSingleView, CivView } from "./components/molecules/CivView";
+import { ButtonGroup } from "./components/molecules/ButtonGroup";
+import { CivSingleView } from "./components/molecules/CivView";
 import Navbar from "./components/molecules/Navbar";
-import {
-  ICivData,
-  IGroupByUnitData,
-  IUnitCivData,
-  allCivs,
-  groupByUnitType,
-  searchCivs,
-  searchUnits,
-} from "./data/model";
+import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "./data/model";
 import { CancellableDebouncer } from "./helpers/debouncers";
 import { Container } from "./styles";
+import { DataFilter } from "./helpers/constants";
 import GenericUnitsView from "./components/molecules/GenericUnitsView";
 
 setBasePath("/shoelace");
@@ -30,11 +24,11 @@ export interface ISearchResult {
 }
 
 const App = () => {
-  const [selectedCivKey, setSelectedCivKey] = useState("Aztecs");
+  // const [selectedCivKey, setSelectedCivKey] = useState("Aztecs");
+  const [filter, setFilter] = useState<DataFilter>(DataFilter.units);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<ISearchResult>();
   const [isLoading, setLoading] = useState(false);
-  const [showDropdown] = useState(false);
 
   useEffect(
     () => {
@@ -78,19 +72,13 @@ const App = () => {
     });
   }, []);
 
-  const genericUnitsDataLength = searchResult?.grouped.length || 0;
-
   return (
     <>
       <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <Container>
-        {genericUnitsDataLength > 0 && <GenericUnitsView genericUnitsData={searchResult} />}
-        {searchResult?.civs.map((c, _index) => {
-          return <CivSingleView key={c.key} civ={c} />;
-        })}
-        {showDropdown ?? (
-          <CivView selectedCivKey={selectedCivKey} civsList={allCivs()} setSelectedCivKey={setSelectedCivKey} />
-        )}
+        <ButtonGroup filter={filter} setFilter={setFilter} />
+        {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
+        {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
       </Container>
     </>
   );
