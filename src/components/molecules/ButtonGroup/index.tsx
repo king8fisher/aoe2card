@@ -7,12 +7,12 @@ export interface IFilterStats {
 }
 
 interface IButtonGroupProps {
-  stats: IFilterStats;
+  filterStats: IFilterStats;
   filter: DataFilter;
   setFilter: (unitView: DataFilter) => void;
 }
 
-export const ButtonGroup = ({ filter, setFilter, stats }: IButtonGroupProps) => (
+export const ButtonGroup = ({ filter, setFilter, filterStats }: IButtonGroupProps) => (
   <div className="flex flex-row items-center my-4">
     <SlButtonGroup>
       <SlButton
@@ -20,14 +20,14 @@ export const ButtonGroup = ({ filter, setFilter, stats }: IButtonGroupProps) => 
         variant={filter === DataFilter.units ? "primary" : "default"}
         onClick={() => setFilter(DataFilter.units)}
       >
-        <LabelWithBadge label="Units" amount={stats.unitsFoundAmount} />
+        <LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} />
       </SlButton>
       <SlButton
         size="small"
         variant={filter === DataFilter.civs ? "primary" : "default"}
         onClick={() => setFilter(DataFilter.civs)}
       >
-        <LabelWithBadge label="Civs" amount={stats.civsFoundAmount} />
+        <LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} />
       </SlButton>
     </SlButtonGroup>
   </div>

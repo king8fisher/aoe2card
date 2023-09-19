@@ -71,7 +71,7 @@ const App = () => {
     });
   }, []);
 
-  const stats: IFilterStats = useMemo(() => {
+  const filterStats: IFilterStats = useMemo(() => {
     return {
       unitsFoundAmount: searchResult?.grouped.length || 0,
       civsFoundAmount: searchResult?.civs.length || 0,
@@ -82,7 +82,7 @@ const App = () => {
     <>
       <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <Container>
-        <ButtonGroup filter={filter} setFilter={setFilter} stats={stats} />
+        <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
         {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
         {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
       </Container>
