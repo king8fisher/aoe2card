@@ -1,7 +1,8 @@
+import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { useState } from "react";
 import { ICivData } from "../../../data/model";
 import { getCivImgUrl } from "../../../helpers/tools";
-import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
+import { SingleCivIconWrap } from "./styles";
 
 interface SingleCivIconProps {
   highlight: boolean;
@@ -10,9 +11,9 @@ interface SingleCivIconProps {
 
 const SingleCivIcon = ({ highlight, civData }: SingleCivIconProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const imgClassName = highlight ? "w-7 h-7" : "w-7 h-7 opacity-20";
+  const imgClassName = highlight ? undefined : "opacity-20";
   return (
-    <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
+    <SingleCivIconWrap onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
       {showTooltip && (
         <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
           <div className="flex flex-col gap-1" slot="content">
@@ -23,7 +24,7 @@ const SingleCivIcon = ({ highlight, civData }: SingleCivIconProps) => {
         </SlTooltip>
       )}
       {!showTooltip && <img src={getCivImgUrl(civData.key)} className={imgClassName} />}
-    </div>
+    </SingleCivIconWrap>
   );
 };
 
