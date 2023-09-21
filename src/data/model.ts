@@ -83,7 +83,7 @@ export interface ICivData {
 
 const _cachedAllCivs: ICivData[] = [];
 
-export const allCivs = (): ICivData[] => {
+export const getAllCivs = (): ICivData[] => {
   if (_cachedAllCivs.length > 0) {
     return _cachedAllCivs;
   }
@@ -205,7 +205,7 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   like = like.toLowerCase().trim();
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
-  return matchUnits(allCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
+  return matchUnits(getAllCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
 };
 
 export interface IGroupByUnitData {
@@ -291,7 +291,7 @@ export const searchCivs = (like: string): ICivData[] => {
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
   return matchCivs(
-    allCivs(),
+    getAllCivs(),
     (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.key.toLowerCase().indexOf(like) >= 0
   );
 };

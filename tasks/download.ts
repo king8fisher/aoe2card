@@ -5,7 +5,7 @@ import * as https from "https";
 import * as path from "path";
 import { exit } from "process";
 import { fileURLToPath } from "url";
-import { allCivUnits, allCivs } from "../src/data/model";
+import { allCivUnits, getAllCivs } from "../src/data/model";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +17,7 @@ const cDirDest = `${__dirname}/../public/c`;
 
 const uniqueUnitIDs: Set<number> = new Set();
 
-allCivs().forEach((c) => {
+getAllCivs().forEach((c) => {
   allCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u.unit.id));
 });
 
@@ -80,7 +80,7 @@ async function taskGetCivsImgs() {
   makeDir(cDir);
 
   async function getImgs() {
-    allCivs().forEach((c) => {
+    getAllCivs().forEach((c) => {
       new Promise<string>((resolve, reject) => {
         https.get(getCivImgUrl(c.key), (res: any) => {
           // Image will be stored at this path

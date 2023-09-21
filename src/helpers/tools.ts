@@ -1,6 +1,6 @@
 import { IUnitData, UnitType } from "../data/model";
 
-export const styleForUnit = (unit: IUnitData) => {
+export const getStyleForUnit = (unit: IUnitData) => {
   switch (unit.unitType) {
     case UnitType.CastleAgeUniqueUnit:
       return "bg-green-400 dark:bg-green-700";
