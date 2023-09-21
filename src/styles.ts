@@ -61,5 +61,4 @@ export const UnitsPresentationFlex = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 0.25rem;
 `;

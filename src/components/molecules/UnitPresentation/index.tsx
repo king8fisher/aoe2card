@@ -1,7 +1,7 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { memo, useState } from "react";
 import { IUnitCivData } from "../../../data/model";
-import { getCivImgUrl, styleForUnit } from "../../../helpers/tools";
+import { getCivImgUrl, getStyleForUnit } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 import { CostPresentation } from "../../atoms/UnitCost";
 import { UnitLine } from "../UnitLine";
@@ -11,7 +11,7 @@ export const UnitPresentation = memo(({ unitCivData, showCiv }: { unitCivData: I
   // onMouseLeave event does not bubble. When an event bubbles, it moves, or propagates, up the DOM hierarchy.
   // onMouseOut bubbles.
   return (
-    <div className={["flex flex-col rounded-md p-1", styleForUnit(unitCivData.unit)].join(" ")}>
+    <div className={["flex flex-col rounded-md p-1", getStyleForUnit(unitCivData.unit)].join(" ")}>
       {showCiv && (
         <UnitLineDiv onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           {showTooltip && (
