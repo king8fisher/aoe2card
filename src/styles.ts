@@ -55,6 +55,8 @@ export const UnitLineDiv = styled.div`
   flex-direction: row;
   gap: 0.25rem /* 4px */;
   align-items: flex-start;
+  justify-content: space-between;
+  margin: 5px 10px;
 `;
 
 export const UnitsPresentationFlex = styled.div`

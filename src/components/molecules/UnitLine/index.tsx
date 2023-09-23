@@ -1,11 +1,17 @@
 /* eslint-disable prefer-arrow-callback */
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
-import { memo, useState } from "react";
-import { IUnitData } from "../../../data/model";
+import { useState } from "react";
 import { getUnitImgUrl } from "../../../helpers/tools";
-import { UnitLineDiv } from "../../../styles";
+import { UnitDisplayLine, UnitLineDiv } from "../../../styles";
+import { CostPresentation } from "../../atoms/UnitCost";
+import { Cost, IUnitData } from "../../../data/model";
 
-export const UnitLine = memo(({ unit }: { unit: IUnitData }) => {
+interface IUnitLineProps {
+  unit: IUnitData;
+  cost: Cost;
+}
+
+export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
   return (
     <div className="max-w-sm">
@@ -17,17 +23,16 @@ export const UnitLine = memo(({ unit }: { unit: IUnitData }) => {
               <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
             </div>
             <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-            <span className="ml-[4px]">{unit.value}</span>
-            <span className="opacity-50 ml-[4px] text-xs mt-[0.35rem]">{unit.id}</span>
+            <span className="ml-[4px] text-lg">{unit.value}</span>
           </SlTooltip>
         )}
         {!showTooltip && (
           <>
             <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-            <span className="ml-[4px]">{unit.value}</span>
-            <span className="opacity-50 ml-[4px] text-xs mt-[0.35rem]">{unit.id}</span>
+            <span className="ml-[4px] text-lg">{unit.value}</span>
           </>
         )}
+        <CostPresentation cost={cost} />
       </UnitLineDiv>
       <div className="flex">
         <div className="text-sm leading-1 flex flex-col gap-0 px-2 mt-1">
@@ -45,4 +50,4 @@ export const UnitLine = memo(({ unit }: { unit: IUnitData }) => {
       </div>
     </div>
   );
-});
+};
