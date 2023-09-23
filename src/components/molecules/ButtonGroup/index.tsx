@@ -13,7 +13,7 @@ interface IButtonGroupProps {
 }
 
 export const ButtonGroup = ({ filter, setFilter, filterStats }: IButtonGroupProps) => (
-  <div className="flex flex-row items-center my-4">
+  <div className="flex flex-row items-center my-2">
     <SlButtonGroup>
       <SlButton
         size="small"

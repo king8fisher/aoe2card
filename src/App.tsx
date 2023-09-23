@@ -12,6 +12,7 @@ import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, 
 import { DataFilter } from "./helpers/constants";
 import { CancellableDebouncer } from "./helpers/debouncers";
 import { Container } from "./styles";
+import SearchInput from "./components/atoms/SearchInput";
 
 setBasePath("/shoelace");
 
@@ -80,8 +81,9 @@ const App = () => {
 
   return (
     <>
-      <Navbar searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
+      <Navbar />
       <Container>
+        <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
         <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
         {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
         {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
