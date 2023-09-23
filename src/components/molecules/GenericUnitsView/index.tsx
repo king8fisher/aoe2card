@@ -20,10 +20,7 @@ const GenericUnitsView = ({ genericUnitsData }: IGenericUnitsViewProps) => {
         ].join(" ")}
       >
         <div>
-          <UnitLine unit={groupByUnitData.unit} />
-          <UnitDisplayLine className="text-xs mt-1">
-            <CostPresentation cost={groupByUnitData.mostCommonUnitStats.cost} />
-          </UnitDisplayLine>
+          <UnitLine unit={groupByUnitData.unit} cost={groupByUnitData.mostCommonUnitStats.cost} />
         </div>
         <div className="grid grid-cols-8 gap-1 p-1 mt-1">
           {getAllCivs().map((civData) => (
