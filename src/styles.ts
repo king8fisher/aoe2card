@@ -56,6 +56,7 @@ export const UnitLineDiv = styled.div`
   gap: 0.25rem /* 4px */;
   align-items: flex-start;
   justify-content: space-between;
+  text-align: center;
   margin: 5px 10px;
 `;
 
