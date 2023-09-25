@@ -1,11 +1,34 @@
-import { SlButton, SlDetails, SlDropdown, SlIcon, SlMenu, SlMenuItem } from "@shoelace-style/shoelace/dist/react";
-import { memo, useMemo } from "react";
-import { ICivData, IUnitCivData, allCivUnits, civByKey } from "../../../data/model";
+import { SlDetails, SlIcon } from "@shoelace-style/shoelace/dist/react";
+import { useMemo } from "react";
+import { ICivData, IUnitCivData, getAllCivUnits } from "../../../data/model";
 import { getCivImgUrl } from "../../../helpers/tools";
 import { UnitsPresentationFlex } from "../../../styles";
 import { UnitPresentation } from "../UnitPresentation";
 
-export const CivSingleView = memo(({ civ }: { civ: ICivData }) => {
+interface ICivViewProps {
+  civ: ICivData;
+}
+
+export const CivView = ({ civ }: ICivViewProps) => {
+  const unitsByCiv: IUnitCivData[] = useMemo(() => getAllCivUnits(civ.key), [civ]);
+
+  const renderCivDetailsView = () => (
+    <>
+      {(civ?.help || "") != "" && (
+        <div className="text-sm pb-3">{<span dangerouslySetInnerHTML={{ __html: civ?.help || "" }} />}</div>
+      )}
+      <UnitsPresentationFlex>
+        {unitsByCiv?.map((unitCivData) => (
+          <UnitPresentation
+            key={`${unitCivData.civ.key}-${unitCivData.unit.id}`}
+            unitCivData={unitCivData}
+            showCiv={false}
+          />
+        ))}
+      </UnitsPresentationFlex>
+    </>
+  );
+
   return (
     <SlDetails className="details w-full mt-2">
       <SlIcon name="plus-square" slot="expand-icon" />
@@ -14,60 +37,7 @@ export const CivSingleView = memo(({ civ }: { civ: ICivData }) => {
         <img src={getCivImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
         {civ.value}
       </span>
-      <CivDetailsView civ={civ} />
+      {renderCivDetailsView()}
     </SlDetails>
   );
-});
-
-export const CivDetailsView = memo(({ civ }: { civ: ICivData }) => {
-  const unitsByCiv: IUnitCivData[] = useMemo(() => allCivUnits(civ.key), [civ]);
-  return (
-    <>
-      {(civ?.help || "") != "" && (
-        <div className="text-sm pb-3">{<span dangerouslySetInnerHTML={{ __html: civ?.help || "" }} />}</div>
-      )}
-      <UnitsPresentationFlex>
-        {unitsByCiv?.map((v, _index) => (
-          <UnitPresentation key={`${v.civ.key}-${v.unit.id}`} unitCivData={v} showCiv={false} />
-        ))}
-      </UnitsPresentationFlex>
-    </>
-  );
-});
-
-interface ICivViewProps {
-  civsList: { key: string; value: string }[];
-  selectedCivKey: string;
-  setSelectedCivKey: (civ: string) => void;
-}
-
-export const CivView = memo(({ civsList, selectedCivKey, setSelectedCivKey }: ICivViewProps) => {
-  const civ = useMemo(() => civByKey(selectedCivKey), [selectedCivKey]);
-  return (
-    <>
-      <SlDetails className="details">
-        <SlIcon name="plus-square" slot="expand-icon" />
-        <SlIcon name="dash-square" slot="collapse-icon" />
-        <SlDropdown className="shadow-lg" slot="summary">
-          <SlButton slot="trigger" caret>
-            <img slot="prefix" src={getCivImgUrl(selectedCivKey)} className="w-5 h-5 flex-shrink-0" />
-            {selectedCivKey}
-          </SlButton>
-          <SlMenu
-            onSlSelect={(event) => {
-              setSelectedCivKey(event.detail.item.value);
-            }}
-          >
-            {civsList.map((value) => (
-              <SlMenuItem key={value.key} value={value.key}>
-                {value.value}
-                <img slot="prefix" src={getCivImgUrl(value.key)} className="w-5 h-5 flex-shrink-0" />
-              </SlMenuItem>
-            ))}
-          </SlMenu>
-        </SlDropdown>
-        <CivDetailsView civ={civ} />
-      </SlDetails>
-    </>
-  );
-});
+};

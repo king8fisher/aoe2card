@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
-import { CivSingleView } from "../../components/molecules/CivView";
+import { CivView } from "../../components/molecules/CivView";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
@@ -76,7 +76,7 @@ const Home = () => {
       <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
-      {filter === DataFilter.civs && searchResult?.civs.map((c, _index) => <CivSingleView key={c.key} civ={c} />)}
+      {filter === DataFilter.civs && searchResult?.civs.map((civ) => <CivView key={civ.key} civ={civ} />)}
     </Container>
   );
 };
