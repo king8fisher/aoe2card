@@ -5,7 +5,7 @@ import * as https from "https";
 import * as path from "path";
 import { exit } from "process";
 import { fileURLToPath } from "url";
-import { allCivUnits, getAllCivs } from "../src/data/model";
+import { getAllCivUnits, getAllCivs } from "../src/data/model";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +18,7 @@ const cDirDest = `${__dirname}/../public/c`;
 const uniqueUnitIDs: Set<number> = new Set();
 
 getAllCivs().forEach((c) => {
-  allCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u.unit.id));
+  getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u.unit.id));
 });
 
 // await taskGetUnitImgs();

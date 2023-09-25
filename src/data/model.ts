@@ -256,7 +256,7 @@ export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
 //   });
 // };
 
-export const allCivUnits = (civKey: string): IUnitCivData[] => {
+export const getAllCivUnits = (civKey: string): IUnitCivData[] => {
   const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
   return matchUnits([civ_], (_u) => true);

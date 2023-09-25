@@ -1,12 +1,17 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
-import { memo, useState } from "react";
+import { useState } from "react";
 import { IUnitCivData } from "../../../data/model";
 import { getCivImgUrl, getStyleForUnit } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 import { CostPresentation } from "../../atoms/UnitCost";
 import { UnitLine } from "../UnitLine";
 
-export const UnitPresentation = memo(({ unitCivData, showCiv }: { unitCivData: IUnitCivData; showCiv: boolean }) => {
+interface IUnitPresentationProps {
+  unitCivData: IUnitCivData;
+  showCiv: boolean;
+}
+
+export const UnitPresentation = ({ unitCivData, showCiv }: IUnitPresentationProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
   // onMouseLeave event does not bubble. When an event bubbles, it moves, or propagates, up the DOM hierarchy.
   // onMouseOut bubbles.
@@ -32,10 +37,10 @@ export const UnitPresentation = memo(({ unitCivData, showCiv }: { unitCivData: I
           )}
         </UnitLineDiv>
       )}
-      <UnitLine unit={unitCivData.unit} />
+      <UnitLine unit={unitCivData.unit} cost={unitCivData.unitStats.cost} />
       <div className="text-xs mt-1">
         <CostPresentation cost={unitCivData.unitStats.cost} />
       </div>
     </div>
   );
-});
+};
