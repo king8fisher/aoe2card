@@ -16,7 +16,12 @@ export const UnitPresentation = ({ unitCivData, showCiv }: IUnitPresentationProp
   // onMouseLeave event does not bubble. When an event bubbles, it moves, or propagates, up the DOM hierarchy.
   // onMouseOut bubbles.
   return (
-    <div className={["flex flex-col rounded-md p-1", getStyleForUnit(unitCivData.unit)].join(" ")}>
+    <div
+      className={[
+        "flex flex-col w-full min-[500px]:w-1/2 md:w-1/3 lg:w-1/4 rounded-md p-1",
+        getStyleForUnit(unitCivData.unit),
+      ].join(" ")}
+    >
       {showCiv && (
         <UnitLineDiv onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
           {showTooltip && (
@@ -38,9 +43,6 @@ export const UnitPresentation = ({ unitCivData, showCiv }: IUnitPresentationProp
         </UnitLineDiv>
       )}
       <UnitLine unit={unitCivData.unit} cost={unitCivData.unitStats.cost} />
-      <div className="text-xs mt-1">
-        <CostPresentation cost={unitCivData.unitStats.cost} />
-      </div>
     </div>
   );
 };

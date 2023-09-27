@@ -1,9 +1,8 @@
-import { ISearchResult } from "../../../App";
 import { IGroupByUnitData, getAllCivs } from "../../../data/model";
 import { getStyleForUnit } from "../../../helpers/tools";
-import { UnitDisplayLine, UnitsPresentationFlex } from "../../../styles";
+import { ISearchResult } from "../../../pages/Home";
+import { UnitsPresentationFlex } from "../../../styles";
 import SingleCivIcon from "../../atoms/SingleCivIcon";
-import { CostPresentation } from "../../atoms/UnitCost";
 import { UnitLine } from "../UnitLine";
 
 interface IGenericUnitsViewProps {
@@ -34,7 +33,7 @@ const GenericUnitsView = ({ genericUnitsData }: IGenericUnitsViewProps) => {
   return (
     !!genericUnitsData?.grouped.length && (
       <UnitsPresentationFlex>
-        {genericUnitsData?.grouped.map((groupByUnitData) => renderUnitInfo(groupByUnitData))}
+        {genericUnitsData?.grouped.map((groupByUnitData: IGroupByUnitData) => renderUnitInfo(groupByUnitData))}
       </UnitsPresentationFlex>
     )
   );
