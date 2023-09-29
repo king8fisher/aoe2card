@@ -73,7 +73,7 @@ export const CardWrap = styled.div`
   border-radius: 0.375rem;
   width: 100%;
   width: 100%;
-  @media (min-width: 400px) {
+  @media (min-width: 500px) {
     width: 50%;
   }
   @media (min-width: 768px) {
