@@ -53,8 +53,7 @@ export const UnitDisplayLine = styled.div`
 export const UnitLineDiv = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.25rem /* 4px */;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
   text-align: center;
   margin: 5px 10px;
@@ -63,5 +62,33 @@ export const UnitLineDiv = styled.div`
 export const UnitsPresentationFlex = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
   flex-wrap: wrap;
+`;
+
+export const CardWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.375rem;
+  width: 100%;
+  width: 100%;
+  @media (min-width: 400px) {
+    width: 50%;
+  }
+  @media (min-width: 768px) {
+    width: 33.333333%;
+  }
+  @media (min-width: 1024px) {
+    width: 25%;
+  }
+  padding: 0.1rem;
+`;
+
+export const CardInnerPadding = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 0.375rem;
+  height: 100%;
 `;

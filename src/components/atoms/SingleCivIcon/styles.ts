@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
 export const SingleCivIconWrap = styled.span`
-  width: 1.75rem;
-  height: 1.75rem;
+  max-width: 1.75rem;
+  max-height: 1.75rem;
 `;
