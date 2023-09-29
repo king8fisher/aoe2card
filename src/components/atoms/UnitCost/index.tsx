@@ -9,7 +9,7 @@ type CostType = keyof Cost;
 // don't slow down rendering. If not, convert back.
 
 const RenderSingleCostPresenter = memo(({ cost, type }: { cost: Cost; type: CostType }) => (
-  <span className={["flex flex-col gap-0 items-center", cost[type] == 0 ? "opacity-30" : ""].join(" ")}>
+  <span className={["flex flex-col gap-0 items-center text-sm", cost[type] == 0 ? "opacity-30" : ""].join(" ")}>
     <img src={getResImgUrl(type)} className="w-5 h-5" />
     {`${cost[type]}`}
   </span>
