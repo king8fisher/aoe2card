@@ -4,11 +4,9 @@ import { CivView } from "../../components/molecules/CivView";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
-import { CancellableDebouncer } from "../../helpers/debouncers";
 import { Container } from "../../styles";
 import SearchInput from "../../components/atoms/SearchInput";
-
-const debouncer = new CancellableDebouncer<[IUnitCivData[], ICivData[]]>();
+import { useDebounce } from "../../helpers/debouncers";
 
 export interface ISearchResult {
   grouped: IGroupByUnitData[];
@@ -22,47 +20,32 @@ const Home = () => {
   const [searchResult, setSearchResult] = useState<ISearchResult>();
   const [isLoading, setLoading] = useState(false);
 
-  useEffect(
-    () => {
-      document.body.classList.add("ready");
-      // Return cleanup function
-      return () => {
-        debouncer.destroyDebouncer();
-      };
-    },
-    [] // Ensure []. Otherwise this will be called more than needed
-  );
-
-  const handleSetSearchTerm = useCallback((nextSearchTerm: string) => {
-    setSearchTerm(nextSearchTerm);
-    setLoading(true);
-    const s = nextSearchTerm; // Cache search term copy
-    debouncer.runDebounced({
-      calc: () => {
-        // if (s.trim().length < 2) {
-        //   return [[], []];
-        // }
-        // const t0 = performance.now();
-        const u = searchUnits(s);
-        const c = searchCivs(s);
-        // const t1 = performance.now();
-        // console.log(`Search done in ${t1 - t0} ms.`);
-        return [u, c];
-      },
-      assign: ([v, c]) => {
-        setSearchResult({
-          grouped: groupByUnitType(v),
-          units: v,
-          civs: c,
-        });
-      },
-      reject: (_) => {},
-      destroy: () => {
-        setLoading(false);
-      },
-      delay: 400,
-    });
+  useEffect(() => {
+    document.body.classList.add("ready");
   }, []);
+
+  const search = useCallback((nextSearchTerm: string) => {
+    setLoading(true);
+
+    const units = searchUnits(nextSearchTerm);
+    const civs = searchCivs(nextSearchTerm);
+    setSearchResult({
+      grouped: groupByUnitType(units),
+      units,
+      civs,
+    });
+    setLoading(false);
+  }, []);
+
+  const debouncedSearch = useDebounce(search, 400);
+
+  const handleSetSearchTerm = useCallback(
+    (nextSearchTerm: string) => {
+      setSearchTerm(nextSearchTerm);
+      debouncedSearch(nextSearchTerm);
+    },
+    [debouncedSearch]
+  );
 
   const filterStats: IFilterStats = useMemo(() => {
     return {
