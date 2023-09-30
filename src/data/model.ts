@@ -1,9 +1,10 @@
 import dataSrc from "./data.json";
 import { Data } from "./data_json_types";
 import stringsSrc from "./strings.json";
+import { Strings } from "./strings_json.types";
 
 const data = dataSrc as Data;
-const strings = stringsSrc as { [x: string]: string };
+const strings = stringsSrc as Strings;
 
 // This will have to be at some point converted into the dynamic json files load.
 
