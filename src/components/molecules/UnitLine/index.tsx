@@ -1,9 +1,8 @@
 /* eslint-disable prefer-arrow-callback */
-import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
-import { useState } from "react";
 import { Cost, IUnitData } from "../../../data/model";
 import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
+import { ContentWithTooltip } from "../../atoms/ContentWithTooltip";
 import { CostPresentation } from "../../atoms/UnitCost";
 
 interface IUnitLineProps {
@@ -12,34 +11,26 @@ interface IUnitLineProps {
 }
 
 export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
-  const [showTooltip, setShowTooltip] = useState(false);
   return (
     <>
-      <UnitLineDiv onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
-        {showTooltip && (
-          <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
-            <div className="flex flex-col gap-1" slot="content">
-              <span className="font-bold leading-6">{unit.extractedUnitData.name}</span>
-              <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
-            </div>
-            <span className="flex flex-col gap-px items-center">
-              <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-              <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
-            </span>
-            <span className="mx-[4px] text-md break-all">{unit.extractedUnitData.name}</span>
-          </SlTooltip>
-        )}
-        {!showTooltip && (
+      <ContentWithTooltip
+        tooltip={
           <>
-            <span className="flex flex-col gap-px items-center">
-              <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-              <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
-            </span>
-            <span className="mx-[4px] text-md break-all">{unit.extractedUnitData.name}</span>
+            <span className="font-bold leading-6">{unit.extractedUnitData.name}</span>
+            <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
           </>
-        )}
-        <CostPresentation cost={cost} />
-      </UnitLineDiv>
+        }
+      >
+        <UnitLineDiv>
+          <span className="flex flex-col gap-px items-center">
+            <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+            <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
+          </span>
+          <span className="mx-[4px] text-md break-words">{unit.extractedUnitData.name}</span>
+          <CostPresentation cost={cost} />
+        </UnitLineDiv>
+      </ContentWithTooltip>
+
       <div className="flex">
         <div className="text-sm leading-1 flex flex-col gap-0 px-2 mt-1">
           {unit.help.strong !== "" && (
