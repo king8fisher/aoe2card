@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import data from "./data.json";
-import { armourData, attackData, unitNameByID } from "./model";
+import { armourData, attackData, extractUnitDataByID } from "./model";
 
 // Playground for messing with json file structure and scaffolding functions
 // to make it easy to access data.
@@ -9,7 +9,7 @@ import { armourData, attackData, unitNameByID } from "./model";
 function playground() {
   // Unit data for unit_id
   data.data.unit_upgrades[561].internal_name; // "Elite Mangudai"
-  unitNameByID(561); // "Elite Mangudai"
+  extractUnitDataByID(561); // "Elite Mangudai"
   data.data.unit_upgrades[561].ResearchTime; // 50
   data.data.units[561].internal_name; // "UMOSU"
   data.data.units[561].Cost; // { "Gold": 65, "Wood": 55 }

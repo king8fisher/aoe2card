@@ -18,10 +18,19 @@ export type armourData = {
   Class: number;
 };
 
-export const unitNameByID = (unitId: number): string => {
+interface IExtractedUnitData {
+  name: string;
+  hp: number;
+}
+
+export const extractUnitDataByID = (unitId: number): IExtractedUnitData => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
-  return strings[data.data.units[unitId.toString()].LanguageNameId];
+  const d = data.data.units[unitId.toString()];
+  return {
+    name: strings[d.LanguageNameId],
+    hp: d.HP,
+  };
 };
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
@@ -130,7 +139,7 @@ export interface IUnitHelp {
 export interface IUnitData {
   id: number;
   /** Localized name of the unit */
-  value: string;
+  extractedUnitData: IExtractedUnitData;
   unitType: UnitType;
   help: IUnitHelp;
 }
@@ -145,7 +154,7 @@ export const allUnits = (civKey: string): IUnitData[] => {
   data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
       id: id,
-      value: unitNameByID(id),
+      extractedUnitData: extractUnitDataByID(id),
       unitType: UnitType.RegularUnit,
       help: unitHelpByID(id),
     });
@@ -156,14 +165,19 @@ export const allUnits = (civKey: string): IUnitData[] => {
 
 export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit, help: unitHelpByID(id) };
+  return {
+    id: id,
+    extractedUnitData: extractUnitDataByID(id),
+    unitType: UnitType.ImperialAgeUniqueUnit,
+    help: unitHelpByID(id),
+  };
 };
 
 export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
   return {
     id: id,
-    value: unitNameByID(id),
+    extractedUnitData: extractUnitDataByID(id),
     unitType: UnitType.CastleAgeUniqueUnit,
     help: unitHelpByID(id),
   };
@@ -206,7 +220,10 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   like = like.toLowerCase().trim();
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
-  return matchUnits(getAllCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
+  return matchUnits(
+    getAllCivs(),
+    (u) => u.extractedUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
+  );
 };
 
 export interface IGroupByUnitData {
