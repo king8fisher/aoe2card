@@ -18,33 +18,56 @@ export type armourData = {
   Class: number;
 };
 
-export const unitNameByID = (unitId: number): string => {
+interface IExtractedUnitData {
+  name: string;
+  hp: number;
+  attack: number;
+  pierceArmor: number;
+}
+
+export const extractUnitDataByID = (unitId: number): IExtractedUnitData => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
-  return strings[data.data.units[unitId.toString()].LanguageNameId];
+  const d = data.data.units[unitId.toString()];
+
+  return {
+    name: strings[d.LanguageNameId],
+    hp: d.HP,
+    attack: d.Attack,
+    pierceArmor: d.PierceArmor,
+  };
 };
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
   const about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
-  const sw = splitAbout(about);
-  return {
-    about: sw.about,
-    strong: sw.strong,
-    weak: sw.weak,
-  };
+  return splitAbout(about);
 };
 
-const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)", "gmiu");
-const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)", "gmiu");
+const strongEnRegex = new RegExp("strong\\s+vs.\\s+([^\\.]+)\\.?", "gmiu");
+const weakEnRegex = new RegExp("weak\\s+vs.\\s+([^\\.]+)\\.?", "gmiu");
 
-const splitAbout = (about: string): { about: string; strong: string; weak: string } => {
+const trimSuffix = (s: string, suffix: string) => {
+  return s.endsWith(suffix) ? s.substring(0, s.length - suffix.length) : s;
+};
+
+const splitAbout = (about: string): IUnitHelp => {
   // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
   //              |   var   |
   //              |  piece  |
   const f = about.indexOf("(‹cost›)<br>\n");
   let aboutTrimmed = about;
-  if (f >= 0) {
-    aboutTrimmed = about.substring(f + 13);
+  if (f >= 0) aboutTrimmed = about.substring(f + 13);
+  // Remove \n‹hp› ‹attack› ‹armor› ‹piercearmor› ‹range›
+  // Remove \n‹hp› ‹attack› ‹armor› ‹piercearmor› ‹range› ‹garrison›
+  // Remove ...
+  const h = aboutTrimmed.indexOf("\n‹hp› ");
+  if (h >= 0) aboutTrimmed = aboutTrimmed.substring(0, h);
+  const u = aboutTrimmed.indexOf("<i> Upgrades:");
+  let upgrades = "";
+  if (u >= 0) {
+    upgrades = aboutTrimmed.substring(u + 13).trim();
+    upgrades = trimSuffix(upgrades, ".</i><br>");
+    aboutTrimmed = aboutTrimmed.substring(0, u);
   }
 
   // Resetting regex
@@ -53,18 +76,21 @@ const splitAbout = (about: string): { about: string; strong: string; weak: strin
 
   let m;
   let strong = "";
-  if ((m = strongEnRegex.exec(about)) !== null) {
+  if ((m = strongEnRegex.exec(aboutTrimmed)) !== null) {
     if (m.index !== strongEnRegex.lastIndex) {
       strong = m[1];
+      aboutTrimmed = aboutTrimmed.replace(m[0], "");
     }
   }
   let weak = "";
-  if ((m = weakEnRegex.exec(about)) !== null) {
+  if ((m = weakEnRegex.exec(aboutTrimmed)) !== null) {
     if (m.index !== weakEnRegex.lastIndex) {
       weak = m[1];
+      aboutTrimmed = aboutTrimmed.replace(m[0], "");
     }
   }
-  return { about: aboutTrimmed, strong: strong, weak: weak };
+
+  return { about: aboutTrimmed, strong: strong, weak: weak, upgrades: upgrades };
 };
 
 export const techNameByID = (techId: number): string =>
@@ -125,12 +151,13 @@ export interface IUnitHelp {
   about: string;
   strong: string;
   weak: string;
+  upgrades: string;
 }
 
 export interface IUnitData {
   id: number;
   /** Localized name of the unit */
-  value: string;
+  extractedUnitData: IExtractedUnitData;
   unitType: UnitType;
   help: IUnitHelp;
 }
@@ -145,7 +172,7 @@ export const allUnits = (civKey: string): IUnitData[] => {
   data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
       id: id,
-      value: unitNameByID(id),
+      extractedUnitData: extractUnitDataByID(id),
       unitType: UnitType.RegularUnit,
       help: unitHelpByID(id),
     });
@@ -156,14 +183,19 @@ export const allUnits = (civKey: string): IUnitData[] => {
 
 export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return { id: id, value: unitNameByID(id), unitType: UnitType.ImperialAgeUniqueUnit, help: unitHelpByID(id) };
+  return {
+    id: id,
+    extractedUnitData: extractUnitDataByID(id),
+    unitType: UnitType.ImperialAgeUniqueUnit,
+    help: unitHelpByID(id),
+  };
 };
 
 export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
   return {
     id: id,
-    value: unitNameByID(id),
+    extractedUnitData: extractUnitDataByID(id),
     unitType: UnitType.CastleAgeUniqueUnit,
     help: unitHelpByID(id),
   };
@@ -206,7 +238,10 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   like = like.toLowerCase().trim();
   if (like == "") return [];
   // TODO: Turn this into fuzzy search
-  return matchUnits(getAllCivs(), (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like);
+  return matchUnits(
+    getAllCivs(),
+    (u) => u.extractedUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
+  );
 };
 
 export interface IGroupByUnitData {

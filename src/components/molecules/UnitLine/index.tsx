@@ -19,17 +19,28 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
         {showTooltip && (
           <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
             <div className="flex flex-col gap-1" slot="content">
-              <span className="font-bold leading-6">{unit.value}</span>
+              <span className="font-bold leading-6">{unit.extractedUnitData.name}</span>
               <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
+              <span className="italic"><strong>Upgrades: </strong>{unit.help.upgrades}</span>
             </div>
-            <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-            <span className="mx-[4px] text-md break-all">{unit.value}</span>
+            <span className="flex flex-col gap-px items-center">
+              <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+              <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
+              <span className="text-xs">a {unit.extractedUnitData.attack}</span>
+              <span className="text-xs">pa {unit.extractedUnitData.pierceArmor}</span>
+            </span>
+            <span className="mx-[4px] text-md break-all">{unit.extractedUnitData.name}</span>
           </SlTooltip>
         )}
         {!showTooltip && (
           <>
-            <img src={getUnitImgUrl(unit.id)} className="w-5 h-5 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-            <span className="mx-[4px] text-md break-all">{unit.value}</span>
+            <span className="flex flex-col gap-px items-center">
+              <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+              <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
+              <span className="text-xs">a {unit.extractedUnitData.attack}</span>
+              <span className="text-xs">pa {unit.extractedUnitData.pierceArmor}</span>
+            </span>
+            <span className="mx-[4px] text-md break-all">{unit.extractedUnitData.name}</span>
           </>
         )}
         <CostPresentation cost={cost} />
@@ -44,6 +55,11 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
           {unit.help.weak !== "" && (
             <span className="w-full bg-gradient-to-br via-30% from-orange-800/40 to-orange-800/0 rounded-md flex-grow p-1 whitespace-normal">
               {unit.help.weak}
+            </span>
+          )}
+          {unit.help.upgrades !== "" && (
+            <span className="w-full bg-gradient-to-br via-30% from-blue-800/40 to-blue-800/0 rounded-md flex-grow p-1 whitespace-normal">
+              {unit.help.upgrades}
             </span>
           )}
         </div>
