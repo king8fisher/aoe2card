@@ -37,7 +37,7 @@ SiegeEngineers combine/copy those:
 
 ## Assets Sources
 
-* `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
+- `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
 
 ## Intricacies
 

@@ -11,8 +11,14 @@ export const getStyleForUnit = (unit: IUnitData) => {
   }
 };
 
+export const roundTo = (num: number, places: number) => {
+  return +(Math.round(parseFloat(num.toString() + "e+" + places)) + "e-" + places);
+};
+
 export const getResImgUrl = (type: string) => `r/${type}.png`;
 // export const getCivImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 export const getCivImgUrl = (civKey: string) => `c/${civKey}.png`;
 // export const getUnitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
 export const getUnitImgUrl = (unitId: number) => `u/a/${unitId}.png`;
+
+export const getStatisticsImgUrl = (type: string) => `s/${type}.png`;
