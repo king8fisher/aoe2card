@@ -35,6 +35,10 @@ SiegeEngineers combine/copy those:
 - [halfon](https://halfon.aoe2.se/) project:
   - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json - seems to be equal to https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
 
+## Assets Sources
+
+* `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
+
 ## Intricacies
 
 - Sicilians. Several "same" units can be produced from different buildings: Castle & Donjon
