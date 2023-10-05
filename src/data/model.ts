@@ -1,5 +1,5 @@
 import dataSrc from "./data.json";
-import { Data } from "./data_json_types";
+import { Data, Unit } from "./data_json_types";
 import stringsSrc from "./strings.json";
 import { Strings } from "./strings_json.types";
 
@@ -18,23 +18,18 @@ export type armourData = {
   Class: number;
 };
 
-interface IExtractedUnitData {
+export interface IStatisticsUnitData {
   name: string;
-  hp: number;
-  attack: number;
-  pierceArmor: number;
+  unitStatistics: Unit;
 }
 
-export const extractUnitDataByID = (unitId: number): IExtractedUnitData => {
+export const extractUnitDataByID = (unitId: number): IStatisticsUnitData => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
   const d = data.data.units[unitId.toString()];
-
   return {
     name: strings[d.LanguageNameId],
-    hp: d.HP,
-    attack: d.Attack,
-    pierceArmor: d.PierceArmor,
+    unitStatistics: d,
   };
 };
 
@@ -157,7 +152,7 @@ export interface IUnitHelp {
 export interface IUnitData {
   id: number;
   /** Localized name of the unit */
-  extractedUnitData: IExtractedUnitData;
+  statisticsUnitData: IStatisticsUnitData;
   unitType: UnitType;
   help: IUnitHelp;
 }
@@ -172,7 +167,7 @@ export const allUnits = (civKey: string): IUnitData[] => {
   data.techtrees[civKey].units.forEach((id: number) => {
     entries.push({
       id: id,
-      extractedUnitData: extractUnitDataByID(id),
+      statisticsUnitData: extractUnitDataByID(id),
       unitType: UnitType.RegularUnit,
       help: unitHelpByID(id),
     });
@@ -185,7 +180,7 @@ export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
   return {
     id: id,
-    extractedUnitData: extractUnitDataByID(id),
+    statisticsUnitData: extractUnitDataByID(id),
     unitType: UnitType.ImperialAgeUniqueUnit,
     help: unitHelpByID(id),
   };
@@ -195,7 +190,7 @@ export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
   return {
     id: id,
-    extractedUnitData: extractUnitDataByID(id),
+    statisticsUnitData: extractUnitDataByID(id),
     unitType: UnitType.CastleAgeUniqueUnit,
     help: unitHelpByID(id),
   };
@@ -240,7 +235,7 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   // TODO: Turn this into fuzzy search
   return matchUnits(
     getAllCivs(),
-    (u) => u.extractedUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
+    (u) => u.statisticsUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
   );
 };
 

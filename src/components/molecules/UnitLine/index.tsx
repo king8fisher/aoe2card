@@ -3,6 +3,7 @@ import { Cost, IUnitData } from "../../../data/model";
 import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 import { ContentWithTooltip } from "../../atoms/ContentWithTooltip";
+import { StatisticsBlock } from "../../atoms/StatisticsBlock";
 import { CostPresentation } from "../../atoms/UnitCost";
 
 interface IUnitLineProps {
@@ -16,7 +17,7 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
       <ContentWithTooltip
         tooltip={
           <>
-            <span className="font-bold leading-6">{unit.extractedUnitData.name}</span>
+            <span className="font-bold leading-6">{unit.statisticsUnitData.name}</span>
             <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
             <span className="italic">
               <strong>Upgrades: </strong>
@@ -28,14 +29,14 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
         <UnitLineDiv>
           <span className="flex flex-col gap-px items-center">
             <img src={getUnitImgUrl(unit.id)} className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
-            <span className="text-xs">hp {unit.extractedUnitData.hp}</span>
-            <span className="text-xs">a {unit.extractedUnitData.attack}</span>
-            <span className="text-xs">pa {unit.extractedUnitData.pierceArmor}</span>
           </span>
-          <span className="mx-[4px] text-md break-words">{unit.extractedUnitData.name}</span>
+          <span className="mx-[4px] text-md break-words">{unit.statisticsUnitData.name}</span>
           <CostPresentation cost={cost} />
         </UnitLineDiv>
       </ContentWithTooltip>
+      <UnitLineDiv>
+        <StatisticsBlock unitData={unit.statisticsUnitData} />
+      </UnitLineDiv>
 
       <div className="flex">
         <div className="text-sm leading-1 flex flex-col gap-0 px-2 mt-1">

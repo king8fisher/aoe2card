@@ -72,7 +72,6 @@ export const CardWrap = styled.div`
   flex-direction: column;
   border-radius: 0.375rem;
   width: 100%;
-  width: 100%;
   @media (min-width: 500px) {
     width: 50%;
   }

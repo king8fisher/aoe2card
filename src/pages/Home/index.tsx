@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import SearchInput from "../../components/atoms/SearchInput";
 import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
 import { CivView } from "../../components/molecules/CivView";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
-import { Container } from "../../styles";
-import SearchInput from "../../components/atoms/SearchInput";
 import { useDebounce } from "../../helpers/debouncers";
+import { Container } from "../../styles";
 
 export interface ISearchResult {
   grouped: IGroupByUnitData[];
@@ -25,6 +25,8 @@ const Home = () => {
   }, []);
 
   const search = useCallback((nextSearchTerm: string) => {
+    nextSearchTerm = nextSearchTerm.trim();
+    if (nextSearchTerm.length < 2) nextSearchTerm = "";
     setLoading(true);
 
     const units = searchUnits(nextSearchTerm);
