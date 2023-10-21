@@ -63,7 +63,7 @@ export const UnitsPresentationFlex = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
 `;
 
