@@ -10,7 +10,7 @@
     "build": "vite build",
     "format": "prettier -w .",
     "fmt": "pnpm format",
-    "test": "echo \"Debug: no test implemented.\"",
+    "test": "vitest run",
     "lint": "echo '##### LINTING TYPESCRIPT FILES ######' && eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint-fix": "echo '##### FIXING LINT IN TYPESCRIPT FILES ######' && eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -36,8 +36,11 @@
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "tailwindcss": "^3.3.3",
+    "ts-to-zod": "^3.2.0",
     "typescript": "5.1.6",
     "vite": "^4.5.0",
-    "vite-plugin-static-copy": "^0.17.0"
+    "vite-plugin-static-copy": "^0.17.0",
+    "vitest": "^0.34.6",
+    "zod": "^3.22.4"
   }
 }
