@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import { Cost, IUnitData } from "../../../data/model";
 import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
