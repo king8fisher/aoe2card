@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import dataSrc from "./jsons/data.json";
-import stringsSrc from "./jsons/strings.json";
-import unitBuildingsSrc from "./jsons/units_buildings_techs.json";
+import dataSrc from "./json/data.json";
+import stringsSrc from "./json/strings.json";
+import unitBuildingsSrc from "./json/units_buildings_techs.json";
 import { dataSchema } from "./types/zod/data_json_types";
 import { stringsSchema } from "./types/zod/strings_json_types";
 import { unitsBuildingsTechsSchema } from "./types/zod/units_buildings_techs_data_types";
@@ -10,9 +10,9 @@ import { unitsBuildingsTechsSchema } from "./types/zod/units_buildings_techs_dat
 
 Zod files generated using "ts-to-zod":
 
-$ pnpm ts-to-zod .\src\data\jsons\data_json_types.ts .\src\data\types\zod\data_json_types.ts --skipValidation
-$ pnpm ts-to-zod .\src\data\jsons\strings_json_types.ts .\src\data\types\zod\strings_json_types.ts --skipValidation         
-$ pnpm ts-to-zod .\src\data\jsons\units_buildings_techs_data_types.ts .\src\data\types\zod\units_buildings_techs_data_types.ts --skipValidation
+$ pnpm ts-to-zod .\src\data\json\data_json_types.ts .\src\data\types\zod\data_json_types.ts --skipValidation
+$ pnpm ts-to-zod .\src\data\json\strings_json_types.ts .\src\data\types\zod\strings_json_types.ts --skipValidation
+$ pnpm ts-to-zod .\src\data\json\units_buildings_techs_data_types.ts .\src\data\types\zod\units_buildings_techs_data_types.ts --skipValidation
 
 */
 

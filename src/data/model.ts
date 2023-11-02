@@ -1,5 +1,5 @@
-import dataSrc from "./jsons/data.json";
-import stringsSrc from "./jsons/strings.json";
+import dataSrc from "./json/data.json";
+import stringsSrc from "./json/strings.json";
 import { Data, Unit } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
 

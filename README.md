@@ -1,9 +1,14 @@
 # aoe2card
 
-Playground for a future app that digs into AOE2 data and presents it in a user friendly way.
+Playground for a future app that digs into AOE2 data and presents it in a user
+friendly way.
 
-Temporary link for the project using vercel:
-https://aoe2card.vercel.app/
+Temporary link for the project using vercel: https://aoe2card.vercel.app/
+
+## Inspirations
+
+- https://aoestats.io
+- https://aoe2.net
 
 ## Requirements
 
@@ -11,47 +16,56 @@ https://aoe2card.vercel.app/
   - It's possible to use `node v14.*`, but then `pnpm v7.*` is required.
 - [pnpm](https://pnpm.io/installation)
 - Optional (if `tsx` desired):
-  - `pnpm install -g tsx` (Will tell if environment PATH lacks an entry, fix accordingly).
+  - `pnpm install -g tsx` (Will tell if environment PATH lacks an entry, fix
+    accordingly).
 - Compile project for development:
   - `pnpm i` - install dependencies.
   - `pnpm dev` - start server in development mode.
 - `pnpm install -g prettier` for:
-  - `prettier -w .` (which can be run with `pnpm format` as well, being a task in `package.json`)
+  - `prettier -w .` (which can be run with `pnpm format` as well, being a task
+    in `package.json`)
 
 ## VSCode Extensions
 
-- [styled-components.vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components) for Styled Components
+- [styled-components.vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components)
+  for Styled Components
 
 ## Data Sources
 
 - https://github.com/HSZemi/aoe2dat is the source for SiegeEngineers.
   - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
-  - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.ror.json - apparently Return of Rome
+  - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.ror.json -
+    apparently Return of Rome
 
 SiegeEngineers combine/copy those:
 
 - [aoe2techtree](https://aoe2techtree.net) project:
-  - https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json - processed data
+  - https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json -
+    processed data
 - [halfon](https://halfon.aoe2.se/) project:
-  - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json - seems to be equal to https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
+  - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json -
+    seems to be equal to
+    https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
 
 ## Data Update
 
 - Pull current data from **SeigeEngineers** and **HSZemi**:
   - Windows:
     ```powershell
-    > iwr -outf ./src/data/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    > iwr -outf ./src/data/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    > iwr -outf ./src/data/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
+    > iwr -outf ./src/data/json/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
+    > iwr -outf ./src/data/json/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
+    > iwr -outf ./src/data/json/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
     ```
-  - Linux / Mac:  
+  - Linux / Mac:
     ```shell
-    $ wget -P ./src/data/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    $ wget -P ./src/data/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    $ wget -P ./src/data/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
+    $ wget -P ./src/data/json/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
+    $ wget -P ./src/data/json/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
+    $ wget -P ./src/data/json/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
     ```
-- Format `json` files for uniformness in searches with the `fmt` task defined in `package.json`: `pnpm fmt`.
-- Update current DE build in `./src/data/update.json` (See https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
+- Format `json` files for uniformness in searches with the `fmt` task defined in
+  `package.json`: `pnpm fmt`.
+- Update current DE build in `./src/data/patch.json` (See
+  https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
 
 ## Assets Sources
 
@@ -59,41 +73,52 @@ SiegeEngineers combine/copy those:
 
 ## Intricacies
 
-- Sicilians. Several "same" units can be produced from different buildings: Castle & Donjon
+- Sicilians. Several "same" units can be produced from different buildings:
+  Castle & Donjon
   - Pikeman shows as 2 IDs: 358 & 1787.
   - Spearman shows as 2 IDs: 93 & 1786.
   - Halberdier shows as 2 IDs: 359 & 1788.
   - Serjeant shows as 2 IDs: 1660 & 1658.
     - Elite Serjeant shows as 2 IDs: 1659 & 1661.
 - Huns. Castle upgrade "Marauders" "Enables you to create Tarkans at Stables".
-- Goths. Castle upgrade "Anarchy" "Allows Huskarls to be created at the Barracks.".
+- Goths. Castle upgrade "Anarchy" "Allows Huskarls to be created at the
+  Barracks.".
 
 ## From Vite Template
 
 ### React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal setup to get React working in Vite with HMR and
+some ESLint rules.
 
 Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md)
+  uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc)
+  uses [SWC](https://swc.rs/) for Fast Refresh
 
 #### Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+If you are developing a production application, we recommend updating the
+configuration to enable type aware lint rules:
 
 - Configure the top-level `parserOptions` property like this:
 
 ```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+parserOptions: {
+ ecmaVersion: 'latest',
+ sourceType: 'module',
+ project: ['./tsconfig.json', './tsconfig.node.json'],
+ tsconfigRootDir: __dirname,
+},
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Replace `plugin:@typescript-eslint/recommended` to
+  `plugin:@typescript-eslint/recommended-type-checked` or
+  `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Install
+  [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and
+  add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends`
+  list
