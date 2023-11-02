@@ -1,7 +1,7 @@
-import dataSrc from "./data.json";
-import { Data, Unit } from "./data_json_types";
-import stringsSrc from "./strings.json";
-import { Strings } from "./strings_json.types";
+import dataSrc from "./jsons/data.json";
+import stringsSrc from "./jsons/strings.json";
+import { Data, Unit } from "./types/data_json_types";
+import { Strings } from "./types/strings_json_types";
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
