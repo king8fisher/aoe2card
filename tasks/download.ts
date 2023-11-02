@@ -1,11 +1,61 @@
-import * as child_process from "child_process";
-import * as fs from "fs";
-import { move } from "fs-extra";
-import * as https from "https";
-import * as path from "path";
-import { exit } from "process";
-import { fileURLToPath } from "url";
-import { getAllCivUnits, getAllCivs } from "../src/data/model";
+import * as child_process from "node:child_process";
+import * as fs from "node:fs";
+import * as https from "node:https";
+import * as path from "node:path";
+import { exit } from "node:process";
+import { fileURLToPath } from "node:url";
+import dataSrc from "../src/data/json/data.json" assert { type: "json" };
+import stringsSrc from "../src/data/json/strings.json" assert { type: "json" };
+import { ICivData } from "../src/data/model.ts";
+import { Data } from "../src/data/types/data_json_types.ts";
+import { Strings } from "../src/data/types/strings_json_types.ts";
+
+const data = dataSrc as Data;
+const strings = stringsSrc as Strings;
+
+const _cachedAllCivs: ICivData[] = [];
+
+export const getAllCivs = (): ICivData[] => {
+  if (_cachedAllCivs.length > 0) {
+    return _cachedAllCivs;
+  }
+  Object.entries(data.civ_names).forEach((v, _k) => {
+    // {key: internal_name, value: strings_localized_value}
+    const help = strings[data.civ_helptexts[v[0]]];
+    _cachedAllCivs.push({
+      key: v[0],
+      value: strings[v[1]],
+      help: help,
+    });
+  });
+  return _cachedAllCivs;
+};
+
+const _cachedCivByKey: Map<string, ICivData> = new Map();
+
+export const civByKey = (civKey: string): ICivData => {
+  if (_cachedCivByKey.has(civKey)) {
+    return _cachedCivByKey.get(civKey)!;
+  }
+  const result = {
+    key: civKey,
+    value: strings[data.civ_names[civKey]],
+    help: strings[data.civ_helptexts[civKey]],
+  };
+  _cachedCivByKey.set(civKey, result);
+  return result;
+};
+
+export const getAllCivUnits = (civKey: string): number[] => {
+  const civ_ = civByKey(civKey);
+  if (civ_ == null) return [];
+
+  return [
+    ...data.techtrees[civKey].units,
+    data.techtrees[civKey].unique.imperialAgeUniqueUnit,
+    data.techtrees[civKey].unique.castleAgeUniqueUnit,
+  ];
+};
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,16 +68,17 @@ const cDirDest = `${__dirname}/../public/c`;
 const uniqueUnitIDs: Set<number> = new Set();
 
 getAllCivs().forEach((c) => {
-  getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u.unit.id));
+  getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u));
 });
 
 // await taskGetUnitImgs();
 // await taskRemoveBlackFromUnitImgs();
-await taskMoveUnitImgs();
+// await taskMoveUnitImgs();
 // await taskGetCivsImgs();
 
 async function taskGetUnitImgs() {
-  const getUnitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
+  const getUnitImgUrl = (unitId: number) =>
+    `https://aoe2techtree.net/img/Units/${unitId}.png`;
 
   rmDir(uDir);
   makeDir(uDir);
@@ -68,13 +119,16 @@ async function taskRemoveBlackFromUnitImgs() {
       return console.log(`Unable to scan ${uDir}`, err);
     }
     files.forEach(function (file) {
-      child_process.exec(`gm.exe convert ${uDir}/${file} -fuzz 5% -transparent "#000" ${uDir}/a/${file}`);
+      child_process.exec(
+        `gm.exe convert ${uDir}/${file} -fuzz 5% -transparent "#000" ${uDir}/a/${file}`,
+      );
     });
   });
 }
 
 async function taskGetCivsImgs() {
-  const getCivImgUrl = (civKey: string) => `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
+  const getCivImgUrl = (civKey: string) =>
+    `https://aoe2techtree.net/img/Civs/${civKey.toLowerCase()}.png`;
 
   rmDir(cDir);
   makeDir(cDir);
@@ -110,12 +164,12 @@ async function taskGetCivsImgs() {
 
 async function taskMoveUnitImgs() {
   rmDir(uDirDest);
-  move(uDir, uDirDest, (err: any) => {
-    if (err) {
-      return console.log(`can't move ${uDir} to ${uDirDest}`, err);
-    }
+  try {
+    await Deno.rename(uDir, uDirDest);
     console.log(`[✔] Units ${uDirDest}!`);
-  });
+  } catch (e) {
+    console.log(`can't move ${uDir} to ${uDirDest}`, e);
+  }
 }
 
 function rmDir(dir: string) {
