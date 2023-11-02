@@ -35,6 +35,24 @@ SiegeEngineers combine/copy those:
 - [halfon](https://halfon.aoe2.se/) project:
   - (https://raw.githubusercontent.com/SiegeEngineers/halfon/master/data/units_buildings_techs.de.json - seems to be equal to https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json)
 
+## Data Update
+
+- Pull current data from **SeigeEngineers** and **HSZemi**:
+  - Windows:
+    ```powershell
+    > iwr -outf ./src/data/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
+    > iwr -outf ./src/data/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
+    > iwr -outf ./src/data/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
+    ```
+  - Linux / Mac:  
+    ```shell
+    $ wget -P ./src/data/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
+    $ wget -P ./src/data/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
+    $ wget -P ./src/data/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
+    ```
+- Format `json` files for uniformness in searches with the `fmt` task defined in `package.json`: `pnpm fmt`.
+- Update current DE build in `./src/data/update.json` (See https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
+
 ## Assets Sources
 
 - `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
@@ -49,28 +67,6 @@ SiegeEngineers combine/copy those:
     - Elite Serjeant shows as 2 IDs: 1659 & 1661.
 - Huns. Castle upgrade "Marauders" "Enables you to create Tarkans at Stables".
 - Goths. Castle upgrade "Anarchy" "Allows Huskarls to be created at the Barracks.".
-
-## CHANGELOG
-
-- `pnpm create vite aoe2-card-app-react-ts --template react-ts`
-  - `cd ` into
-  - `pnpm i`
-  - `pnpm dev`
-- Create `data` folder (which is now `src/data`).
-  - Step in.
-  - Pull current data from **SeigeEngineers** and **HSZemi**:
-    ```powershell
-    > iwr -outf data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    > iwr -outf strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    > iwr -outf units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
-    ```
-    ```console
-    $ wget https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    $ wget https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    $ wget https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
-    ```
-  - Format json files for uniformness in searches (`prettier -w .`).
-- `tsx data/model.ts` to run the file in `node` for quick `console.log` outputs.
 
 ## From Vite Template
 
