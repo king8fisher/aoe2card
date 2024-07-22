@@ -16,31 +16,35 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lit-labs/react": "^2.1.1",
-    "@shoelace-style/shoelace": "^2.11.0",
+    "@lit-labs/react": "^2.1.2",
+    "@radix-ui/react-popover": "^1.0.7",
+    "@shoelace-style/shoelace": "^2.12.0",
+    "clsx": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^6.1.0"
+    "react-router-dom": "^6.21.1",
+    "styled-components": "^6.1.5"
   },
   "devDependencies": {
-    "@types/node": "^20.8.7",
-    "@types/react": "^18.2.31",
-    "@types/react-dom": "^18.2.14",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "@vitejs/plugin-react": "^4.1.0",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
-    "eslint": "^8.52.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "postcss": "^8.4.31",
-    "prettier": "^3.0.3",
-    "tailwindcss": "^3.3.3",
-    "ts-to-zod": "^3.2.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.4.0",
+    "ts-to-zod": "^3.5.0",
     "typescript": "5.1.6",
-    "vite": "^4.5.0",
-    "vite-plugin-static-copy": "^0.17.0",
+    "vite": "^4.5.1",
+    "vite-plugin-static-copy": "^0.17.1",
     "vitest": "^0.34.6",
     "zod": "^3.22.4"
-  }
+  },
+  "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
 }
