@@ -15,13 +15,13 @@ export interface AgeNames {
 }
 
 export interface DataClass {
-  buildings: { [key: string]: Building };
+  buildings: { [key: string]: BuildingValue };
   techs: { [key: string]: Tech };
   unit_upgrades: { [key: string]: UnitUpgrade };
   units: { [key: string]: Unit };
 }
 
-export interface Building {
+export interface BuildingValue {
   AccuracyPercent: number;
   Armours: Armour[];
   Attack: number;
@@ -51,23 +51,17 @@ export interface BuildingCost {
   Wood?: number;
   Stone?: number;
   Gold?: number;
+  Food?: number;
 }
 
 export interface Tech {
-  Cost: TechCost;
+  Cost: BuildingCost;
   ID: number;
   LanguageHelpId: number;
   LanguageNameId: number;
   Repeatable: boolean;
   ResearchTime: number;
   internal_name: string;
-}
-
-export interface TechCost {
-  Gold?: number;
-  Wood?: number;
-  Food?: number;
-  Stone?: number;
 }
 
 export interface UnitUpgrade {
@@ -127,11 +121,16 @@ export interface TechTreeStrings {
 }
 
 export interface Techtree {
-  buildings: number[];
+  buildings: BuildingElement[];
   monkPrefix: MonkPrefix;
-  techs: number[];
+  techs: BuildingElement[];
   unique: Unique;
-  units: number[];
+  units: BuildingElement[];
+}
+
+export interface BuildingElement {
+  age: number;
+  id: number;
 }
 
 export enum MonkPrefix {

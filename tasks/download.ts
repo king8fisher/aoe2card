@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import dataSrc from "../src/data/json/data.json" assert { type: "json" };
 import stringsSrc from "../src/data/json/strings.json" assert { type: "json" };
 import { ICivData } from "../src/data/model.ts";
-import { Data } from "../src/data/types/data_json_types.ts";
+import { BuildingElement, Data } from "../src/data/types/data_json_types.ts";
 import { Strings } from "../src/data/types/strings_json_types.ts";
 
 const data = dataSrc as Data;
@@ -50,8 +50,13 @@ export const getAllCivUnits = (civKey: string): number[] => {
   const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
 
+  const unitsIds: number[] = [];
+  data.techtrees[civKey].units.map((el: BuildingElement) => {
+    unitsIds.push(el.id);
+  });
+
   return [
-    ...data.techtrees[civKey].units,
+    ...unitsIds,
     data.techtrees[civKey].unique.imperialAgeUniqueUnit,
     data.techtrees[civKey].unique.castleAgeUniqueUnit,
   ];
@@ -60,10 +65,10 @@ export const getAllCivUnits = (civKey: string): number[] => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uDir = `${__dirname}/u`;
-const uDirDest = `${__dirname}/../public/u`;
-const cDir = `${__dirname}/c`;
-const cDirDest = `${__dirname}/../public/c`;
+const uDir = path.normalize(`${__dirname}/u`);
+const uDirDest = path.normalize(`${__dirname}/../public/u`);
+const cDir = path.normalize(`${__dirname}/c`);
+const cDirDest = path.normalize(`${__dirname}/../public/c`);
 
 const uniqueUnitIDs: Set<number> = new Set();
 
@@ -71,10 +76,11 @@ getAllCivs().forEach((c) => {
   getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u));
 });
 
-// await taskGetUnitImgs();
-// await taskRemoveBlackFromUnitImgs();
-// await taskMoveUnitImgs();
-// await taskGetCivsImgs();
+//await taskGetUnitImgs();
+//await taskRemoveBlackFromUnitImgs();
+//await taskMoveUnitImgs();
+//await taskGetCivsImgs();
+//await taskMoveCivsImgs();
 
 async function taskGetUnitImgs() {
   const getUnitImgUrl = (unitId: number) =>
@@ -138,8 +144,8 @@ async function taskGetCivsImgs() {
       new Promise<string>((resolve, reject) => {
         https.get(getCivImgUrl(c.key), (res: any) => {
           // Image will be stored at this path
-          const path = `${cDir}/${c.key}.png`;
-          const filePath = fs.createWriteStream(path);
+          const normalizedPath = path.normalize(`${cDir}/${c.key}.png`);
+          const filePath = fs.createWriteStream(normalizedPath);
           res.pipe(filePath);
           filePath.on("finish", () => {
             filePath.close();
@@ -169,6 +175,16 @@ async function taskMoveUnitImgs() {
     console.log(`[✔] Units ${uDirDest}!`);
   } catch (e) {
     console.log(`can't move ${uDir} to ${uDirDest}`, e);
+  }
+}
+
+async function taskMoveCivsImgs() {
+  rmDir(cDirDest);
+  try {
+    await Deno.rename(cDir, cDirDest);
+    console.log(`[✔] Civ ${cDirDest}!`);
+  } catch (e) {
+    console.log(`can't move ${cDir} to ${cDirDest}`, e);
   }
 }
 

@@ -64,7 +64,7 @@ SiegeEngineers combine/copy those:
     ```
 - Format `json` files for uniformness in searches with the `fmt` task defined in
   `package.json`: `pnpm fmt`.
-- Update current DE build in `./src/data/patch.json` (See
+- Update current DE build in `./src/data/json/patch.json` (See
   https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
 
 ## Assets Sources

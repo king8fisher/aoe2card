@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import data from "./data.json";
+import dataSrc from "./json/data.json";
+import stringsSrc from "./json/strings.json";
+import { Data } from "./types/data_json_types";
+import { Strings } from "./types/strings_json_types";
+
+const data = dataSrc as Data;
+const strings = stringsSrc as Strings;
+
 import { armourData, attackData, extractUnitDataByID } from "./model";
 
 // Playground for messing with json file structure and scaffolding functions

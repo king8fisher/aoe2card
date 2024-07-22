@@ -1,6 +1,6 @@
 import dataSrc from "./json/data.json";
 import stringsSrc from "./json/strings.json";
-import { Data, Unit } from "./types/data_json_types";
+import { BuildingElement, Data, Unit } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
 
 const data = dataSrc as Data;
@@ -34,7 +34,8 @@ export const extractUnitDataByID = (unitId: number): IStatisticsUnitData => {
 };
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
-  const about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
+  const about: string =
+    strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
   return splitAbout(about);
 };
 
@@ -85,7 +86,12 @@ const splitAbout = (about: string): IUnitHelp => {
     }
   }
 
-  return { about: aboutTrimmed, strong: strong, weak: weak, upgrades: upgrades };
+  return {
+    about: aboutTrimmed,
+    strong: strong,
+    weak: weak,
+    upgrades: upgrades,
+  };
 };
 
 export const techNameByID = (techId: number): string =>
@@ -164,7 +170,8 @@ export const allUnits = (civKey: string): IUnitData[] => {
     return _cacheAllUnitsByCivKey.get(civKey)!;
   }
   const entries: IUnitData[] = [];
-  data.techtrees[civKey].units.forEach((id: number) => {
+  data.techtrees[civKey].units.forEach((buildingElement: BuildingElement) => {
+    const id = buildingElement.id;
     entries.push({
       id: id,
       statisticsUnitData: extractUnitDataByID(id),
@@ -235,7 +242,9 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   // TODO: Turn this into fuzzy search
   return matchUnits(
     getAllCivs(),
-    (u) => u.statisticsUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
+    (u) =>
+      u.statisticsUnitData.name.toLowerCase().indexOf(like) >= 0 ||
+      u.id.toString() == like,
   );
 };
 
@@ -257,7 +266,11 @@ export const groupByUnitType = (units: IUnitCivData[]): IGroupByUnitData[] => {
     } else {
       const m = new Set<string>();
       m.add(next.civ.key);
-      result.push({ unit: next.unit, civs: m, mostCommonUnitStats: { cost: next.unitStats.cost } });
+      result.push({
+        unit: next.unit,
+        civs: m,
+        mostCommonUnitStats: { cost: next.unitStats.cost },
+      });
     }
   }
   // patchCalculateMostCommon(result);
@@ -293,10 +306,17 @@ export const getAllCivUnits = (civKey: string): IUnitCivData[] => {
   return matchUnits([civ_], (_u) => true);
 };
 
-export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
+export const matchUnits = (
+  civs: ICivData[],
+  match: (unit: IUnitData) => boolean,
+): IUnitCivData[] => {
   const result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
+    [
+      imperialAgeUniqueUnit(c.key),
+      castleAgeUniqueUnit(c.key),
+      ...allUnits(c.key),
+    ].forEach((u) => {
       if (match(u)) {
         const cost = data.data.units[u.id].Cost;
         result.push({
@@ -307,7 +327,7 @@ export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean
               cost["Food"] || 0,
               cost["Gold"] || 0,
               0, // FIXME: Units cost no stone ? Type doesn't appear to have stone. Confirm.
-              cost["Wood"] || 0
+              cost["Wood"] || 0,
             ),
           },
         });
@@ -323,11 +343,16 @@ export const searchCivs = (like: string): ICivData[] => {
   // TODO: Turn this into fuzzy search
   return matchCivs(
     getAllCivs(),
-    (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.key.toLowerCase().indexOf(like) >= 0
+    (u) =>
+      u.value.toLowerCase().indexOf(like) >= 0 ||
+      u.key.toLowerCase().indexOf(like) >= 0,
   );
 };
 
-export const matchCivs = (civs: ICivData[], match: (civ: ICivData) => boolean): ICivData[] => {
+export const matchCivs = (
+  civs: ICivData[],
+  match: (civ: ICivData) => boolean,
+): ICivData[] => {
   const result: ICivData[] = [];
   civs.forEach((c) => {
     if (match(c)) {
