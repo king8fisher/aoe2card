@@ -34,8 +34,7 @@ export const extractUnitDataByID = (unitId: number): IStatisticsUnitData => {
 };
 
 export const unitHelpByID = (unitId: number): IUnitHelp => {
-  const about: string =
-    strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
+  const about: string = strings[data.data.units[unitId.toString()].LanguageHelpId] ?? "";
   return splitAbout(about);
 };
 
@@ -242,9 +241,7 @@ export const searchUnits = (like: string): IUnitCivData[] => {
   // TODO: Turn this into fuzzy search
   return matchUnits(
     getAllCivs(),
-    (u) =>
-      u.statisticsUnitData.name.toLowerCase().indexOf(like) >= 0 ||
-      u.id.toString() == like,
+    (u) => u.statisticsUnitData.name.toLowerCase().indexOf(like) >= 0 || u.id.toString() == like
   );
 };
 
@@ -306,17 +303,10 @@ export const getAllCivUnits = (civKey: string): IUnitCivData[] => {
   return matchUnits([civ_], (_u) => true);
 };
 
-export const matchUnits = (
-  civs: ICivData[],
-  match: (unit: IUnitData) => boolean,
-): IUnitCivData[] => {
+export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
   const result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [
-      imperialAgeUniqueUnit(c.key),
-      castleAgeUniqueUnit(c.key),
-      ...allUnits(c.key),
-    ].forEach((u) => {
+    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
       if (match(u)) {
         const cost = data.data.units[u.id].Cost;
         result.push({
@@ -327,7 +317,7 @@ export const matchUnits = (
               cost["Food"] || 0,
               cost["Gold"] || 0,
               0, // FIXME: Units cost no stone ? Type doesn't appear to have stone. Confirm.
-              cost["Wood"] || 0,
+              cost["Wood"] || 0
             ),
           },
         });
@@ -343,16 +333,11 @@ export const searchCivs = (like: string): ICivData[] => {
   // TODO: Turn this into fuzzy search
   return matchCivs(
     getAllCivs(),
-    (u) =>
-      u.value.toLowerCase().indexOf(like) >= 0 ||
-      u.key.toLowerCase().indexOf(like) >= 0,
+    (u) => u.value.toLowerCase().indexOf(like) >= 0 || u.key.toLowerCase().indexOf(like) >= 0
   );
 };
 
-export const matchCivs = (
-  civs: ICivData[],
-  match: (civ: ICivData) => boolean,
-): ICivData[] => {
+export const matchCivs = (civs: ICivData[], match: (civ: ICivData) => boolean): ICivData[] => {
   const result: ICivData[] = [];
   civs.forEach((c) => {
     if (match(c)) {

@@ -76,12 +76,6 @@ getAllCivs().forEach((c) => {
   getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u));
 });
 
-//await taskGetUnitImgs();
-//await taskRemoveBlackFromUnitImgs();
-//await taskMoveUnitImgs();
-//await taskGetCivsImgs();
-//await taskMoveCivsImgs();
-
 async function taskGetUnitImgs() {
   const getUnitImgUrl = (unitId: number) =>
     `https://aoe2techtree.net/img/Units/${unitId}.png`;
@@ -207,3 +201,9 @@ function makeDir(dir: string) {
     fs.mkdirSync(dir);
   }
 }
+
+//await taskGetUnitImgs();
+//await taskRemoveBlackFromUnitImgs();
+//await taskMoveUnitImgs();
+//await taskGetCivsImgs();
+//await taskMoveCivsImgs();
