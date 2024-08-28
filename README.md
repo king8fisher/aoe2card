@@ -1,14 +1,18 @@
-# aoe2card
+# AoE2 Card
 
-Playground for a future app that digs into AOE2 data and presents it in a user
+Playground for a future app that digs into AoE2 data and presents it in a user
 friendly way.
 
 Temporary link for the project using vercel: https://aoe2card.vercel.app/
 
 ## Inspirations
 
-- https://aoestats.io
-- https://aoe2.net
+- https://aoestats.io (well maintained)
+- https://aoe2.net (gets outdated)
+- https://github.com/denniske/aoe2companion
+- github.com/KSneijders/AoE2ScenarioParser
+- github.com/pau795/AoE2DatabaseWeb
+- github.com/pau795/AoE2DatabaseAndroid
 
 ## Requirements
 
@@ -70,6 +74,11 @@ SiegeEngineers combine/copy those:
 ## Assets Sources
 
 - `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
+
+## Existing APIs
+
+- https://aoestats.io/api/patches/?format=json gives us the latest known patch number, at least known to aoestats.io.
+  - Ex: https://aoestats.io/api/stats/?patch=111772&grouping=random_map&elo_range=all&format=json
 
 ## Intricacies
 

@@ -44,11 +44,7 @@ export const StatisticsBlock = memo(({ unitData }: { unitData: IStatisticsUnitDa
         tooltip="Attack Delay Seconds"
         amount={roundTo(unitData.unitStatistics.AttackDelaySeconds, 2)}
       />
-      <SingleStatisticsPresenter
-        icon="speed"
-        tooltip="Speed"
-        amount={unitData.unitStatistics.Speed}
-      />
+      <SingleStatisticsPresenter icon="speed" tooltip="Speed" amount={unitData.unitStatistics.Speed} />
       <SingleStatisticsPresenter
         icon="line-of-sight"
         tooltip="Line Of Sight"
