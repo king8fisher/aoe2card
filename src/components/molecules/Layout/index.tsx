@@ -6,9 +6,11 @@ interface ILayoutProps {
 
 const Layout = ({ children }: ILayoutProps): JSX.Element => (
   <>
-    <Navbar />
-    {children}
-    {/* TODO: Add fotter */}
+    <div className="min-h-screen mb-1">
+      <Navbar />
+      {children}
+      {/* TODO: Add footer */}
+    </div>
   </>
 );
 
