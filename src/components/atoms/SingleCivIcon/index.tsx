@@ -34,7 +34,7 @@ const SingleCivIcon = (
 export default SingleCivIcon;
 
 export const TooltipContent = ({ civData }: { civData: ICivData }) => {
-  return (<div className="flex flex-col gap-1">
+  return (<div className="flex flex-col gap-1 text-sm">
     <div className="flex flex-row items-start">
       <span className="font-bold leading-6 grow">{civData.value}</span>
       <SingleCivIcon

@@ -65,10 +65,10 @@ const Home = () => {
       <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
       {filter === DataFilter.civs && searchResult?.civs.map((civ) => <CivView key={civ.key} civ={civ} />)}
-      <div className="flex flex-row flex-wrap gap-1 items-start">
+      <div className="flex flex-row flex-wrap md:flex-nowrap gap-1 items-start pb-8">
         {
           filter === DataFilter.civs &&
-          <div className="grid grid-cols-8 gap-1 p-1 mt-1 max-w-[300px]">
+          <div className="grid grid-cols-8 gap-1 p-1 mt-1 max-w-[300px] shrink-0">
             {getAllCivs().map((civData) => (
               <SingleCivIcon
                 highlight
@@ -87,7 +87,7 @@ const Home = () => {
           </div>
         }
         { (filter === DataFilter.civs && civTip) &&
-          <div className="min-w-[200px] max-w-[350px] flex flex-col gap-2 p-2 rounded bg-black/20">
+          <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
             <TooltipContent civData={civTip} />
           </div>
         }

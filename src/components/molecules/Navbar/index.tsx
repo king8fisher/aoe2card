@@ -3,7 +3,7 @@ import { Patch } from "../../atoms/Navbar/Patch";
 import { DarkModeButton } from "../DarkMode";
 
 const Navbar = (): JSX.Element => (
-  <div className="py-2 bg-zinc-300 dark:bg-zinc-800">
+  <div className="py-0 bg-zinc-300 dark:bg-zinc-800">
     <Container className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-1 items-center" title={"AoE2 Card"}>
         <a
