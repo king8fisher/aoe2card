@@ -10,23 +10,21 @@ interface SingleCivIconProps {
   civData: ICivData;
 }
 
-const SingleCivIcon = (
-  { highlight, civData, disablePopup, ...props }: SingleCivIconProps
-    & HTMLAttributes<HTMLDivElement>) => {
+const SingleCivIcon = ({
+  highlight,
+  civData,
+  disablePopup,
+  ...props
+}: SingleCivIconProps & HTMLAttributes<HTMLDivElement>) => {
   const imgClassName = highlight ? undefined : "opacity-20";
   return (
     <SingleCivIconWrap {...props}>
       {disablePopup && <img src={getCivImgUrl(civData.key)} className={imgClassName} />}
-      {!disablePopup &&
-        <ContentWithTooltip
-          tooltip={
-            <TooltipContent civData={civData} />
-          }
-        >
-
+      {!disablePopup && (
+        <ContentWithTooltip tooltip={<TooltipContent civData={civData} />}>
           <img src={getCivImgUrl(civData.key)} className={imgClassName} />
         </ContentWithTooltip>
-      }
+      )}
     </SingleCivIconWrap>
   );
 };
@@ -34,17 +32,13 @@ const SingleCivIcon = (
 export default SingleCivIcon;
 
 export const TooltipContent = ({ civData }: { civData: ICivData }) => {
-  return (<div className="flex flex-col gap-1 text-sm">
-    <div className="flex flex-row items-start">
-      <span className="font-bold leading-6 grow">{civData.value}</span>
-      <SingleCivIcon
-        highlight
-        disablePopup
-        civData={civData}
-        className="place-self-end"
-      />
+  return (
+    <div className="flex flex-col gap-1 text-sm">
+      <div className="flex flex-row items-start">
+        <span className="font-bold leading-6 grow">{civData.value}</span>
+        <SingleCivIcon highlight disablePopup civData={civData} className="place-self-end" />
+      </div>
+      <span className="text-wrap" dangerouslySetInnerHTML={{ __html: civData.help }} />
     </div>
-    <span className="text-wrap" dangerouslySetInnerHTML={{ __html: civData.help }} />
-  </div>
-  )
-}
+  );
+};

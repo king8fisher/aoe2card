@@ -8,11 +8,8 @@ export const Patch = () => {
         title={`Age of Empires II: Definitive Edition - Patch ${patch.DE}`}
       >
         <span>DE</span>
-        <span>
-          {patch.DE}
-        </span>
+        <span>{patch.DE}</span>
       </span>
     </>
   );
 };
-
