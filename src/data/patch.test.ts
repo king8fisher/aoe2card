@@ -11,7 +11,7 @@ export interface Patches {
   total_games: number;
 }
 
-test("latest patch", async () => {
+test.skip("latest patch", async () => {
   const p = await fetch("https://aoestats.io/api/patches/?format=json");
   const json = (await p.json()) as Patches[];
   let max: Patches | undefined;
