@@ -1,5 +1,5 @@
 import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
-import { useState } from "react";
+import { useState, type JSX } from "react";
 
 interface TooltipProps {
   tooltip: JSX.Element;

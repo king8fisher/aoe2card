@@ -1,5 +1,7 @@
 import Navbar from "../Navbar";
 
+import type { JSX } from "react";
+
 interface ILayoutProps {
   children: React.ReactNode;
 }

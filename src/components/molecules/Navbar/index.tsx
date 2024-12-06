@@ -2,6 +2,8 @@ import { Container } from "../../../styles";
 import { Patch } from "../../atoms/Navbar/Patch";
 import { DarkModeButton } from "../DarkMode";
 
+import type { JSX } from "react";
+
 const Navbar = (): JSX.Element => (
   <div className="py-0 bg-zinc-300 dark:bg-zinc-800">
     <Container className="flex flex-row items-center justify-between">
