@@ -1,4 +1,4 @@
-import { Metadata } from "next"
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: 'AoE2 Card',
@@ -9,10 +9,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <head>
-        {/* <meta charSet="UTF-8" /> */}
-        {/* <link rel="icon" type="image/png" href="/favicon.png" /> */}
-        {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
-        <title>AoE2 Card</title>
         <style>
           {`
             body {
