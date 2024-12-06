@@ -4,22 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "debug": "vite --port 4000",
-    "expose": "vite --port 8080 --host",
-    "build": "vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "format": "prettier -w .",
     "fmt": "pnpm format",
-    "test": "vitest run",
-    "lint": "echo '##### LINTING TYPESCRIPT FILES ######' && eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint-fix": "echo '##### FIXING LINT IN TYPESCRIPT FILES ######' && eslint . --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "test": "vitest --run"
   },
   "dependencies": {
     "@lit-labs/react": "^2.1.3",
     "@radix-ui/react-popover": "^1.1.1",
     "@shoelace-style/shoelace": "^2.16.0",
     "clsx": "^2.1.1",
+    "next": "^15.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
