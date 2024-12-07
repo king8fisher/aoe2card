@@ -49,18 +49,20 @@ const splitAbout = (about: string): IUnitHelp => {
   // Trim "Create <Unit Name> (‹cost›)" out of the "about" section
   //              |   var   |
   //              |  piece  |
-  const f = about.indexOf("(‹cost›)<br>\n");
+  const costPrefix = "(‹cost›)<br>\n";
+  const f = about.indexOf(costPrefix);
   let aboutTrimmed = about;
-  if (f >= 0) aboutTrimmed = about.substring(f + 13);
+  if (f >= 0) aboutTrimmed = about.substring(f + costPrefix.length);
   // Remove \n‹hp› ‹attack› ‹armor› ‹piercearmor› ‹range›
   // Remove \n‹hp› ‹attack› ‹armor› ‹piercearmor› ‹range› ‹garrison›
   // Remove ...
   const h = aboutTrimmed.indexOf("\n‹hp› ");
   if (h >= 0) aboutTrimmed = aboutTrimmed.substring(0, h);
-  const u = aboutTrimmed.indexOf("<i> Upgrades:");
+  const upgradesPrefix = "<i> Upgrades:";
+  const u = aboutTrimmed.indexOf(upgradesPrefix);
   let upgrades = "";
   if (u >= 0) {
-    upgrades = aboutTrimmed.substring(u + 13).trim();
+    upgrades = aboutTrimmed.substring(u + upgradesPrefix.length).trim();
     upgrades = trimSuffix(upgrades, ".</i><br>");
     aboutTrimmed = aboutTrimmed.substring(0, u);
   }
