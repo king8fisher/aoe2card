@@ -46,11 +46,20 @@ export const civByKey = (civKey: string): ICivData => {
   return result;
 };
 
-export const getAllCivUnits = (civKey: string): number[] => {
+export const getAllCivUnits = (civKey: string | null): number[] => {
+  const unitsIds: number[] = [];
+  
+  if (civKey == null) {
+    for (const u in data.data.units) {
+      const el = data.data.units[u]
+      unitsIds.push(el.ID)
+    }
+    return unitsIds;
+  }
+
   const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
-
-  const unitsIds: number[] = [];
+  
   data.techtrees[civKey].units.map((el: BuildingElement) => {
     unitsIds.push(el.id);
   });
@@ -72,9 +81,11 @@ const cDirDest = path.normalize(`${__dirname}/../public/c`);
 
 const uniqueUnitIDs: Set<number> = new Set();
 
-getAllCivs().forEach((c) => {
-  getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u));
-});
+getAllCivUnits(null).forEach((c) => uniqueUnitIDs.add(c))
+
+// getAllCivs().forEach((c) => {
+//   getAllCivUnits(c.key).forEach((u) => uniqueUnitIDs.add(u));
+// });
 
 async function taskGetUnitImgs() {
   const getUnitImgUrl = (unitId: number) =>
@@ -102,7 +113,7 @@ async function taskGetUnitImgs() {
         });
       })
         .then((id) => {
-          console.log(`got ${id}`);
+          console.log(`img for ${id}`);
         })
         .catch((id) => {
           console.log(`error ${id}`);
@@ -202,7 +213,7 @@ function makeDir(dir: string) {
   }
 }
 
-//await taskGetUnitImgs();
+await taskGetUnitImgs();
 //await taskRemoveBlackFromUnitImgs();
 //await taskMoveUnitImgs();
 //await taskGetCivsImgs();
