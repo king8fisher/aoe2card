@@ -1,4 +1,4 @@
-import { SlButton, SlButtonGroup } from "@shoelace-style/shoelace/dist/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/src/shadcn/components/ui/tabs";
 import { DataFilter } from "../../../helpers/constants";
 
 export interface IFilterStats {
@@ -13,24 +13,16 @@ interface IButtonGroupProps {
 }
 
 export const ButtonGroup = ({ filter, setFilter, filterStats }: IButtonGroupProps) => (
-  <div className="flex flex-row items-center my-2">
-    <SlButtonGroup>
-      <SlButton
-        size="small"
-        variant={filter === DataFilter.units ? "primary" : "default"}
-        onClick={() => setFilter(DataFilter.units)}
-      >
-        <LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} />
-      </SlButton>
-      <SlButton
-        size="small"
-        variant={filter === DataFilter.civs ? "primary" : "default"}
-        onClick={() => setFilter(DataFilter.civs)}
-      >
-        <LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} />
-      </SlButton>
-    </SlButtonGroup>
-  </div>
+  <>
+    <Tabs value={filter} onValueChange={(v) => setFilter(v as DataFilter)}>
+      <TabsList>
+        <TabsTrigger value={DataFilter.units}><LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} /></TabsTrigger>
+        <TabsTrigger value={DataFilter.civs}><LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} /></TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">Make changes to your account here.</TabsContent>
+      <TabsContent value="password">Change your password here.</TabsContent>
+    </Tabs>
+  </>
 );
 
 const LabelWithBadge = ({ label, amount }: { label: string; amount: number }) => (

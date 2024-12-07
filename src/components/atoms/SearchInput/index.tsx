@@ -1,4 +1,4 @@
-import { SlIcon, SlInput, SlSpinner } from "@shoelace-style/shoelace/dist/react";
+import { Input } from "~/src/shadcn/components/ui/input";
 
 interface ISearchInputProps {
   searchTerm: string;
@@ -8,9 +8,9 @@ interface ISearchInputProps {
 
 const SearchInput = ({ searchTerm, setSearchTerm, isLoading }: ISearchInputProps) => (
   <div className="flex-1 mt-3">
-    <SlInput
-      className="search-input"
-      clearable
+    <Input
+      // clearable
+      type="search"
       placeholder="Search"
       value={searchTerm}
       autoFocus
@@ -18,12 +18,12 @@ const SearchInput = ({ searchTerm, setSearchTerm, isLoading }: ISearchInputProps
         const searchValue = e?.currentTarget?.value;
         setSearchTerm(searchValue);
       }}
-      onSlClear={() => {
-        setSearchTerm("");
-      }}
+      // onSlClear={() => {
+      //   setSearchTerm("");
+      // }}
     >
-      {isLoading ? <SlSpinner slot="prefix" /> : <SlIcon name="search" slot="prefix" />}
-    </SlInput>
+      {/* {isLoading ? <SlSpinner slot="prefix" /> : <SlIcon name="search" slot="prefix" />} */}
+    </Input>
   </div>
 );
 

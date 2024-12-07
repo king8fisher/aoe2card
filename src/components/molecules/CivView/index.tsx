@@ -1,5 +1,5 @@
-import { SlDetails, SlIcon } from "@shoelace-style/shoelace/dist/react";
 import { useMemo } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/src/shadcn/components/ui/accordion";
 import { ICivData, IUnitCivData, getAllCivUnits } from "../../../data/model";
 import { getCivImgUrl } from "../../../helpers/tools";
 import { UnitsPresentationFlex } from "../../../styles";
@@ -30,14 +30,19 @@ export const CivView = ({ civ }: ICivViewProps) => {
   );
 
   return (
-    <SlDetails className="details w-full mt-2">
-      <SlIcon name="plus-square" slot="expand-icon" />
-      <SlIcon name="dash-square" slot="collapse-icon" />
-      <span slot="summary" className="flex flex-row gap-3 items-center">
-        <img src={getCivImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
-        {civ.value}
-      </span>
-      {renderCivDetailsView()}
-    </SlDetails>
+    <Accordion type="single" collapsible className="details w-full mt-2">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        {/* <SlIcon name="plus-square" slot="expand-icon" />
+        <SlIcon name="dash-square" slot="collapse-icon" /> */}
+        <AccordionContent>
+          <span slot="summary" className="flex flex-row gap-3 items-center">
+            <img src={getCivImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
+            {civ.value}
+          </span>
+          {renderCivDetailsView()}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };

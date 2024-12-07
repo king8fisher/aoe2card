@@ -1,25 +1,44 @@
-import { SlTooltip } from "@shoelace-style/shoelace/dist/react";
 import { useState, type JSX } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "~/src/shadcn/components/ui/popover";
 
 interface TooltipProps {
   tooltip: JSX.Element;
 }
 
 export const ContentWithTooltip = (props: React.PropsWithChildren<TooltipProps>) => {
-  const [showTooltip, setShowTooltip] = useState(false);
+
   // onMouseLeave event does not bubble. When an event bubbles, it moves, or propagates, up the DOM hierarchy.
   // onMouseOut bubbles.
+  const [open, setOpen] = useState(false);
+
+  const handleMouseEnter = () => {
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setOpen(false);
+  };
+
   return (
-    <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
-      {showTooltip && (
-        <SlTooltip style={{ ["--show-delay" as string]: "400" }}>
-          <div className="flex flex-col gap-1" slot="content">
-            {props.tooltip}
-          </div>
-          {props.children}
-        </SlTooltip>
-      )}
-      {!showTooltip && <>{props.children}</>}
-    </div>
+    <Popover open={open}
+    // onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}
+    >
+      <PopoverTrigger
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {props.children}
+
+      </PopoverTrigger>
+      <PopoverContent>
+        {props.tooltip}
+      </PopoverContent>
+    </Popover>
+    // <div >
+    //   {showTooltip && (
+
+    //   )}
+    //   {!showTooltip && <>{props.children}</>}
+    // </div>
   );
 };

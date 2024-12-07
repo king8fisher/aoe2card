@@ -1,6 +1,6 @@
 import { Container } from "../../../styles";
 import { Patch } from "../../atoms/Navbar/Patch";
-import { DarkModeButton } from "../DarkMode";
+import { ModeToggle } from "../DarkMode/ThemeButton";
 
 import type { JSX } from "react";
 
@@ -22,7 +22,8 @@ const Navbar = (): JSX.Element => (
         </a>
         <Patch />
       </div>
-      <DarkModeButton />
+      <ModeToggle />
+      {/* <DarkModeButton /> */}
     </Container>
   </div>
 );

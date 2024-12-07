@@ -68,7 +68,7 @@ const Home = () => {
   const [civTip, setCivTip] = useState<ICivData | null>(null);
 
   return (
-    <Container>
+    <Container className="flex flex-col gap-2">
       <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
