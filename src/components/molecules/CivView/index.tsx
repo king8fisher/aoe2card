@@ -38,8 +38,6 @@ export const CivView = ({ civ }: ICivViewProps) => {
             {civ.value}
           </span>
         </AccordionTrigger>
-        {/* <SlIcon name="plus-square" slot="expand-icon" />
-        <SlIcon name="dash-square" slot="collapse-icon" /> */}
         <AccordionContent>
           {renderCivDetailsView()}
         </AccordionContent>

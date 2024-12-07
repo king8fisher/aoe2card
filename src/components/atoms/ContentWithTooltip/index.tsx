@@ -6,9 +6,6 @@ interface TooltipProps {
 }
 
 export const ContentWithTooltip = (props: React.PropsWithChildren<TooltipProps>) => {
-
-  // onMouseLeave event does not bubble. When an event bubbles, it moves, or propagates, up the DOM hierarchy.
-  // onMouseOut bubbles.
   const [open, setOpen] = useState(false);
 
   const handleMouseEnter = () => {
@@ -20,11 +17,10 @@ export const ContentWithTooltip = (props: React.PropsWithChildren<TooltipProps>)
   };
 
   return (
-    <Popover open={open}
-    // onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}
-    >
+    <Popover open={open}>
       <PopoverTrigger
         onMouseEnter={handleMouseEnter}
+        // `onMouseOut` bubbles, but `onMouseLeave` event does not bubble.
         onMouseLeave={handleMouseLeave}
       >
         {props.children}
@@ -34,11 +30,5 @@ export const ContentWithTooltip = (props: React.PropsWithChildren<TooltipProps>)
         {props.tooltip}
       </PopoverContent>
     </Popover>
-    // <div >
-    //   {showTooltip && (
-
-    //   )}
-    //   {!showTooltip && <>{props.children}</>}
-    // </div>
   );
 };

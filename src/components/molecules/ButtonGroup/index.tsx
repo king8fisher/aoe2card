@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/src/shadcn/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "~/src/shadcn/components/ui/tabs";
 import { DataFilter } from "../../../helpers/constants";
 
 export interface IFilterStats {
@@ -19,8 +19,6 @@ export const ButtonGroup = ({ filter, setFilter, filterStats }: IButtonGroupProp
         <TabsTrigger value={DataFilter.units}><LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} /></TabsTrigger>
         <TabsTrigger value={DataFilter.civs}><LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} /></TabsTrigger>
       </TabsList>
-      <TabsContent value="account">Make changes to your account here.</TabsContent>
-      <TabsContent value="password">Change your password here.</TabsContent>
     </Tabs>
   </>
 );

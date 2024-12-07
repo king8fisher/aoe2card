@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ThemeProvider } from "~/src/components/theme-provider";
+import { ThemeProvider } from "~/src/components/molecules/ThemeProvider";
 
 export const metadata: Metadata = {
   title: 'AoE2 Card',

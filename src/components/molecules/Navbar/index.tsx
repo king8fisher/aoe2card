@@ -1,7 +1,7 @@
 import Link from "next/link";
+import { ThemeButton } from "~/src/components/molecules/ThemeButton";
 import { Container } from "../../../styles";
 import { Patch } from "../../atoms/Navbar/Patch";
-import { ModeToggle } from "../DarkMode/ThemeButton";
 
 import type { JSX } from "react";
 
@@ -23,8 +23,7 @@ const Navbar = (): JSX.Element => (
         </Link>
         <Patch />
       </div>
-      <ModeToggle />
-      {/* <DarkModeButton /> */}
+      <ThemeButton />
     </Container>
   </div>
 );
