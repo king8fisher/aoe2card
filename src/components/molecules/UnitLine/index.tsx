@@ -26,11 +26,13 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
         }
       >
         <UnitLineDiv>
-          <span className="flex flex-col gap-px items-center">
+          <span className="flex flex-row w-full gap-px items-center">
             <img src={getUnitImgUrl(unit.id)} alt="" className="w-6 h-6 flex-shrink-0 mt-[2px] rounded-sm ml-[4px]" />
+            <span className="mx-[4px] text-md break-words grow">{unit.statisticsUnitData.name}</span>
+            <span className="place-self-end">
+              <CostPresentation cost={cost} />
+            </span>
           </span>
-          <span className="mx-[4px] text-md break-words">{unit.statisticsUnitData.name}</span>
-          <CostPresentation cost={cost} />
         </UnitLineDiv>
       </ContentWithTooltip>
       <UnitLineDiv>

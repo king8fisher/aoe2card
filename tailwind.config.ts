@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+
+const config = {
   darkMode: "class",
   content: ["index.html", "./src/**/*.{ts,tsx}"],
   theme: {
@@ -49,7 +50,9 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+				"tooltip-background": 'hsl(var(--tooltip-background))',
+  			"tooltip-foreground": 'hsl(var(--tooltip-foreground))',
   		},
   		keyframes: {
   			'accordion-down': {
@@ -77,3 +80,5 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 };
+
+export default config;
