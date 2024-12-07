@@ -32,14 +32,15 @@ export const CivView = ({ civ }: ICivViewProps) => {
   return (
     <Accordion type="single" collapsible className="details w-full mt-2">
       <AccordionItem value="item-1">
-        <AccordionTrigger>Is it accessible?</AccordionTrigger>
-        {/* <SlIcon name="plus-square" slot="expand-icon" />
-        <SlIcon name="dash-square" slot="collapse-icon" /> */}
-        <AccordionContent>
+        <AccordionTrigger>
           <span slot="summary" className="flex flex-row gap-3 items-center">
             <img src={getCivImgUrl(civ.key)} alt="" className="w-5 h-5 flex-shrink-0" />
             {civ.value}
           </span>
+        </AccordionTrigger>
+        {/* <SlIcon name="plus-square" slot="expand-icon" />
+        <SlIcon name="dash-square" slot="collapse-icon" /> */}
+        <AccordionContent>
           {renderCivDetailsView()}
         </AccordionContent>
       </AccordionItem>
