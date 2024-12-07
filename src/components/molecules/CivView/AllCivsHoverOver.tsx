@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useState } from "react";
 import {
   ICivData,
@@ -7,10 +8,10 @@ import SingleCivIcon, { TooltipContent } from "../../atoms/SingleCivIcon";
 
 
 export const AllCivsHoverOver = () => {
-  const [civTip, setCivTip] = useState<ICivData | null>(null);
+  const [hovered, setHovered] = useState<ICivData | null>(null);
   return (
     <div className="flex flex-row flex-wrap md:flex-nowrap gap-1 items-start pb-8">
-      <div className="grid grid-cols-8 gap-1 p-1 mt-1 max-w-[300px] shrink-0">
+      <div className="grid grid-cols-8 gap-1 p-1 mt-1 shrink-0">
         {getAllCivs().map((civData) => (
           <SingleCivIcon
             highlight
@@ -18,19 +19,23 @@ export const AllCivsHoverOver = () => {
             civData={civData}
             key={civData.key}
             onMouseOver={() => {
-              setCivTip(civData);
+              setHovered(civData);
             }}
             onMouseLeave={() => {
               // We want to keep the last still visible.
               //setCivTip(null)
             }}
+            className={clsx(
+              "transition-transform",
+              hovered && hovered?.key == civData.key && "scale-150")
+            }
           />
         ))}
       </div>
       {
-        civTip && (
+        hovered && (
           <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
-            <TooltipContent civData={civTip} />
+            <TooltipContent civData={hovered} />
           </div>
         )
       }
