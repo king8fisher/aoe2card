@@ -13,6 +13,7 @@ Temporary link for the project using vercel: https://aoe2card.vercel.app/
 - github.com/KSneijders/AoE2ScenarioParser
 - github.com/pau795/AoE2DatabaseWeb
 - github.com/pau795/AoE2DatabaseAndroid
+- https://www.aoe2database.com/
 
 ## Requirements
 
@@ -35,6 +36,9 @@ Temporary link for the project using vercel: https://aoe2card.vercel.app/
   for Styled Components
 
 ## Data Sources
+
+* `*.dds` Images of the units:
+  * C:\Program Files (x86)\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\units\ 
 
 - https://github.com/HSZemi/aoe2dat is the source for SiegeEngineers.
   - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
