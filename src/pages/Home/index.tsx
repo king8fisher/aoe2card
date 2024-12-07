@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SearchInput from "../../components/atoms/SearchInput";
-import SingleCivIcon, { TooltipContent } from "../../components/atoms/SingleCivIcon";
 import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
 import { CivView } from "../../components/molecules/CivView";
+import { AllCivsHoverOver } from "../../components/molecules/CivView/AllCivsHoverOver";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import {
   ICivData,
   IGroupByUnitData,
   IUnitCivData,
-  getAllCivs,
   groupByUnitType,
   searchCivs,
-  searchUnits,
+  searchUnits
 } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
 import { useDebounce } from "../../helpers/debouncers";
@@ -65,40 +64,13 @@ const Home = () => {
     };
   }, [searchResult]);
 
-  const [civTip, setCivTip] = useState<ICivData | null>(null);
-
   return (
     <Container className="flex flex-col gap-2">
       <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
       {filter === DataFilter.civs && searchResult?.civs.map((civ) => <CivView key={civ.key} civ={civ} />)}
-      <div className="flex flex-row flex-wrap md:flex-nowrap gap-1 items-start pb-8">
-        {filter === DataFilter.civs && (
-          <div className="grid grid-cols-8 gap-1 p-1 mt-1 max-w-[300px] shrink-0">
-            {getAllCivs().map((civData) => (
-              <SingleCivIcon
-                highlight
-                disablePopup
-                civData={civData}
-                key={civData.key}
-                onMouseOver={() => {
-                  setCivTip(civData);
-                }}
-                onMouseLeave={() => {
-                  // We want to keep the last still visible.
-                  //setCivTip(null)
-                }}
-              />
-            ))}
-          </div>
-        )}
-        {filter === DataFilter.civs && civTip && (
-          <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
-            <TooltipContent civData={civTip} />
-          </div>
-        )}
-      </div>
+      {filter === DataFilter.civs && <AllCivsHoverOver />}
     </Container>
   );
 };
