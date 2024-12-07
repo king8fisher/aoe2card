@@ -37,7 +37,7 @@ export const CivView = ({ civ }: ICivViewProps) => {
         <SlIcon name="dash-square" slot="collapse-icon" /> */}
         <AccordionContent>
           <span slot="summary" className="flex flex-row gap-3 items-center">
-            <img src={getCivImgUrl(civ.key)} className="w-5 h-5 flex-shrink-0" />
+            <img src={getCivImgUrl(civ.key)} alt="" className="w-5 h-5 flex-shrink-0" />
             {civ.value}
           </span>
           {renderCivDetailsView()}

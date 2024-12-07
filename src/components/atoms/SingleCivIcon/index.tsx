@@ -19,10 +19,10 @@ const SingleCivIcon = ({
   const imgClassName = highlight ? undefined : "opacity-20";
   return (
     <SingleCivIconWrap {...props}>
-      {disablePopup && <img src={getCivImgUrl(civData.key)} className={imgClassName} />}
+      {disablePopup && <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />}
       {!disablePopup && (
         <ContentWithTooltip tooltip={<TooltipContent civData={civData} />}>
-          <img src={getCivImgUrl(civData.key)} className={imgClassName} />
+          <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />
         </ContentWithTooltip>
       )}
     </SingleCivIconWrap>

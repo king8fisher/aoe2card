@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useDebounce = <T extends (...args: any[]) => any>(fn: T, delay: number) => {
   // A ref to store the timer id
   const timerRef = useRef<NodeJS.Timeout | null>(null);

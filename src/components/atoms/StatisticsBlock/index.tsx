@@ -1,10 +1,9 @@
-import { memo } from "react";
 import { IStatisticsUnitData } from "../../../data/model";
 import { getStatisticsImgUrl, roundTo } from "../../../helpers/tools";
 import { ContentWithTooltip } from "../ContentWithTooltip";
 import { SingleImg, SingleSpan } from "./styles";
 
-const SingleStatisticsPresenter = memo(
+const SingleStatisticsPresenter =
   ({ icon, amount, tooltip }: { icon: string; amount: number | string; tooltip: string }) => (
     <ContentWithTooltip
       tooltip={
@@ -20,9 +19,9 @@ const SingleStatisticsPresenter = memo(
       </SingleSpan>
     </ContentWithTooltip>
   )
-);
+  ;
 
-export const StatisticsBlock = memo(({ unitData }: { unitData: IStatisticsUnitData }) => {
+export const StatisticsBlock = ({ unitData }: { unitData: IStatisticsUnitData }) => {
   return (
     <div className="grid grid-cols-5 gap-1 w-full">
       <SingleStatisticsPresenter icon="hp" tooltip="Hit Points" amount={unitData.unitStatistics.HP} />
@@ -57,4 +56,4 @@ export const StatisticsBlock = memo(({ unitData }: { unitData: IStatisticsUnitDa
       />
     </div>
   );
-});
+};

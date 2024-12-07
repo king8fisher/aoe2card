@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import dataSrc from "./json/data.json";
 import stringsSrc from "./json/strings.json";
 import { Data } from "./types/data_json_types";

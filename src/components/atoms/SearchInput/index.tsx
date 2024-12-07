@@ -6,7 +6,7 @@ interface ISearchInputProps {
   isLoading: boolean;
 }
 
-const SearchInput = ({ searchTerm, setSearchTerm, isLoading }: ISearchInputProps) => (
+const SearchInput = ({ searchTerm, setSearchTerm }: ISearchInputProps) => (
   <div className="flex-1 mt-3">
     <Input
       // clearable

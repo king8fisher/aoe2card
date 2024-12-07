@@ -23,7 +23,7 @@ export const UnitPresentation = ({ unitCivData, showCiv }: IUnitPresentationProp
             }
           >
             <UnitLineDiv>
-              <img src={getCivImgUrl(unitCivData.civ.key)} className="w-7 h-7 flex-shrink-0 mt-[2px]" />
+              <img src={getCivImgUrl(unitCivData.civ.key)} alt="" className="w-7 h-7 flex-shrink-0 mt-[2px]" />
               <div className="leading-none mt-[0.44rem]">{unitCivData.civ.value}</div>
             </UnitLineDiv>
           </ContentWithTooltip>
