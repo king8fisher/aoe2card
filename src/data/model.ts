@@ -164,9 +164,24 @@ export interface IUnitData {
   help: IUnitHelp;
 }
 
+const _cacheAllUnits: Array<IUnitData> = [];
 const _cacheAllUnitsByCivKey: Map<string, IUnitData[]> = new Map();
 
-export const allUnits = (civKey: string): IUnitData[] => {
+export const allRegularUnits = (civKey: string | null): IUnitData[] => {
+  if (civKey == null) {
+    if (_cacheAllUnits.length > 0) return _cacheAllUnits;
+    for (const u in data.data.units) {
+      const el = data.data.units[u]
+      _cacheAllUnits.push({
+        id: el.ID,
+        statisticsUnitData: extractUnitDataByID(el.ID),
+        unitType: UnitType.RegularUnit,
+        help: unitHelpByID(el.ID)
+      })
+    }
+    return _cacheAllUnits;
+  }
+
   if (_cacheAllUnitsByCivKey.has(civKey)) {
     return _cacheAllUnitsByCivKey.get(civKey)!;
   }
@@ -225,7 +240,7 @@ export class Cost {
   }
 }
 
-// const emptyCost = (): Cost => new Cost(0, 0, 0, 0);
+export const emptyCost: Cost = new Cost(0, 0, 0, 0);
 
 export interface IUnitStatsData {
   cost: Cost;
@@ -308,7 +323,7 @@ export const getAllCivUnits = (civKey: string): IUnitCivData[] => {
 export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
   const result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allUnits(c.key)].forEach((u) => {
+    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allRegularUnits(c.key)].forEach((u) => {
       if (match(u)) {
         const cost = data.data.units[u.id].Cost;
         result.push({
