@@ -36,7 +36,7 @@ export const TooltipContent = ({ civData }: { civData: ICivData }) => {
     <div className="flex flex-col gap-1 text-sm">
       <div className="flex flex-row items-start">
         <span className="font-bold leading-6 grow">{civData.value}</span>
-        <SingleCivIcon highlight disablePopup civData={civData} className="place-self-end" />
+        <SingleCivIcon highlight disablePopup civData={civData} className="place-self-end shrink-0" />
       </div>
       <span className="text-wrap" dangerouslySetInnerHTML={{ __html: civData.help }} />
     </div>
