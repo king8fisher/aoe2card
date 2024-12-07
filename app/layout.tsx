@@ -4,6 +4,9 @@ import { ThemeProvider } from "~/src/components/theme-provider";
 export const metadata: Metadata = {
   title: 'AoE2 Card',
   description: 'This is a playground for AoE2 stuff made by a bunch of friends playing the game',
+  icons: [
+    { rel: "icon", url: "/favicon.png" },
+  ]
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
