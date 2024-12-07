@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
 import SearchInput from "../../components/atoms/SearchInput";
 import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
 import { CivView } from "../../components/molecules/CivView";
@@ -13,7 +14,6 @@ import {
   searchUnits
 } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
-import { useDebounce } from "../../helpers/debouncers";
 import { Container } from "../../styles";
 
 export interface ISearchResult {
@@ -47,7 +47,7 @@ const Home = () => {
     setLoading(false);
   }, []);
 
-  const debouncedSearch = useDebounce(search, 400);
+  const [debouncedSearch] = useDebounce(search, 400);
 
   const handleSetSearchTerm = useCallback(
     (nextSearchTerm: string) => {
