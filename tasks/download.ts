@@ -1,6 +1,4 @@
-import * as child_process from "node:child_process";
 import * as fs from "node:fs";
-import * as https from "node:https";
 import * as path from "node:path";
 import { exit } from "node:process";
 import { fileURLToPath } from "node:url";
@@ -78,6 +76,7 @@ const uDir = path.normalize(`${__dirname}/u`);
 const uDirDest = path.normalize(`${__dirname}/../public/u`);
 const cDir = path.normalize(`${__dirname}/c`);
 const cDirDest = path.normalize(`${__dirname}/../public/c`);
+const uDirManual = path.normalize(`${__dirname}/manual`);
 
 const uniqueUnitIDs: Set<number> = new Set();
 
@@ -94,23 +93,23 @@ async function taskGetUnitImgs() {
   rmDir(uDir);
   makeDir(uDir);
 
-  async function getImgs() {
+  function getImgs() {
     uniqueUnitIDs.forEach(async (id) => {
       const response = await fetch(getUnitImgUrl(id));
       if (response.status == 200 && response.body) {
         // Image will be stored at this path
-        const path = `${uDir}/${id}.png`;
-        const filePath = await Deno.open(path, { create: true, write: true });
+        const normalizedPath = path.normalize(`${uDir}/${id}.png`);
+        const filePath = await Deno.open(normalizedPath, { create: true, write: true });
         await response.body.pipeTo(filePath.writable);
       } else {
         console.log({ id, status: response.status });
       }
     });
   }
-  await getImgs();
+  getImgs();
 }
 
-async function taskRemoveBlackFromUnitImgs() {
+function taskRemoveBlackFromUnitImgs() {
   rmDir(`${uDir}/a`);
   makeDir(`${uDir}/a`);
   fs.readdir(uDir, function (err, files) {
@@ -118,12 +117,37 @@ async function taskRemoveBlackFromUnitImgs() {
       return console.log(`Unable to scan ${uDir}`, err);
     }
     files.forEach(function (file) {
-      child_process.exec(
-        `gm.exe convert ${uDir}/${file} -fuzz 5% -transparent "#000" ${uDir}/a/${file}`,
-      );
+      const cmd = new Deno.Command(`cmd.exe`, {
+        args: [`/c`, `gm.exe convert ${uDir}/${file} -fuzz 5% -transparent #000 ${uDir}/a/${file}`]
+      })
+      const _ = cmd.outputSync()
     });
   });
 }
+
+async function taskFillAlphaAsRgbAndRemoveBlackFromUnitImgs() {
+  rmDir(`${uDirManual}/u`);
+  makeDir(`${uDirManual}/u`);
+  makeDir(`${uDirManual}/u/a`);
+  fs.readdir(uDirManual, function (err, files) {
+    if (err) {
+      return console.log(`Unable to scan ${uDir}`, err);
+    }
+    files.forEach(async function (file) {
+      const cmd = new Deno.Command(`cmd.exe`, {
+        args: [`/c`, `gm.exe convert ${uDirManual}/${file} -background #014e92 -flatten ${uDirManual}/u/${file}`]
+      }
+      );
+      const _ = cmd.outputSync()
+      const cmd1 = new Deno.Command(`cmd.exe`, {
+        args: [`/c`, `gm.exe convert ${uDirManual}/u/${file} -fuzz 5% -transparent #000 ${uDirManual}/u/a/${file}`],
+      }
+      )
+      const __ = cmd1.outputSync()
+    });
+  });
+}
+
 
 async function taskGetCivsImgs() {
   const getCivImgUrl = (civKey: string) =>
@@ -132,43 +156,50 @@ async function taskGetCivsImgs() {
   rmDir(cDir);
   makeDir(cDir);
 
-  async function getImgs() {
-    getAllCivs().forEach((c) => {
-      new Promise<string>((resolve, reject) => {
-        https.get(getCivImgUrl(c.key), (res: any) => {
-          // Image will be stored at this path
-          const normalizedPath = path.normalize(`${cDir}/${c.key}.png`);
-          const filePath = fs.createWriteStream(normalizedPath);
-          res.pipe(filePath);
-          filePath.on("finish", () => {
-            filePath.close();
-            resolve(c.key);
-          });
-          filePath.on("error", (e: any) => {
-            console.log(e);
-            reject(c.key);
-          });
-        });
-      })
-        .then((id) => {
-          console.log(`got ${id}`);
-        })
-        .catch((id) => {
-          console.log(`error ${id}`);
-        });
+  function getImgs() {
+    getAllCivs().forEach(async (c) => {
+      const response = await fetch(getCivImgUrl(c.key));
+      if (response.status == 200 && response.body) {
+        // Image will be stored at this path
+        const normalizedPath = path.normalize(`${cDir}/${c.key}.png`);
+        const filePath = await Deno.open(normalizedPath, { create: true, write: true });
+        await response.body.pipeTo(filePath.writable);
+      } else {
+        console.log({ key: c.key, status: response.status });
+      }
     });
   }
-  await getImgs();
+  getImgs();
 }
 
-async function taskMoveUnitImgs() {
-  rmDir(uDirDest);
-  try {
-    await Deno.rename(uDir, uDirDest);
-    console.log(`[✔] Units ${uDirDest}!`);
-  } catch (e) {
-    console.log(`can't move ${uDir} to ${uDirDest}`, e);
+async function copyDirectory(srcDir: string, destDir: string) {
+  // Ensure the destination directory exists
+  await Deno.mkdir(destDir, { recursive: true });
+
+  for await (const entry of Deno.readDir(srcDir)) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory) {
+      // Recursively copy the subdirectory
+      await copyDirectory(srcPath, destPath);
+    } else if (entry.isFile) {
+      // Copy the file
+      await Deno.copyFile(srcPath, destPath);
+      console.log(`Copied file: ${srcPath} -> ${destPath}`);
+    } else if (entry.isSymlink) {
+      // Handle symbolic links if necessary
+      const target = await Deno.readLink(srcPath);
+      await Deno.symlink(target, destPath);
+      console.log(`Copied symlink: ${srcPath} -> ${destPath}`);
+    }
   }
+}
+
+async function taskMoveAllUnitImgs() {
+  rmDir(uDirDest);
+  copyDirectory(uDir, uDirDest)
+  copyDirectory(`${uDirManual}/u`, uDirDest)
 }
 
 async function taskMoveCivsImgs() {
@@ -201,10 +232,28 @@ function makeDir(dir: string) {
   }
 }
 
-//await taskGetUnitImgs();
-await taskRemoveBlackFromUnitImgs();
-//await taskMoveUnitImgs();
-//await taskGetCivsImgs();
-//await taskMoveCivsImgs();
+async function taskBatchRemoteUnitsImgs() {
+  await taskGetUnitImgs();
+  await taskRemoveBlackFromUnitImgs();
+}
+
+async function taskBatchRemoteCivsImgs() {
+  await taskGetCivsImgs();
+  await taskMoveCivsImgs();
+}
+
+async function taskBatchManualUnitsImgs() {
+  // manual -> manual/u
+  await taskFillAlphaAsRgbAndRemoveBlackFromUnitImgs()
+}
+
+async function main() {
+  // await taskBatchRemoteUnitsImgs();
+  // await taskBatchRemoteCivsImgs();
+  await taskBatchManualUnitsImgs()
+  await taskMoveAllUnitImgs()
+}
+
+await main()
 
 // deno --allow-all --unstable-sloppy-imports download.ts
