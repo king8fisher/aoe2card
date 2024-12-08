@@ -48,7 +48,7 @@ export const civByKey = (civKey: string): ICivData => {
 
 export const getAllCivUnits = (civKey: string | null): number[] => {
   const unitsIds: number[] = [];
-  
+
   if (civKey == null) {
     for (const u in data.data.units) {
       const el = data.data.units[u]
@@ -59,7 +59,7 @@ export const getAllCivUnits = (civKey: string | null): number[] => {
 
   const civ_ = civByKey(civKey);
   if (civ_ == null) return [];
-  
+
   data.techtrees[civKey].units.map((el: BuildingElement) => {
     unitsIds.push(el.id);
   });
@@ -95,35 +95,23 @@ async function taskGetUnitImgs() {
   makeDir(uDir);
 
   async function getImgs() {
-    uniqueUnitIDs.forEach((id) => {
-      new Promise<number>((resolve, reject) => {
-        https.get(getUnitImgUrl(id), (res: any) => {
-          // Image will be stored at this path
-          const path = `${uDir}/${id}.png`;
-          const filePath = fs.createWriteStream(path);
-          res.pipe(filePath);
-          filePath.on("finish", () => {
-            filePath.close();
-            resolve(id);
-          });
-          filePath.on("error", (e: any) => {
-            console.log(e);
-            reject(id);
-          });
-        });
-      })
-        .then((id) => {
-          console.log(`img for ${id}`);
-        })
-        .catch((id) => {
-          console.log(`error ${id}`);
-        });
+    uniqueUnitIDs.forEach(async (id) => {
+      const response = await fetch(getUnitImgUrl(id));
+      if (response.status == 200 && response.body) {
+        // Image will be stored at this path
+        const path = `${uDir}/${id}.png`;
+        const filePath = await Deno.open(path, { create: true, write: true });
+        await response.body.pipeTo(filePath.writable);
+      } else {
+        console.log({ id, status: response.status });
+      }
     });
   }
   await getImgs();
 }
 
 async function taskRemoveBlackFromUnitImgs() {
+  rmDir(`${uDir}/a`);
   makeDir(`${uDir}/a`);
   fs.readdir(uDir, function (err, files) {
     if (err) {
@@ -213,8 +201,10 @@ function makeDir(dir: string) {
   }
 }
 
-await taskGetUnitImgs();
-//await taskRemoveBlackFromUnitImgs();
+//await taskGetUnitImgs();
+await taskRemoveBlackFromUnitImgs();
 //await taskMoveUnitImgs();
 //await taskGetCivsImgs();
 //await taskMoveCivsImgs();
+
+// deno --allow-all --unstable-sloppy-imports download.ts
