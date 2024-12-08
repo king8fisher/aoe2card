@@ -198,8 +198,9 @@ async function copyDirectory(srcDir: string, destDir: string) {
 
 async function taskMoveAllUnitImgs() {
   rmDir(uDirDest);
-  copyDirectory(uDir, uDirDest)
-  copyDirectory(`${uDirManual}/u`, uDirDest)
+  await copyDirectory(uDir, uDirDest)
+  // This sequence. Since we may overwrite some images
+  await copyDirectory(`${uDirManual}/u`, uDirDest)
 }
 
 async function taskMoveCivsImgs() {
