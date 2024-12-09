@@ -14,6 +14,7 @@ Temporary link for the project using vercel: https://aoe2card.vercel.app/
 - github.com/pau795/AoE2DatabaseWeb
 - github.com/pau795/AoE2DatabaseAndroid
 - https://www.aoe2database.com/
+- https://ugc.aoe2.rocks/
 
 ## Requirements
 
@@ -37,10 +38,11 @@ Temporary link for the project using vercel: https://aoe2card.vercel.app/
 
 ## Data Sources
 
-* `*.dds` Images of the units:
-  * C:\Program Files (x86)\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\units\ 
+- `*.dds` Images of the units:
+  - `C:\Program Files (x86)\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\units\`
+- `C:\Program Files (x86)\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
 
-- https://github.com/HSZemi/aoe2dat is the source for SiegeEngineers.
+* https://github.com/HSZemi/aoe2dat is the source for SiegeEngineers.
   - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
   - https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.ror.json -
     apparently Return of Rome
@@ -74,10 +76,6 @@ SiegeEngineers combine/copy those:
   `package.json`: `pnpm fmt`.
 - Update current DE build in `./src/data/json/patch.json` (See
   https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
-
-## Assets Sources
-
-- `\Steam\steamapps\common\AoE2DE\widgetui\textures\ingame\staticons\`
 
 ## Existing APIs
 
