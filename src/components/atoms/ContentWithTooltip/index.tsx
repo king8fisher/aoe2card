@@ -24,11 +24,11 @@ export const ContentWithTooltip = (props: React.PropsWithChildren<TooltipProps>)
   return (
     <TooltipProvider>
       <Tooltip open={open}>
-        <TooltipTrigger onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>{props.children}</TooltipTrigger>
+        <TooltipTrigger onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          {props.children}
+        </TooltipTrigger>
         <TooltipContent>
-          <div className="flex flex-col gap-2 text-sm max-w-96">
-            {props.tooltip}
-          </div>
+          <div className="flex flex-col gap-2 text-sm max-w-96">{props.tooltip}</div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

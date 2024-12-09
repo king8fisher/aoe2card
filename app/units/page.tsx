@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
 import "../../src/styles/globals.css";
-import { ClientOnly } from "./client";
+import { AllUnitsGrid } from "./client";
 
 const Page = () => {
   return (
     <>
-      <ClientOnly />
+      <AllUnitsGrid />
     </>
   );
-}
+};
 
 export default Page;

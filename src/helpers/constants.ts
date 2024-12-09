@@ -39,6 +39,7 @@ export const colors = {
 };
 
 export enum DataFilter {
+  explore = "explore",
   units = "units",
   civs = "civs",
 }

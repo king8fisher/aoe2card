@@ -171,13 +171,13 @@ export const allRegularUnits = (civKey: string | null): IUnitData[] => {
   if (civKey == null) {
     if (_cacheAllUnits.length > 0) return _cacheAllUnits;
     for (const u in data.data.units) {
-      const el = data.data.units[u]
+      const el = data.data.units[u];
       _cacheAllUnits.push({
         id: el.ID,
         statisticsUnitData: extractUnitDataByID(el.ID),
         unitType: UnitType.RegularUnit,
-        help: unitHelpByID(el.ID)
-      })
+        help: unitHelpByID(el.ID),
+      });
     }
     return _cacheAllUnits;
   }

@@ -1,11 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
-import {
-  ICivData,
-  getAllCivs
-} from "../../../data/model";
+import { ICivData, getAllCivs } from "../../../data/model";
 import SingleCivIcon, { TooltipContent } from "../../atoms/SingleCivIcon";
-
 
 export const AllCivsHoverOver = () => {
   const [hovered, setHovered] = useState<ICivData | null>(null);
@@ -26,19 +22,18 @@ export const AllCivsHoverOver = () => {
               //setCivTip(null)
             }}
             className={clsx(
+              "w-8 h-8 flex-shrink-0 rounded-lg border-white/10 border-2",
               "transition-transform",
-              hovered && hovered?.key == civData.key && "scale-150")
-            }
+              hovered && hovered?.key == civData.key && "border-0 scale-150"
+            )}
           />
         ))}
       </div>
-      {
-        hovered && (
-          <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
-            <TooltipContent civData={hovered} />
-          </div>
-        )
-      }
+      {hovered && (
+        <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
+          <TooltipContent civData={hovered} />
+        </div>
+      )}
     </div>
-  )
+  );
 };

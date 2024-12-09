@@ -16,17 +16,24 @@ export const ButtonGroup = ({ filter, setFilter, filterStats }: IButtonGroupProp
   <>
     <Tabs value={filter} onValueChange={(v) => setFilter(v as DataFilter)}>
       <TabsList>
-        <TabsTrigger value={DataFilter.units}><LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} /></TabsTrigger>
-        <TabsTrigger value={DataFilter.civs}><LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} /></TabsTrigger>
+        <TabsTrigger value={DataFilter.explore}>
+          <LabelWithBadge label="Explore" />
+        </TabsTrigger>
+        <TabsTrigger value={DataFilter.units}>
+          <LabelWithBadge label="Units" amount={filterStats.unitsFoundAmount} />
+        </TabsTrigger>
+        <TabsTrigger value={DataFilter.civs}>
+          <LabelWithBadge label="Civs" amount={filterStats.civsFoundAmount} />
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   </>
 );
 
-const LabelWithBadge = ({ label, amount }: { label: string; amount: number }) => (
+const LabelWithBadge = ({ label, amount }: { label: string; amount?: number }) => (
   <div className="flex flex-row gap-1 justify-between min-w-[80px] w-full">
     {label}
-    <AmountBadge amount={amount} />
+    {amount !== undefined && <AmountBadge amount={amount} />}
   </div>
 );
 

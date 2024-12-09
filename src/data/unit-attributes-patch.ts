@@ -11,7 +11,7 @@ interface IPatchedUnitAttributes {
  * Returns passed {id, name}, or a patched unit id, if the image
  * is missing and provided by another unit.
  * @param {id, name}
- * @returns 
+ * @returns
  */
 export function patchedUnitAttributes({ unitId, name }: IUnitAttributes): IPatchedUnitAttributes {
   switch (unitId) {

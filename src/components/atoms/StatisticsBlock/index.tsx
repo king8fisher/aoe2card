@@ -3,24 +3,29 @@ import { getStatisticsImgUrl, roundTo } from "../../../helpers/tools";
 import { ContentWithTooltip } from "../ContentWithTooltip";
 import { SingleImg, SingleSpan } from "./styles";
 
-const SingleStatisticsPresenter =
-  ({ icon, amount, tooltip }: { icon: string; amount: number | string; tooltip: string }) => (
-    <ContentWithTooltip
-      tooltip={
-        <span>
-          <strong>{tooltip}: </strong>
-          {amount}
-        </span>
-      }
-    >
-      <SingleSpan className={amount == 0 ? "opacity-30" : ""}>
-        <SingleImg src={getStatisticsImgUrl(icon)} />
+const SingleStatisticsPresenter = ({
+  icon,
+  amount,
+  tooltip,
+}: {
+  icon: string;
+  amount: number | string;
+  tooltip: string;
+}) => (
+  <ContentWithTooltip
+    tooltip={
+      <span>
+        <strong>{tooltip}: </strong>
         {amount}
-      </SingleSpan>
-    </ContentWithTooltip>
-  )
-  ;
-
+      </span>
+    }
+  >
+    <SingleSpan className={amount == 0 ? "opacity-30" : ""}>
+      <SingleImg src={getStatisticsImgUrl(icon)} />
+      {amount}
+    </SingleSpan>
+  </ContentWithTooltip>
+);
 export const StatisticsBlock = ({ unitData }: { unitData: IStatisticsUnitData }) => {
   return (
     <div className="grid grid-cols-5 gap-1 w-full">

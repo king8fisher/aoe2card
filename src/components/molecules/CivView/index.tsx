@@ -38,9 +38,7 @@ export const CivView = ({ civ }: ICivViewProps) => {
             {civ.value}
           </span>
         </AccordionTrigger>
-        <AccordionContent>
-          {renderCivDetailsView()}
-        </AccordionContent>
+        <AccordionContent>{renderCivDetailsView()}</AccordionContent>
       </AccordionItem>
     </Accordion>
   );
