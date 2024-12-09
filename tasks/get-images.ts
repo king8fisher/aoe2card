@@ -1,6 +1,5 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { exit } from "node:process";
 import { fileURLToPath } from "node:url";
 import dataSrc from "../src/data/json/data.json" with { type: "json" };
 import stringsSrc from "../src/data/json/strings.json" with { type: "json" };
@@ -76,7 +75,8 @@ const uDir = path.normalize(`${__dirname}/u`);
 const uDirDest = path.normalize(`${__dirname}/../public/u`);
 const cDir = path.normalize(`${__dirname}/c`);
 const cDirDest = path.normalize(`${__dirname}/../public/c`);
-const uDirManual = path.normalize(`${__dirname}/manual`);
+const dirManual = path.normalize(`${__dirname}/manual`);
+const uDirManual = path.normalize(`${__dirname}/manual/u`);
 
 const uniqueUnitIDs: Set<number> = new Set();
 
@@ -93,8 +93,8 @@ async function taskGetUnitImgs() {
   rmDir(uDir);
   makeDir(uDir);
 
-  function getImgs() {
-    uniqueUnitIDs.forEach(async (id) => {
+  async function getImgs() {
+    for (const id of uniqueUnitIDs) {
       const response = await fetch(getUnitImgUrl(id));
       if (response.status == 200 && response.body) {
         // Image will be stored at this path
@@ -102,50 +102,46 @@ async function taskGetUnitImgs() {
         const filePath = await Deno.open(normalizedPath, { create: true, write: true });
         await response.body.pipeTo(filePath.writable);
       } else {
-        console.log({ id, status: response.status });
+        console.log({ op: "taskGetUnitImgs", id, status: response.status });
       }
-    });
+    }
   }
-  getImgs();
+  await getImgs();
 }
 
-function taskRemoveBlackFromUnitImgs() {
+async function taskRemoveBlackFromUnitImgs() {
   rmDir(`${uDir}/a`);
   makeDir(`${uDir}/a`);
-  fs.readdir(uDir, function (err, files) {
-    if (err) {
-      return console.log(`Unable to scan ${uDir}`, err);
-    }
-    files.forEach(function (file) {
+  for await (const entry of Deno.readDir(uDir)) {
+    if (entry.isFile) {
+      console.log('converting', entry.name)
       const cmd = new Deno.Command(`cmd.exe`, {
-        args: [`/c`, `gm.exe convert ${uDir}/${file} -fuzz 5% -transparent #000 ${uDir}/a/${file}`]
+        args: [`/c`, `gm.exe convert ${path.join(uDir, entry.name)} -fuzz 5% -transparent #000 ${path.join(uDir, "a", entry.name)}`]
       })
       const _ = cmd.outputSync()
-    });
-  });
+    }
+  }
 }
 
 async function taskFillAlphaAsRgbAndRemoveBlackFromUnitImgs() {
-  rmDir(`${uDirManual}/u`);
-  makeDir(`${uDirManual}/u`);
-  makeDir(`${uDirManual}/u/a`);
-  fs.readdir(uDirManual, function (err, files) {
-    if (err) {
-      return console.log(`Unable to scan ${uDir}`, err);
-    }
-    files.forEach(async function (file) {
+  rmDir(`${uDirManual}`);
+  makeDir(`${uDirManual}`);
+  makeDir(`${uDirManual}/a`);
+  for await (const entry of Deno.readDir(dirManual)) {
+    if (entry.isFile) {
+      console.log('converting', entry.name)
       const cmd = new Deno.Command(`cmd.exe`, {
-        args: [`/c`, `gm.exe convert ${uDirManual}/${file} -background #014e92 -flatten ${uDirManual}/u/${file}`]
+        args: [`/c`, `gm.exe convert ${path.join(dirManual, entry.name)} -background #014e92 -flatten ${path.join(uDirManual, entry.name)}`]
       }
       );
       const _ = cmd.outputSync()
       const cmd1 = new Deno.Command(`cmd.exe`, {
-        args: [`/c`, `gm.exe convert ${uDirManual}/u/${file} -fuzz 5% -transparent #000 ${uDirManual}/u/a/${file}`],
+        args: [`/c`, `gm.exe convert ${path.join(uDirManual, entry.name)} -fuzz 5% -transparent #000 ${path.join(uDirManual, "a", entry.name)}`],
       }
       )
       const __ = cmd1.outputSync()
-    });
-  });
+    }
+  };
 }
 
 
@@ -156,20 +152,20 @@ async function taskGetCivsImgs() {
   rmDir(cDir);
   makeDir(cDir);
 
-  function getImgs() {
-    getAllCivs().forEach(async (c) => {
+  async function getImgs() {
+    for (const c of getAllCivs()) {
       const response = await fetch(getCivImgUrl(c.key));
       if (response.status == 200 && response.body) {
         // Image will be stored at this path
-        const normalizedPath = path.normalize(`${cDir}/${c.key}.png`);
+        const normalizedPath = path.join(cDir, `${c.key}.png`);
         const filePath = await Deno.open(normalizedPath, { create: true, write: true });
         await response.body.pipeTo(filePath.writable);
       } else {
         console.log({ key: c.key, status: response.status });
       }
-    });
+    };
   }
-  getImgs();
+  await getImgs();
 }
 
 async function copyDirectory(srcDir: string, destDir: string) {
@@ -199,30 +195,24 @@ async function copyDirectory(srcDir: string, destDir: string) {
 async function taskMoveAllUnitImgs() {
   rmDir(uDirDest);
   await copyDirectory(uDir, uDirDest)
+  //await copyDirectory(path.join(uDir, "a"), path.join(uDirDest, "a"))
   // This sequence. Since we may overwrite some images
-  await copyDirectory(`${uDirManual}/u`, uDirDest)
+  await copyDirectory(path.join(uDirManual), uDirDest)
+  //await copyDirectory(path.join(uDirManual, "a"), path.join(uDirDest, "a"))
 }
 
 async function taskMoveCivsImgs() {
   rmDir(cDirDest);
-  try {
-    await Deno.rename(cDir, cDirDest);
-    console.log(`[✔] Civ ${cDirDest}!`);
-  } catch (e) {
-    console.log(`can't move ${cDir} to ${cDirDest}`, e);
-  }
+  await copyDirectory(cDir, cDirDest)
 }
 
 function rmDir(dir: string) {
   if (fs.existsSync(dir)) {
     try {
-      fs.rmdirSync(dir, {
-        recursive: true,
-      });
-      console.log(`${dir} deleted successfully`);
+      Deno.removeSync(dir, { recursive: true })
     } catch (err) {
       console.log(`${dir}: error deleting`, err);
-      exit(-1);
+      Deno.exit(-1);
     }
   }
 }
@@ -249,12 +239,13 @@ async function taskBatchManualUnitsImgs() {
 }
 
 async function main() {
-  // await taskBatchRemoteUnitsImgs();
-  // await taskBatchRemoteCivsImgs();
+  console.log({ uDir, uDirDest, cDir, cDirDest, dirManual, uDirManual })
+  await taskBatchRemoteUnitsImgs();
   await taskBatchManualUnitsImgs()
   await taskMoveAllUnitImgs()
+  await taskBatchRemoteCivsImgs();
 }
 
 await main()
 
-// deno --allow-all --unstable-sloppy-imports download.ts
+// pnpm run task-get-images
