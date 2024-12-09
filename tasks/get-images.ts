@@ -6,6 +6,7 @@ import stringsSrc from "../src/data/json/strings.json" with { type: "json" };
 import { ICivData } from "../src/data/model.ts";
 import { BuildingElement, Data } from "../src/data/types/data_json_types.ts";
 import { Strings } from "../src/data/types/strings_json_types.ts";
+import { isGraphicsMagickInPath } from "./utils.ts";
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
@@ -239,6 +240,7 @@ async function taskBatchManualUnitsImgs() {
 }
 
 async function main() {
+  if (!isGraphicsMagickInPath()) throw "This tasks requires GraphicsMagick (gm or gm.exe) in the PATH";
   console.log({ uDir, uDirDest, cDir, cDirDest, dirManual, uDirManual })
   await taskBatchRemoteUnitsImgs();
   await taskBatchManualUnitsImgs()
