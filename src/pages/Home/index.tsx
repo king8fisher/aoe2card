@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import SearchInput from "../../components/atoms/SearchInput";
 import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
@@ -25,6 +25,21 @@ const Home = () => {
 
   useEffect(() => {
     document.body.classList.add("ready");
+  }, []);
+
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+        event.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const search = useCallback((nextSearchTerm: string) => {
@@ -61,7 +76,7 @@ const Home = () => {
 
   return (
     <Container className="flex flex-col gap-2">
-      <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
+      <SearchInput ref={searchRef} searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
       {/* <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} /> */}
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
       {filter === DataFilter.civs && searchResult?.civs.map((civ) => <CivView key={civ.key} civ={civ} />)}

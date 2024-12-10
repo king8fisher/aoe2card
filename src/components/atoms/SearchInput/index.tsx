@@ -1,3 +1,4 @@
+import { Ref } from "react";
 import { Input } from "~/src/shadcn/components/ui/input";
 
 interface ISearchInputProps {
@@ -6,21 +7,22 @@ interface ISearchInputProps {
   isLoading: boolean;
 }
 
-const SearchInput = ({ searchTerm, setSearchTerm }: ISearchInputProps) => (
+const SearchInput = ({ searchTerm, setSearchTerm, ref }: ISearchInputProps & { ref: Ref<HTMLInputElement>; }) => (
   <div className="flex-1 mt-3">
     <Input
       // clearable
+      ref={ref}
       type="search"
-      placeholder="Search"
+      placeholder="Search Ctrl+K / Cmd+K"
       value={searchTerm}
       autoFocus
       onInput={(e) => {
         const searchValue = e?.currentTarget?.value;
         setSearchTerm(searchValue);
       }}
-      // onSlClear={() => {
-      //   setSearchTerm("");
-      // }}
+    // onSlClear={() => {
+    //   setSearchTerm("");
+    // }}
     >
       {/* {isLoading ? <SlSpinner slot="prefix" /> : <SlIcon name="search" slot="prefix" />} */}
     </Input>
