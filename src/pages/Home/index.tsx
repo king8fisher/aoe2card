@@ -8,7 +8,7 @@ import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
 import { Container } from "../../styles";
-import { AllUnitsGrid } from "~/app/units/AllUnitsGrid";
+import { AllUnitsGrid } from "~/src/components/molecules/UnitPresentation/AllUnitsGrid";
 import { useSearchParams } from "next/navigation";
 
 export interface ISearchResult {
@@ -49,7 +49,7 @@ const Home = () => {
       setSearchTerm(nextSearchTerm);
       //debouncedSearch(nextSearchTerm);
     },
-    [debouncedSearch]
+    [/*debouncedSearch*/]
   );
 
   const filterStats: IFilterStats = useMemo(() => {

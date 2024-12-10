@@ -19,7 +19,7 @@ export const CivView = ({ civ }: ICivViewProps) => {
       )}
       <UnitsPresentationFlex>
         {unitsByCiv?.map((unitCivData) => (
-          <CardWrap>
+          <CardWrap key={`${unitCivData.civ.key}-${unitCivData.unit.id}`}>
             <CardInnerPadding className={getStyleForUnit(unitCivData.unit)}>
               <UnitPresentation
                 key={`${unitCivData.civ.key}-${unitCivData.unit.id}`}

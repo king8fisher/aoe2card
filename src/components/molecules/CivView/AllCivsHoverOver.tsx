@@ -13,6 +13,7 @@ export const AllCivsHoverOver = ({ useTooltip, filter }: { useTooltip: boolean; 
         {allCivs.map((civData) => (
           <ContentWithTooltip
             tooltip={<TooltipContent civData={civData} />}
+            key={civData.key}
           >
             <SingleCivIcon
               highlight

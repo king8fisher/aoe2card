@@ -15,13 +15,15 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
     <div className="flex flex-row flex-wrap gap-1 p-1 mt-1 shrink-0">
       {allUnits.map((unit) => {
         return (
-          <ContentWithTooltip tooltip={
-            <>
-              <div className={getStyleForUnit(unit)}>
-                <UnitPresentation unit={unit} />
-              </div>
-            </>
-          }>
+          <ContentWithTooltip
+            key={unit.id}
+            tooltip={
+              <>
+                <div className={getStyleForUnit(unit)}>
+                  <UnitPresentation unit={unit} />
+                </div>
+              </>
+            }>
             <div className="flex flex-col items-center" key={unit.id}>
               <img
                 src={getUnitImgUrl(unit.id)}
