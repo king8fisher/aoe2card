@@ -2,6 +2,7 @@ import dataSrc from "./json/data.json";
 import stringsSrc from "./json/strings.json";
 import { BuildingElement, Data, Unit } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
+import { patchedUnitAttributes } from "./unit-attributes-patch";
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
@@ -27,8 +28,9 @@ export const extractUnitDataByID = (unitId: number): IStatisticsUnitData => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
   const d = data.data.units[unitId.toString()];
+  const patched = patchedUnitAttributes({ unitId: unitId, name: strings[d.LanguageNameId] });
   return {
-    name: strings[d.LanguageNameId],
+    name: patched.name,
     unitStatistics: d,
   };
 };

@@ -5,16 +5,11 @@ import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGrou
 import { CivView } from "../../components/molecules/CivView";
 import { AllCivsHoverOver } from "../../components/molecules/CivView/AllCivsHoverOver";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
-import {
-  ICivData,
-  IGroupByUnitData,
-  IUnitCivData,
-  groupByUnitType,
-  searchCivs,
-  searchUnits
-} from "../../data/model";
+import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
 import { Container } from "../../styles";
+import { AllUnitsGrid } from "~/app/units/AllUnitsGrid";
+import { useSearchParams } from "next/navigation";
 
 export interface ISearchResult {
   grouped: IGroupByUnitData[];
@@ -23,7 +18,7 @@ export interface ISearchResult {
 }
 
 const Home = () => {
-  const [filter, setFilter] = useState<DataFilter>(DataFilter.units);
+  const [filter, setFilter] = useState<DataFilter>(DataFilter.explore);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<ISearchResult>();
   const [isLoading, setLoading] = useState(false);
@@ -52,7 +47,7 @@ const Home = () => {
   const handleSetSearchTerm = useCallback(
     (nextSearchTerm: string) => {
       setSearchTerm(nextSearchTerm);
-      debouncedSearch(nextSearchTerm);
+      //debouncedSearch(nextSearchTerm);
     },
     [debouncedSearch]
   );
@@ -67,10 +62,21 @@ const Home = () => {
   return (
     <Container className="flex flex-col gap-2">
       <SearchInput searchTerm={searchTerm} setSearchTerm={handleSetSearchTerm} isLoading={isLoading} />
-      <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} />
+      {/* <ButtonGroup filter={filter} setFilter={setFilter} filterStats={filterStats} /> */}
       {filter === DataFilter.units && <GenericUnitsView genericUnitsData={searchResult} />}
       {filter === DataFilter.civs && searchResult?.civs.map((civ) => <CivView key={civ.key} civ={civ} />)}
-      {filter === DataFilter.civs && <AllCivsHoverOver />}
+      {filter === DataFilter.explore && (
+        <div className="flex flex-row flex-wrap gap-2">
+          <div className="shrink-0">
+            <span className="pl-1 text-sm opacity-50">Civs</span>
+            <AllCivsHoverOver useTooltip filter={searchTerm} />
+          </div>
+          <div className="grow">
+            <span className="pl-1 text-sm opacity-50">Units</span>
+            <AllUnitsGrid filter={searchTerm} />
+          </div>
+        </div>
+      )}
     </Container>
   );
 };

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/src/shadcn/components/ui/accordion";
 import { ICivData, IUnitCivData, getAllCivUnits } from "../../../data/model";
-import { getCivImgUrl } from "../../../helpers/tools";
-import { UnitsPresentationFlex } from "../../../styles";
+import { getCivImgUrl, getStyleForUnit } from "../../../helpers/tools";
+import { CardInnerPadding, CardWrap, UnitsPresentationFlex } from "../../../styles";
 import { UnitPresentation } from "../UnitPresentation";
 
 interface ICivViewProps {
@@ -19,11 +19,15 @@ export const CivView = ({ civ }: ICivViewProps) => {
       )}
       <UnitsPresentationFlex>
         {unitsByCiv?.map((unitCivData) => (
-          <UnitPresentation
-            key={`${unitCivData.civ.key}-${unitCivData.unit.id}`}
-            unitCivData={unitCivData}
-            showCiv={false}
-          />
+          <CardWrap>
+            <CardInnerPadding className={getStyleForUnit(unitCivData.unit)}>
+              <UnitPresentation
+                key={`${unitCivData.civ.key}-${unitCivData.unit.id}`}
+                unit={unitCivData.unit}
+                cost={unitCivData.unitStats.cost}
+              />
+            </CardInnerPadding>
+          </CardWrap>
         ))}
       </UnitsPresentationFlex>
     </>

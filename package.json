@@ -11,7 +11,6 @@
     "fmt": "pnpm format",
     "test": "vitest --run",
     "lint": "next lint",
-
     "task-get-images": "deno run --allow-read=./tasks/u,./tasks/manual,./tasks/manual/u,./public/u,./tasks/c,./public/c --allow-write=./tasks/u,./tasks/manual/u,./public/u,./tasks/c,./public/c --allow-run --allow-net --unstable-sloppy-imports ./tasks/get-images.ts"
   },
   "dependencies": {

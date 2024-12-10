@@ -8,7 +8,7 @@ interface ILayoutProps {
 
 const Layout = ({ children }: ILayoutProps): JSX.Element => (
   <>
-    <div className="min-h-screen mb-1">
+    <div className="min-h-screen">
       <Navbar />
       {children}
       {/* TODO: Add footer */}

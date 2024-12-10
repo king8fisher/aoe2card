@@ -1,12 +1,15 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import "../../src/styles/globals.css";
-import { AllUnitsGrid } from "./client";
+import { AllUnitsGrid } from "./AllUnitsGrid";
 
 const Page = () => {
+  const search = useSearchParams();
+
   return (
     <>
-      <AllUnitsGrid />
+      <AllUnitsGrid filter={search?.get("q") || ""} />
     </>
   );
 };
