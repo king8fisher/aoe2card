@@ -3,11 +3,9 @@
 import clsx from "clsx";
 import { useMemo } from "react";
 import { ContentWithTooltip } from "~/src/components/atoms/ContentWithTooltip";
-import { TooltipContent } from "~/src/components/atoms/SingleCivIcon";
 import { UnitPresentation } from "~/src/components/molecules/UnitPresentation";
-import { allRegularUnits, Cost } from "~/src/data/model";
-import { patchedUnitAttributes } from "~/src/data/unit-attributes-patch";
-import { getStyleForUnit, getUnitImgUrl } from "~/src/helpers/tools";
+import { allRegularUnits } from "~/src/data/model";
+import { getUnitImgUrl } from "~/src/helpers/tools";
 
 export function AllUnitsGrid({ filter }: { filter: string; }) {
   const allUnits = useMemo(() => allRegularUnits(null), []);
@@ -19,9 +17,7 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
             key={unit.id}
             tooltip={
               <>
-                <div className={getStyleForUnit(unit)}>
-                  <UnitPresentation unit={unit} />
-                </div>
+                <UnitPresentation unit={unit} />
               </>
             }>
             <div className="flex flex-col items-center" key={unit.id}>
@@ -30,9 +26,9 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
                 alt=""
                 className={
                   clsx("w-8 h-8 flex-shrink-0 rounded-lg border-2",
-                    filter == "" ? "border-white/20" :
+                    filter == "" ? "border-black/20 dark:border-white/10" :
                       unit.statisticsUnitData.name.toLowerCase().includes(filter.toLowerCase())
-                        ? "border-yellow-400"
+                        ? "border-yellow-600 dark:border-yellow-400"
                         : "opacity-50"
                   )
                 }

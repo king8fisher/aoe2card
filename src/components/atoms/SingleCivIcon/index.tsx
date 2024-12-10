@@ -34,7 +34,7 @@ export default SingleCivIcon;
 export const TooltipContent = ({ civData }: { civData: ICivData; }) => {
   return (
     <div className="flex flex-col gap-1 text-sm">
-      <div className="flex flex-row items-start gap-1">
+      <div className="flex flex-row items-center gap-1">
         <SingleCivIcon highlight disablePopup civData={civData} className="w-8 h-8 shrink-0" />
         <span className="font-bold leading-6 grow">{civData.value}</span>
       </div>

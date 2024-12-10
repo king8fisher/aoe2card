@@ -53,9 +53,9 @@ export const UnitDisplayLine = styled.div`
 export const UnitLineDiv = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  justify-content: space-between;
-  text-align: center;
+  align-items: start;
+  justify-content: start;
+  text-align: start;
   margin: 5px 10px;
 `;
 

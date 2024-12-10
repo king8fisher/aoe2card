@@ -29,12 +29,12 @@ export const AllCivsHoverOver = ({ useTooltip, filter }: { useTooltip: boolean; 
               }}
               className={clsx(
                 "cursor-pointer",
-                "w-8 h-8 flex-shrink-0 rounded-lg border-white/10 border-2",
+                "w-8 h-8 flex-shrink-0 rounded-lg border-black/20 dark:border-white/10 border-2",
                 "transition-transform",
                 hovered && hovered?.key == civData.key && "border-0 scale-150",
                 filter == "" ? "border-white/20" :
                   civData.value.toLowerCase().includes(filter.toLowerCase())
-                    ? "border-yellow-400"
+                    ? "border-yellow-600 dark:border-yellow-400"
                     : "opacity-50"
               )}
             />
