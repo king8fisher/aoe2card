@@ -26,7 +26,6 @@ export const AllCivsHoverOver = (
       <div className="grid grid-cols-8 gap-1 p-1 mt-1 shrink-0">
         {allCivs.map((civData) => (
           <ContentWithPopover
-            tooltip={<span className="text-sm">{civData.value}</span>}
             popover={<TooltipContent civData={civData} />}
             key={civData.key}
           >
