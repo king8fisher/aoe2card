@@ -1,7 +1,7 @@
 import { HTMLAttributes } from "react";
 import { ICivData } from "../../../data/model";
 import { getCivImgUrl } from "../../../helpers/tools";
-import { ContentWithTooltip } from "../ContentWithTooltip";
+import { ContentWithPopover } from "../ContentWithTooltip";
 import { SingleCivIconWrap } from "./styles";
 
 interface SingleCivIconProps {
@@ -21,9 +21,9 @@ const SingleCivIcon = ({
     <SingleCivIconWrap {...props}>
       {disablePopup && <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />}
       {!disablePopup && (
-        <ContentWithTooltip tooltip={<TooltipContent civData={civData} />}>
+        <ContentWithPopover popover={<TooltipContent civData={civData} />}>
           <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />
-        </ContentWithTooltip>
+        </ContentWithPopover>
       )}
     </SingleCivIconWrap>
   );

@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useMemo } from "react";
-import { ContentWithTooltip } from "~/src/components/atoms/ContentWithTooltip";
+import { ContentWithPopover } from "~/src/components/atoms/ContentWithTooltip";
 import { UnitPresentation } from "~/src/components/molecules/UnitPresentation";
 import { allRegularUnits } from "~/src/data/model";
 import { getUnitImgUrl } from "~/src/helpers/tools";
@@ -13,9 +13,10 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
     <div className="flex flex-row flex-wrap gap-1 p-1 mt-1 shrink-0">
       {allUnits.map((unit) => {
         return (
-          <ContentWithTooltip
+          <ContentWithPopover
             key={unit.id}
-            tooltip={
+            tooltip={<span className="text-sm">{unit.statisticsUnitData.name}</span>}
+            popover={
               <>
                 <UnitPresentation unit={unit} />
               </>
@@ -36,7 +37,7 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
               {/* <div className="text-xs text-center leading-none mt-[0.44rem]">{unit.id}</div>
                   <div className="text-xs text-center leading-none mt-[0.44rem]">{patched.name}</div> */}
             </div>
-          </ContentWithTooltip>
+          </ContentWithPopover>
         );
         // return <UnitLine cost={emptyCost} unit={v} key={v.id} />
       })}

@@ -84,7 +84,7 @@ const Home = () => {
         <div className="flex flex-row flex-wrap gap-2">
           <div className="shrink-0">
             <span className="pl-1 text-sm opacity-50">Civs</span>
-            <AllCivsHoverOver useTooltip filter={searchTerm} />
+            <AllCivsHoverOver filter={searchTerm} />
           </div>
           <div className="grow">
             <span className="pl-1 text-sm opacity-50">Units</span>

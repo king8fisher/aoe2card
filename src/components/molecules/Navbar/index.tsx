@@ -4,6 +4,8 @@ import { Container } from "../../../styles";
 import { Patch } from "../../atoms/Navbar/Patch";
 
 import type { JSX } from "react";
+import { BoxSelectIcon, BugIcon, IceCream2Icon, TowerControlIcon } from "lucide-react";
+import { Button } from "~/src/shadcn/components/ui/button";
 
 const Navbar = (): JSX.Element => (
   <div className="py-0 bg-zinc-300 dark:bg-zinc-800">
@@ -23,7 +25,14 @@ const Navbar = (): JSX.Element => (
         </Link>
         <Patch />
       </div>
-      <ThemeButton />
+      <div className="flex flex-row gap-2">
+        <Link href="/civs">
+          <Button variant="outline" size="icon" title="Civs">
+            <TowerControlIcon size={15} />
+          </Button>
+        </Link>
+        <ThemeButton />
+      </div>
     </Container>
   </div>
 );

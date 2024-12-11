@@ -1,18 +1,33 @@
 import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ICivData, getAllCivs } from "../../../data/model";
 import SingleCivIcon, { TooltipContent } from "../../atoms/SingleCivIcon";
-import { ContentWithTooltip } from "../../atoms/ContentWithTooltip";
+import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
-export const AllCivsHoverOver = ({ useTooltip, filter }: { useTooltip: boolean; filter: string; }) => {
+export const AllCivsHoverOver = (
+  { reactToHovering = false, filter = "" }:
+    { reactToHovering?: boolean; filter?: string; }
+) => {
   const [hovered, setHovered] = useState<ICivData | null>(null);
   const allCivs = useMemo(() => getAllCivs(), []);
+
+  const delayedSetHovered = useDebouncedCallback((civData: ICivData) => {
+    setHovered(civData);
+  }, 50);
+
+  const handleHover = (civData: ICivData) => {
+    setHovered(civData);
+    //delayedSetHovered(civData);
+  };
+
   return (
-    <div className="flex flex-col flex-wrap md:flex-nowrap gap-1 items-start">
+    <div className="flex flex-col min-[550px]:flex-row gap-2 items-start">
       <div className="grid grid-cols-8 gap-1 p-1 mt-1 shrink-0">
         {allCivs.map((civData) => (
-          <ContentWithTooltip
-            tooltip={<TooltipContent civData={civData} />}
+          <ContentWithPopover
+            tooltip={<span className="text-sm">{civData.value}</span>}
+            popover={<TooltipContent civData={civData} />}
             key={civData.key}
           >
             <SingleCivIcon
@@ -21,7 +36,7 @@ export const AllCivsHoverOver = ({ useTooltip, filter }: { useTooltip: boolean; 
               civData={civData}
               key={civData.key}
               onMouseOver={() => {
-                if (!useTooltip) setHovered(civData);
+                if (reactToHovering) handleHover(civData);
               }}
               onMouseLeave={() => {
                 // We want to keep the last still visible.
@@ -29,20 +44,21 @@ export const AllCivsHoverOver = ({ useTooltip, filter }: { useTooltip: boolean; 
               }}
               className={clsx(
                 "cursor-pointer",
-                "w-8 h-8 flex-shrink-0 rounded-lg border-black/20 dark:border-white/10 border-2",
+                "w-8 h-8 flex-shrink-0 rounded-lg border-2",
                 "transition-transform",
-                hovered && hovered?.key == civData.key && "border-0 scale-150",
-                filter == "" ? "border-white/20" :
+                hovered && hovered?.key == civData.key && "border-none scale-150",
+                filter == "" ? "border-black/20 dark:border-white/10" :
                   civData.value.toLowerCase().includes(filter.toLowerCase())
                     ? "border-yellow-600 dark:border-yellow-400"
                     : "opacity-50"
               )}
             />
-          </ContentWithTooltip>
+          </ContentWithPopover>
         ))}
+
       </div>
       {hovered && (
-        <div className="grow flex flex-col gap-2 p-2 rounded bg-black/20">
+        <div className="max-w-[500px] rounded-lg bg-black/20 p-2">
           <TooltipContent civData={hovered} />
         </div>
       )}

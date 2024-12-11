@@ -1,6 +1,6 @@
 import { IStatisticsUnitData } from "../../../data/model";
 import { getStatisticsImgUrl, roundTo } from "../../../helpers/tools";
-import { ContentWithTooltip } from "../ContentWithTooltip";
+import { ContentWithPopover } from "../ContentWithTooltip";
 import { SingleImg, SingleSpan } from "./styles";
 
 const SingleStatisticsPresenter = ({
@@ -12,8 +12,8 @@ const SingleStatisticsPresenter = ({
   amount: number | string;
   tooltip: string;
 }) => (
-  <ContentWithTooltip
-    tooltip={
+  <ContentWithPopover
+    popover={
       <span>
         <strong>{tooltip}: </strong>
         {amount}
@@ -24,9 +24,9 @@ const SingleStatisticsPresenter = ({
       <SingleImg src={getStatisticsImgUrl(icon)} />
       {amount}
     </SingleSpan>
-  </ContentWithTooltip>
+  </ContentWithPopover>
 );
-export const StatisticsBlock = ({ unitData }: { unitData: IStatisticsUnitData }) => {
+export const StatisticsBlock = ({ unitData }: { unitData: IStatisticsUnitData; }) => {
   return (
     <div className="grid grid-cols-5 gap-1 w-full">
       <SingleStatisticsPresenter icon="hp" tooltip="Hit Points" amount={unitData.unitStatistics.HP} />

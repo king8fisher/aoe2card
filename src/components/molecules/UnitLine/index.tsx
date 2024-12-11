@@ -1,7 +1,7 @@
 import { Cost, IUnitData } from "../../../data/model";
 import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
-import { ContentWithTooltip } from "../../atoms/ContentWithTooltip";
+import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
 import { StatisticsBlock } from "../../atoms/StatisticsBlock";
 import { CostPresentation } from "../../atoms/UnitCost";
 
@@ -13,8 +13,8 @@ interface IUnitLineProps {
 export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
   return (
     <>
-      <ContentWithTooltip
-        tooltip={
+      <ContentWithPopover
+        popover={
           <>
             <span className="font-bold leading-6">{unit.statisticsUnitData.name}</span>
             <span dangerouslySetInnerHTML={{ __html: unit.help.about }} />
@@ -36,7 +36,7 @@ export const UnitLine = ({ unit, cost }: IUnitLineProps) => {
             }
           </span>
         </UnitLineDiv>
-      </ContentWithTooltip>
+      </ContentWithPopover>
       <UnitLineDiv>
         <StatisticsBlock unitData={unit.statisticsUnitData} />
       </UnitLineDiv>
