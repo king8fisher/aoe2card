@@ -4,11 +4,13 @@ import clsx from "clsx";
 import { useMemo } from "react";
 import { ContentWithPopover } from "~/src/components/atoms/ContentWithTooltip";
 import { UnitPresentation } from "~/src/components/molecules/UnitPresentation";
-import { allRegularUnits } from "~/src/data/model";
+import { calculateDamage } from "~/src/data/calculateDamage";
+import { allRegularUnits, extractUnitDataByID } from "~/src/data/model";
 import { getUnitImgUrl } from "~/src/helpers/tools";
 
 export function AllUnitsGrid({ filter }: { filter: string; }) {
   const allUnits = useMemo(() => allRegularUnits(null), []);
+  const halb = extractUnitDataByID(359);
   return (
     <div className="flex flex-row flex-wrap gap-1 p-1 mt-1 shrink-0">
       {allUnits.map((unit) => {
@@ -22,6 +24,7 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
               </>
             }>
             <div className="flex flex-col items-center" key={unit.id}>
+              {/* <div className="text-xs text-center leading-none">{unit.id}</div> */}
               <img
                 src={getUnitImgUrl(unit.id)}
                 alt=""
@@ -34,8 +37,11 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
                   )
                 }
               />
+              {/* <div className="text-xs">
+                {calculateDamage(extractUnitDataByID(unit.id), halb)}
+              </div> */}
               {/* <div className="text-xs text-center leading-none mt-[0.44rem]">{unit.id}</div>
-                  <div className="text-xs text-center leading-none mt-[0.44rem]">{patched.name}</div> */}
+               <div className="text-xs text-center leading-none mt-[0.44rem]">{patched.name}</div> */}
             </div>
           </ContentWithPopover>
         );

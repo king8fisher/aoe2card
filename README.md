@@ -14,7 +14,11 @@ Temporary link for the project using vercel: https://aoe2card.vercel.app/
 - github.com/pau795/AoE2DatabaseWeb
 - github.com/pau795/AoE2DatabaseAndroid
 - https://www.aoe2database.com/
+
+### How Damage is Calculated
+
 - https://ugc.aoe2.rocks/
+- https://steamcommunity.com/sharedfiles/filedetails/?id=637093101
 
 ## Requirements
 

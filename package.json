@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -H localhost",
     "build": "next build",
     "start": "next start",
     "format": "prettier -w .",
