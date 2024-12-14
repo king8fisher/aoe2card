@@ -1,8 +1,8 @@
 import dataSrc from "./json/data.json";
 import stringsSrc from "./json/strings.json";
-import { BuildingElement, Data, Unit, UnitCost } from "./types/data_json_types";
+import { patchedUnitAttributes, unitToUnitVariationsList } from "./patched_data";
+import { Age, BuildingElement, Data, Unit, UnitCost } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
-import { patchedUnitAttributes } from "./unit-attributes-patch";
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
@@ -24,7 +24,7 @@ export interface IStatisticsUnitData {
   unitStatistics: Unit;
 }
 
-export const extractUnitDataByID = (unitId: number): IStatisticsUnitData => {
+export const findUnitStatisticsUnitDataByID = (unitId: number): IStatisticsUnitData => {
   // data.data.units[561].LanguageNameId // 5458
   // strings[5458] // "Elite Mangudai"
   const d = data.data.units[unitId.toString()];
@@ -160,6 +160,7 @@ export interface IUnitHelp {
 
 export interface IUnitData {
   id: number;
+  age: Age | undefined;
   /** Localized name of the unit */
   statisticsUnitData: IStatisticsUnitData;
   unitType: UnitType;
@@ -169,56 +170,85 @@ export interface IUnitData {
 const _cacheAllUnits: Array<IUnitData> = [];
 const _cacheAllUnitsByCivKey: Map<string, IUnitData[]> = new Map();
 
-export const allRegularUnits = (civKey: string | null): IUnitData[] => {
-  if (civKey == null) {
-    if (_cacheAllUnits.length > 0) return _cacheAllUnits;
-    for (const u in data.data.units) {
-      const el = data.data.units[u];
-      _cacheAllUnits.push({
-        id: el.ID,
-        statisticsUnitData: extractUnitDataByID(el.ID),
-        unitType: UnitType.RegularUnit,
-        help: unitHelpByID(el.ID),
-      });
-    }
-    return _cacheAllUnits;
-  }
+/**
+ * Returns all existing units without civ relationship.
+ * @returns 
+ */
+export const allUnits = (): IUnitData[] => {
+  if (_cacheAllUnits.length > 0) return _cacheAllUnits;
+  for (const u in data.data.units) {
+    const unit = data.data.units[u];
+    const patched = patchedUnitAttributes({ unitId: unit.ID, name: strings[unit.LanguageNameId] });
+    _cacheAllUnits.push({
+      id: unit.ID,
+      age: undefined,
+      statisticsUnitData: {
+        name: patched.name,
+        unitStatistics: unit
+      },
+      unitType: UnitType.RegularUnit,
+      help: unitHelpByID(unit.ID),
+    });
+  };
+  return _cacheAllUnits;
+};
 
+/**
+ * Returns all regular units available to a civ.
+ * @param civKey 
+ * @returns 
+ */
+export const regularUnits = (civKey: string): IUnitData[] => {
   if (_cacheAllUnitsByCivKey.has(civKey)) {
     return _cacheAllUnitsByCivKey.get(civKey)!;
   }
   const entries: IUnitData[] = [];
   data.techtrees[civKey].units.forEach((buildingElement: BuildingElement) => {
-    const id = buildingElement.id;
-    entries.push({
-      id: id,
-      statisticsUnitData: extractUnitDataByID(id),
-      unitType: UnitType.RegularUnit,
-      help: unitHelpByID(id),
-    });
+    // Since techtrees do not mention unit variations, we will expand them here
+    withVariations(entries, buildingElement.id, buildingElement.age, UnitType.RegularUnit);
   });
   _cacheAllUnitsByCivKey.set(civKey, entries);
   return entries;
 };
 
-export const imperialAgeUniqueUnit = (civKey: string): IUnitData => {
+function withVariations(entries: IUnitData[], unitId: number, age: Age, unitType: UnitType) {
+  const variations = unitToUnitVariationsList(unitId);
+  for (const variation of variations) {
+    entries.push({
+      id: variation,
+      age: age,
+      statisticsUnitData: findUnitStatisticsUnitDataByID(variation),
+      unitType: unitType,
+      help: unitHelpByID(variation),
+    });
+  }
+}
+
+
+/**
+ * Returns all imperial unique units available to a civ.
+ * @param civKey 
+ * @returns 
+ */
+export const imperialAgeUniqueUnit = (civKey: string): IUnitData[] => {
   const id = data.techtrees[civKey].unique.imperialAgeUniqueUnit as number;
-  return {
-    id: id,
-    statisticsUnitData: extractUnitDataByID(id),
-    unitType: UnitType.ImperialAgeUniqueUnit,
-    help: unitHelpByID(id),
-  };
+  // Since techtrees do not mention unit variations, we will expand them here
+  const entries: IUnitData[] = [];
+  withVariations(entries, id, 4, UnitType.ImperialAgeUniqueUnit);
+  return entries;
 };
 
-export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
+/**
+ * Returns all castle unique units available to a civ.
+ * @param civKey 
+ * @returns 
+ */
+export const castleAgeUniqueUnit = (civKey: string): IUnitData[] => {
   const id = data.techtrees[civKey].unique.castleAgeUniqueUnit as number;
-  return {
-    id: id,
-    statisticsUnitData: extractUnitDataByID(id),
-    unitType: UnitType.CastleAgeUniqueUnit,
-    help: unitHelpByID(id),
-  };
+  // Since techtrees do not mention unit variations, we will expand them here
+  const entries: IUnitData[] = [];
+  withVariations(entries, id, 3, UnitType.CastleAgeUniqueUnit);
+  return entries;
 };
 
 export interface IUnitStatsData {
@@ -299,10 +329,15 @@ export const getAllCivUnits = (civKey: string): IUnitCivData[] => {
   return matchUnits([civ_], (_u) => true);
 };
 
+
 export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean): IUnitCivData[] => {
   const result: IUnitCivData[] = [];
   civs.forEach((c) => {
-    [imperialAgeUniqueUnit(c.key), castleAgeUniqueUnit(c.key), ...allRegularUnits(c.key)].forEach((u) => {
+    [
+      ...imperialAgeUniqueUnit(c.key),
+      ...castleAgeUniqueUnit(c.key),
+      ...regularUnits(c.key)
+    ].forEach((u) => {
       if (match(u)) {
         const cost = data.data.units[u.id].Cost;
         result.push({

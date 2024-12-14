@@ -26,6 +26,11 @@ export const armourSchema = z.object({
   Class: z.number(),
 });
 
+export const attackSchema = z.object({
+  Amount: z.number(),
+  Class: z.number(),
+});
+
 export const buildingCostSchema = z.object({
   Wood: z.number().optional(),
   Stone: z.number().optional(),
@@ -49,15 +54,21 @@ export const unitUpgradeCostSchema = z.object({
   Food: z.number().optional(),
 });
 
+export const unitCostSchema = z.object({
+  Gold: z.number().optional(),
+  Wood: z.number().optional(),
+  Food: z.number().optional(),
+});
+
 export const unitSchema = z.object({
   AccuracyPercent: z.number(),
   Armours: z.array(armourSchema),
   Attack: z.number(),
   AttackDelaySeconds: z.number(),
-  Attacks: z.array(armourSchema),
+  Attacks: z.array(attackSchema),
   ChargeEvent: z.number(),
   ChargeType: z.number(),
-  Cost: unitUpgradeCostSchema,
+  Cost: unitCostSchema,
   FrameDelay: z.number(),
   GarrisonCapacity: z.number(),
   HP: z.number(),
@@ -80,8 +91,10 @@ export const unitSchema = z.object({
   RechargeDuration: z.number().optional(),
 });
 
+export const ageSchema = z.number().int().gte(1).lte(4);
+
 export const buildingElementSchema = z.object({
-  age: z.number(),
+  age: ageSchema,
   id: z.number(),
 });
 
@@ -98,7 +111,7 @@ export const buildingValueSchema = z.object({
   AccuracyPercent: z.number(),
   Armours: z.array(armourSchema),
   Attack: z.number(),
-  Attacks: z.array(armourSchema),
+  Attacks: z.array(attackSchema),
   Cost: buildingCostSchema,
   GarrisonCapacity: z.number(),
   HP: z.number(),

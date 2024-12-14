@@ -4,16 +4,15 @@ import clsx from "clsx";
 import { useMemo } from "react";
 import { ContentWithPopover } from "~/src/components/atoms/ContentWithTooltip";
 import { UnitPresentation } from "~/src/components/molecules/UnitPresentation";
-import { calculateDamage } from "~/src/data/calculateDamage";
-import { allRegularUnits, extractUnitDataByID } from "~/src/data/model";
+import { allUnits, findUnitStatisticsUnitDataByID } from "~/src/data/model";
 import { getUnitImgUrl } from "~/src/helpers/tools";
 
 export function AllUnitsGrid({ filter }: { filter: string; }) {
-  const allUnits = useMemo(() => allRegularUnits(null), []);
-  const halb = extractUnitDataByID(359);
+  const units = useMemo(() => allUnits(), []);
+  const halb = findUnitStatisticsUnitDataByID(359);
   return (
     <div className="flex flex-row flex-wrap gap-1 p-1 mt-1 shrink-0">
-      {allUnits.map((unit) => {
+      {units.map((unit) => {
         return (
           <ContentWithPopover
             key={unit.id}

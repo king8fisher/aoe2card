@@ -1,3 +1,21 @@
+import { findUnitStatisticsUnitDataByID, IUnitData, matchUnits } from "./model";
+
+export function unitToUnitVariationsList(unitId: number) {
+  switch (unitId) {
+    case 331: // Trebuchet (Packed)
+      return [unitId, 42]; // Trebuchet (Unpacked)
+    case 1759: // Ratha
+      return [unitId, 1738]; // Ratha (Melee)
+    case 1761: // Elite Ratha
+      return [unitId, 1740]; // Elite Ratha (Melee)
+    case 1225: // Konnik
+      return [unitId, 1252]; // Konnik (Dismounted)
+    case 1227: // Elite Konnik
+      return [unitId, 1253]; // Elite Konnik (Dismounted)
+  }
+  return [unitId];
+}
+
 interface IUnitAttributes {
   unitId: number;
   name: string;

@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { AllUnitsGrid } from "~/src/components/molecules/UnitPresentation/AllUnitsGrid";
 import SearchInput from "../../components/atoms/SearchInput";
-import { ButtonGroup, IFilterStats } from "../../components/molecules/ButtonGroup";
+import { IFilterStats } from "../../components/molecules/ButtonGroup";
 import { CivView } from "../../components/molecules/CivView";
 import { AllCivsHoverOver } from "../../components/molecules/CivView/AllCivsHoverOver";
 import GenericUnitsView from "../../components/molecules/GenericUnitsView";
 import { ICivData, IGroupByUnitData, IUnitCivData, groupByUnitType, searchCivs, searchUnits } from "../../data/model";
 import { DataFilter } from "../../helpers/constants";
 import { Container } from "../../styles";
-import { AllUnitsGrid } from "~/src/components/molecules/UnitPresentation/AllUnitsGrid";
-import { useSearchParams } from "next/navigation";
 
 export interface ISearchResult {
   grouped: IGroupByUnitData[];

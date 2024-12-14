@@ -132,8 +132,10 @@ export interface Techtree {
   units: BuildingElement[];
 }
 
+export type Age = 1 | 2 | 3 | 4;
+
 export interface BuildingElement {
-  age: number;
+  age: Age;
   id: number;
 }
 

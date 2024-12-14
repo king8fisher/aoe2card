@@ -6,16 +6,16 @@ import { Strings } from "./types/strings_json_types";
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
 
-import { armourData, attackData, extractUnitDataByID } from "./model";
+import { armourData, attackData, findUnitStatisticsUnitDataByID } from "./model";
 
-// Playground for messing with json file structure and scaffolding functions
+// Playground for exploring json file structure and scaffolding functions
 // to make it easy to access data.
 
 // eslint-disable-next-line func-style
 function playground() {
   // Unit data for unit_id
   data.data.unit_upgrades[561].internal_name; // "Elite Mangudai"
-  extractUnitDataByID(561); // "Elite Mangudai"
+  findUnitStatisticsUnitDataByID(561); // "Elite Mangudai"
   data.data.unit_upgrades[561].ResearchTime; // 50
   data.data.units[561].internal_name; // "UMOSU"
   data.data.units[561].Cost; // { "Gold": 65, "Wood": 55 }
