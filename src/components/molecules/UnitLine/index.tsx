@@ -69,12 +69,12 @@ export const UnitLine = ({ unit, cost, withPopover = false }: IUnitLineProps) =>
         </div>
       </div>
       {groupByUnitData &&
-        <div className="grid grid-cols-8 gap-1 p-1 mt-1">
+        <div className="grid self-start grid-cols-8 gap-1">
           {getAllCivs().map((civData) => (
             <SingleCivIcon
               showTooltip
               disablePopup={false}
-              className="w-5 h-5"
+              className="w-6 h-6"
               highlight={groupByUnitData.civs.has(civData.key)} civData={civData} key={civData.key} />
           ))}
         </div>
