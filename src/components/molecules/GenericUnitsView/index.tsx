@@ -10,28 +10,33 @@ interface IGenericUnitsViewProps {
 }
 
 const GenericUnitsView = ({ genericUnitsData }: IGenericUnitsViewProps) => {
-  const renderUnitInfo = (groupByUnitData: IGroupByUnitData) => (
-    <CardWrap key={groupByUnitData.unit.id}>
-      <CardInnerPadding className={getStyleForUnit(groupByUnitData.unit)}>
-        <div>
-          <UnitLine unit={groupByUnitData.unit} cost={groupByUnitData.mostCommonUnitStats.cost} />
-        </div>
-        <div className="grid grid-cols-8 gap-1 p-1 mt-1">
-          {getAllCivs().map((civData) => (
-            <SingleCivIcon highlight={groupByUnitData.civs.has(civData.key)} civData={civData} key={civData.key} />
-          ))}
-        </div>
-      </CardInnerPadding>
-    </CardWrap>
-  );
-
   return (
     !!genericUnitsData?.grouped.length && (
       <UnitsPresentationFlex>
-        {genericUnitsData?.grouped.map((groupByUnitData: IGroupByUnitData) => renderUnitInfo(groupByUnitData))}
+        {genericUnitsData?.grouped.map((groupByUnitData: IGroupByUnitData) =>
+          <RenderUnitInfo groupByUnitData={groupByUnitData} />)}
       </UnitsPresentationFlex>
     )
   );
 };
+
+const RenderUnitInfo = ({ groupByUnitData }: { groupByUnitData: IGroupByUnitData; }) => (
+  <CardWrap key={groupByUnitData.unit.id}>
+    <CardInnerPadding className={getStyleForUnit(groupByUnitData.unit)}>
+      <div>
+        <UnitLine
+          withPopover
+          unit={groupByUnitData.unit}
+          cost={groupByUnitData.mostCommonUnitStats.cost} />
+      </div>
+      <div className="grid grid-cols-8 gap-1 p-1 mt-1">
+        {getAllCivs().map((civData) => (
+          <SingleCivIcon showTooltip highlight={groupByUnitData.civs.has(civData.key)} civData={civData} key={civData.key} />
+        ))}
+      </div>
+    </CardInnerPadding>
+  </CardWrap>
+);
+
 
 export default GenericUnitsView;

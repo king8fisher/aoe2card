@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ICivData, getAllCivs } from "../../../data/model";
-import SingleCivIcon, { TooltipContent } from "../../atoms/SingleCivIcon";
+import SingleCivIcon, { SingleCivTooltipContent } from "../../atoms/SingleCivIcon";
 import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 
@@ -27,7 +27,7 @@ export const AllCivsHoverOver = (
         {allCivs.map((civData) => (
           <ContentWithPopover
             tooltip={showTooltip ? <span className="text-sm">{civData.value}</span> : undefined}
-            popover={<TooltipContent civData={civData} />}
+            popover={<SingleCivTooltipContent civData={civData} />}
             key={civData.key}
           >
             <SingleCivIcon
@@ -59,7 +59,7 @@ export const AllCivsHoverOver = (
       </div>
       {hovered && (
         <div className="max-w-[500px] rounded-lg bg-black/20 p-2">
-          <TooltipContent civData={hovered} />
+          <SingleCivTooltipContent civData={hovered} />
         </div>
       )}
     </div>

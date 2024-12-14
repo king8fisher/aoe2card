@@ -29,7 +29,7 @@ export const UnitPresentation = ({ civ, unit, cost }: IUnitPresentationProps) =>
           </UnitLineDiv>
         </ContentWithPopover>
       )}
-      <UnitLine unit={unit} cost={cost} />
+      <UnitLine withPopover={false} unit={unit} cost={cost} />
     </>
   );
 };

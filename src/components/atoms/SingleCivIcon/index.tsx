@@ -2,11 +2,11 @@ import { HTMLAttributes } from "react";
 import { ICivData } from "../../../data/model";
 import { getCivImgUrl } from "../../../helpers/tools";
 import { ContentWithPopover } from "../ContentWithTooltip";
-import { SingleCivIconWrap } from "./styles";
 
 interface SingleCivIconProps {
   highlight: boolean;
   disablePopup?: boolean;
+  showTooltip?: boolean;
   civData: ICivData;
 }
 
@@ -14,24 +14,27 @@ const SingleCivIcon = ({
   highlight,
   civData,
   disablePopup,
+  showTooltip,
   ...props
 }: SingleCivIconProps & HTMLAttributes<HTMLDivElement>) => {
-  const imgClassName = highlight ? undefined : "opacity-20";
+  const imgClassName = highlight ? "" : "opacity-20";
   return (
-    <SingleCivIconWrap {...props}>
+    <div {...props}>
       {disablePopup && <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />}
       {!disablePopup && (
-        <ContentWithPopover popover={<TooltipContent civData={civData} />}>
+        <ContentWithPopover
+          tooltip={showTooltip ? <span className="text-sm">{civData.value}</span> : undefined}
+          popover={<SingleCivTooltipContent civData={civData} />}>
           <img src={getCivImgUrl(civData.key)} alt="" className={imgClassName} />
         </ContentWithPopover>
       )}
-    </SingleCivIconWrap>
+    </div>
   );
 };
 
 export default SingleCivIcon;
 
-export const TooltipContent = ({ civData }: { civData: ICivData; }) => {
+export const SingleCivTooltipContent = ({ civData }: { civData: ICivData; }) => {
   return (
     <div className="flex flex-col gap-1 text-sm">
       <div className="flex flex-row items-center gap-1">

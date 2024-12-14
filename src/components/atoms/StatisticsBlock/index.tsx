@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { IStatisticsUnitData } from "../../../data/model";
 import { getStatisticsImgUrl, roundTo } from "../../../helpers/tools";
 import { ContentWithPopover } from "../ContentWithTooltip";
@@ -13,6 +14,10 @@ const SingleStatisticsPresenter = ({
   tooltip: string;
 }) => (
   <ContentWithPopover
+    tooltip={<span>
+      <strong>{tooltip}: </strong>
+      {amount}
+    </span>}
     popover={
       <span>
         <strong>{tooltip}: </strong>
@@ -20,15 +25,16 @@ const SingleStatisticsPresenter = ({
       </span>
     }
   >
-    <SingleSpan className={amount == 0 ? "opacity-30" : ""}>
+    <div className={clsx("cursor-pointer flex flex-row gap-1 items-center", amount == 0 ? "opacity-30" : "")}>
       <SingleImg src={getStatisticsImgUrl(icon)} />
       {amount}
-    </SingleSpan>
+    </div>
   </ContentWithPopover>
 );
+
 export const StatisticsBlock = ({ unitData }: { unitData: IStatisticsUnitData; }) => {
   return (
-    <div className="grid grid-cols-5 gap-1 w-full">
+    <div className="grid grid-cols-5 gap-px w-full">
       <SingleStatisticsPresenter icon="hp" tooltip="Hit Points" amount={unitData.unitStatistics.HP} />
       <SingleStatisticsPresenter icon="damage" tooltip="Attack" amount={unitData.unitStatistics.Attack} />
       <SingleStatisticsPresenter icon="armor" tooltip="Melee Armor" amount={unitData.unitStatistics.MeleeArmor} />

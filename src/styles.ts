@@ -56,7 +56,6 @@ export const UnitLineDiv = styled.div`
   align-items: start;
   justify-content: start;
   text-align: start;
-  margin: 5px 10px;
 `;
 
 export const UnitsPresentationFlex = styled.div`
