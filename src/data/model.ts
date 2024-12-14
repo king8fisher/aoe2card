@@ -1,6 +1,6 @@
 import dataSrc from "./json/data.json";
 import stringsSrc from "./json/strings.json";
-import { BuildingElement, Data, Unit } from "./types/data_json_types";
+import { BuildingElement, Data, Unit, UnitCost } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
 import { patchedUnitAttributes } from "./unit-attributes-patch";
 
@@ -221,31 +221,8 @@ export const castleAgeUniqueUnit = (civKey: string): IUnitData => {
   };
 };
 
-// TODO: Refactor this into a function
-export class Cost {
-  food: number;
-  gold: number;
-  stone: number;
-  wood: number;
-
-  constructor(food: number, gold: number, stone: number, wood: number) {
-    this.food = food;
-    this.gold = gold;
-    this.stone = stone;
-    this.wood = wood;
-  }
-  toKey(): string {
-    return `f${this.food}g${this.gold}s${this.stone}w${this.wood}`;
-  }
-  static key(food: number, gold: number, stone: number, wood: number): string {
-    return new Cost(food, gold, stone, wood).toKey();
-  }
-}
-
-export const emptyCost: Cost = new Cost(0, 0, 0, 0);
-
 export interface IUnitStatsData {
-  cost: Cost;
+  cost: UnitCost;
 }
 
 export interface IUnitCivData {
@@ -331,14 +308,7 @@ export const matchUnits = (civs: ICivData[], match: (unit: IUnitData) => boolean
         result.push({
           civ: c,
           unit: u,
-          unitStats: {
-            cost: new Cost(
-              cost["Food"] || 0,
-              cost["Gold"] || 0,
-              0, // FIXME: Units cost no stone ? Type doesn't appear to have stone. Confirm.
-              cost["Wood"] || 0
-            ),
-          },
+          unitStats: { cost },
         });
       }
     });

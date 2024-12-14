@@ -6,8 +6,8 @@ import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 export const AllCivsHoverOver = (
-  { reactToHovering = false, filter = "" }:
-    { reactToHovering?: boolean; filter?: string; }
+  { reactToHovering = false, showTooltip = false, filter = "" }:
+    { reactToHovering?: boolean; showTooltip?: boolean; filter?: string; }
 ) => {
   const [hovered, setHovered] = useState<ICivData | null>(null);
   const allCivs = useMemo(() => getAllCivs(), []);
@@ -26,6 +26,7 @@ export const AllCivsHoverOver = (
       <div className="grid grid-cols-8 gap-1 p-1 mt-1 shrink-0">
         {allCivs.map((civData) => (
           <ContentWithPopover
+            tooltip={showTooltip ? <span className="text-sm">{civData.value}</span> : undefined}
             popover={<TooltipContent civData={civData} />}
             key={civData.key}
           >

@@ -20,7 +20,7 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
             tooltip={<span className="text-sm">{unit.statisticsUnitData.name}</span>}
             popover={
               <>
-                <UnitPresentation unit={unit} />
+                <UnitPresentation unit={unit} cost={unit.statisticsUnitData.unitStatistics.Cost} />
               </>
             }>
             <div className="flex flex-col items-center" key={unit.id}>

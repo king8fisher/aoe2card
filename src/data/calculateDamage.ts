@@ -1,5 +1,5 @@
 import { IStatisticsUnitData } from "./model";
-import { Armour } from "./types/data_json_types";
+import { Armour, Attack } from "./types/data_json_types";
 
 /**
  * Returns default melee/pierce damage of attackingUnit against defendingUnit.
@@ -18,8 +18,6 @@ export function calculateDamage(attackingUnit: IStatisticsUnitData, defendingUni
   const damage = Math.max(sum, 1);
   return damage;
 }
-
-type Attack = Armour;
 
 /**
  * Returns an array of matching classes 

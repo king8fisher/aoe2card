@@ -1,4 +1,5 @@
-import { Cost, IUnitData } from "../../../data/model";
+import { UnitCost } from "~/src/data/types/data_json_types";
+import { IUnitData } from "../../../data/model";
 import { getUnitImgUrl } from "../../../helpers/tools";
 import { UnitLineDiv } from "../../../styles";
 import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
@@ -7,7 +8,7 @@ import { CostPresentation } from "../../atoms/UnitCost";
 
 interface IUnitLineProps {
   unit: IUnitData;
-  cost?: Cost;
+  cost?: UnitCost;
 }
 
 export const UnitLine = ({ unit, cost }: IUnitLineProps) => {

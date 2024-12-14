@@ -1,4 +1,5 @@
-import { Cost, ICivData, IUnitCivData, IUnitData, IUnitStatsData } from "../../../data/model";
+import { UnitCost } from "~/src/data/types/data_json_types";
+import { ICivData, IUnitCivData, IUnitData, IUnitStatsData } from "../../../data/model";
 import { getCivImgUrl, getStyleForUnit } from "../../../helpers/tools";
 import { CardInnerPadding, CardWrap, UnitLineDiv } from "../../../styles";
 import { ContentWithPopover } from "../../atoms/ContentWithTooltip";
@@ -7,7 +8,7 @@ import { UnitLine } from "../UnitLine";
 interface IUnitPresentationProps {
   civ?: ICivData;
   unit: IUnitData;
-  cost?: Cost;
+  cost?: UnitCost;
 }
 
 export const UnitPresentation = ({ civ, unit, cost }: IUnitPresentationProps) => {

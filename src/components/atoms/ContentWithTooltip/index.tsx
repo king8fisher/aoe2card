@@ -26,11 +26,11 @@ export const ContentWithPopover = (props: React.PropsWithChildren<TooltipProps>)
   return (
     <>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger className="leading-none m-0 p-0">
           {props.tooltip ?
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild className="leading-none">
                   {props.children}
                 </TooltipTrigger>
                 <TooltipContent>

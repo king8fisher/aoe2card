@@ -1,10 +1,10 @@
 export interface Data {
   age_names: AgeNames;
-  civ_helptexts: { [key: string]: string };
-  civ_names: { [key: string]: string };
+  civ_helptexts: { [key: string]: string; };
+  civ_names: { [key: string]: string; };
   data: DataClass;
   tech_tree_strings: TechTreeStrings;
-  techtrees: { [key: string]: Techtree };
+  techtrees: { [key: string]: Techtree; };
 }
 
 export interface AgeNames {
@@ -15,17 +15,17 @@ export interface AgeNames {
 }
 
 export interface DataClass {
-  buildings: { [key: string]: BuildingValue };
-  techs: { [key: string]: Tech };
-  unit_upgrades: { [key: string]: UnitUpgrade };
-  units: { [key: string]: Unit };
+  buildings: { [key: string]: BuildingValue; };
+  techs: { [key: string]: Tech; };
+  unit_upgrades: { [key: string]: UnitUpgrade; };
+  units: { [key: string]: Unit; };
 }
 
 export interface BuildingValue {
   AccuracyPercent: number;
   Armours: Armour[];
   Attack: number;
-  Attacks: Armour[];
+  Attacks: Attack[];
   Cost: BuildingCost;
   GarrisonCapacity: number;
   HP: number;
@@ -46,6 +46,8 @@ export interface Armour {
   Amount: number;
   Class: number;
 }
+
+export type Attack = Armour;
 
 export interface BuildingCost {
   Wood?: number;
@@ -77,15 +79,17 @@ export interface UnitUpgradeCost {
   Food?: number;
 }
 
+export type UnitCost = UnitUpgradeCost;
+
 export interface Unit {
   AccuracyPercent: number;
   Armours: Armour[];
   Attack: number;
   AttackDelaySeconds: number;
-  Attacks: Armour[];
+  Attacks: Attack[];
   ChargeEvent: number;
   ChargeType: number;
-  Cost: UnitUpgradeCost;
+  Cost: UnitCost;
   FrameDelay: number;
   GarrisonCapacity: number;
   HP: number;
