@@ -17,10 +17,10 @@ const RenderSingleCostPresenter = ({ cost, type }: { cost: UnitCost; type: CostT
 export const CostPresentation = ({ cost }: { cost: UnitCost; }) => {
   return (
     <FlexWrap>
-      {cost.Food && <RenderSingleCostPresenter cost={cost} type="Food" />}
-      {cost.Wood && <RenderSingleCostPresenter cost={cost} type="Wood" />}
-      {cost.Gold && <RenderSingleCostPresenter cost={cost} type="Gold" />}
-      {/* {cost.stone > 0 && <RenderSingleCostPresenter cost={cost} type="stone" />} */}
+      {cost.Food ? <RenderSingleCostPresenter cost={cost} type="Food" /> : <></>}
+      {cost.Wood ? <RenderSingleCostPresenter cost={cost} type="Wood" /> : <></>}
+      {cost.Gold ? <RenderSingleCostPresenter cost={cost} type="Gold" /> : <></>}
+      {/* {cost.Stone ? <RenderSingleCostPresenter cost={cost} type="Stone" /> : <></>} */}
     </FlexWrap>
   );
 };
