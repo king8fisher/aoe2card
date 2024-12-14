@@ -14,7 +14,7 @@ const GenericUnitsView = ({ genericUnitsData }: IGenericUnitsViewProps) => {
     !!genericUnitsData?.grouped.length && (
       <UnitsPresentationFlex>
         {genericUnitsData?.grouped.map((groupByUnitData: IGroupByUnitData) =>
-          <RenderUnitInfo groupByUnitData={groupByUnitData} />)}
+          <RenderUnitInfo key={groupByUnitData.unit.id} groupByUnitData={groupByUnitData} />)}
       </UnitsPresentationFlex>
     )
   );
