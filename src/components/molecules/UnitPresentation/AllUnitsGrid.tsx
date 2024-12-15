@@ -30,7 +30,9 @@ export function AllUnitsGrid({ filter }: { filter: string; }) {
                 className={
                   clsx("w-8 h-8 flex-shrink-0 rounded-lg border-2",
                     filter == "" ? "border-black/20 dark:border-white/10" :
-                      unit.statisticsUnitData.name.toLowerCase().includes(filter.toLowerCase())
+                      (unit.statisticsUnitData.name.toLowerCase().includes(filter.toLowerCase())
+                        || unit.id.toString() == filter
+                      )
                         ? "border-yellow-600 dark:border-yellow-400"
                         : "opacity-50"
                   )
