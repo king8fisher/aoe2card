@@ -64,20 +64,9 @@ SiegeEngineers combine/copy those:
 ## Data Update
 
 - Pull current data from **SeigeEngineers** and **HSZemi**:
-  - Windows:
-    ```powershell
-    > iwr -outf ./src/data/json/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    > iwr -outf ./src/data/json/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    > iwr -outf ./src/data/json/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
-    ```
-  - Linux / Mac:
-    ```shell
-    $ wget -P ./src/data/json/data.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/data.json
-    $ wget -P ./src/data/json/strings.json https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/master/data/locales/en/strings.json
-    $ wget -P ./src/data/json/units_buildings_techs.json https://raw.githubusercontent.com/HSZemi/aoe2dat/master/data/units_buildings_techs.json
-    ```
-- Format `json` files for uniformness in searches with the `fmt` task defined in
-  `package.json`: `pnpm fmt`.
+  - (requires Deno)
+    - `pnpm task-get-data` (this automatically formats the files using `deno fmt`)
+    - `pnpm task-get-images`
 - Update current DE build in `./src/data/json/patch.json` (See
   https://github.com/SiegeEngineers/aoe2techtree/commits/master for the number).
 
