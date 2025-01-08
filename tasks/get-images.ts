@@ -109,7 +109,7 @@ async function _taskGetImgs(listOfStuff: Array<string | number> | Set<number>,
   async function getImgs() {
     for (const id of listOfStuff) {
       try {
-        fetchAndSaveBinary(sourcePath(id), destinationPath(id));
+        await fetchAndSaveBinary(sourcePath(id), destinationPath(id));
       } catch (err) {
         console.error(new Error("taskGetUnitImgs", { cause: err }));
       }
@@ -150,7 +150,7 @@ async function taskGetCivsImgs() {
   async function getImgs() {
     for (const c of getAllCivs()) {
       try {
-        fetchAndSaveBinary(getCivImgUrl(c.key), path.join(cDir, `${c.key}.png`));
+        await fetchAndSaveBinary(getCivImgUrl(c.key), path.join(cDir, `${c.key}.png`));
       } catch (err) {
         console.error(new Error(`key ${c.key}`, { cause: err }));
       }
@@ -161,11 +161,9 @@ async function taskGetCivsImgs() {
 
 async function copyDirectory(srcDir: string, destDir: string) {
   ensureDir(destDir);
-
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
     const srcPath = path.join(srcDir, entry.name);
     const destPath = path.join(destDir, entry.name);
-
     if (entry.isDirectory()) {
       // Recursively copy the subdirectory
       await copyDirectory(srcPath, destPath);

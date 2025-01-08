@@ -37,3 +37,5 @@ for (const source of sources) {
     console.error(err);
   }
 }
+
+// pnpm run task-get-data
