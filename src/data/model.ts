@@ -1,11 +1,11 @@
-import dataSrc from "./json/data.json";
-import stringsSrc from "./json/strings.json";
+import dataSrc from "./json/data.json" with { type: "json" };
+import stringsSrc from "./json/strings.json" with { type: "json" };
 import { patchedUnitAttributes, unitToUnitVariationsList } from "./patched_data";
-import { Age, BuildingElement, Data, Unit, UnitCost } from "./types/data_json_types";
+import { Age, BuildingElement, Data, Tech, Unit, UnitCost } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
 
-const data = dataSrc as Data;
-const strings = stringsSrc as Strings;
+export const data = dataSrc as Data;
+export const strings = stringsSrc as Strings;
 
 // This will have to be at some point converted into the dynamic json files load.
 
@@ -95,6 +95,46 @@ const splitAbout = (about: string): IUnitHelp => {
     weak: weak,
     upgrades: upgrades,
   };
+};
+
+export type TechWithSource = (Tech & {
+  source: "regular" | "castleUT" | "impUT";
+});
+
+/**
+ * {@link allTechs} returns all technologies that have links to them
+ * from the other parts of the data: from `data.techtrees[civKey].techs`,
+ * `data.techtrees[civKey].unique.castleAgeUniqueTech` as well as 
+ * `data.techtrees[civKey].unique.imperialAgeUniqueTech`.
+ *
+ * @returns {TechWithSource[]}
+ */
+export const allTechs = (): TechWithSource[] => {
+  const result: TechWithSource[] = [];
+  for (const techId in data.data.techs) {
+    let found = false;
+    for (const civKey in data.techtrees) {
+      if (data.techtrees[civKey].techs.find((t) => t.id.toString() == techId)) {
+        found = true;
+        result.push({ ...data.data.techs[techId], source: "regular" });
+        break;
+      }
+      if (data.techtrees[civKey].unique.castleAgeUniqueTech.toString() == techId) {
+        found = true;
+        result.push({ ...data.data.techs[techId], source: "castleUT" });
+        break;
+      }
+      if (data.techtrees[civKey].unique.imperialAgeUniqueTech.toString() == techId) {
+        found = true;
+        result.push({ ...data.data.techs[techId], source: "impUT" });
+        break;
+      }
+    }
+    if (!found) {
+      // console.log(techId, data.data.techs[techId].internal_name);
+    }
+  }
+  return result;
 };
 
 export const techNameByID = (techId: number): string =>

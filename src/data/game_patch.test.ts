@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import patchSrc from "./json/patch.json";
+import patchSrc from "./json/patch.json" with { type: "json" };
 
 export interface Patches {
   number: number;

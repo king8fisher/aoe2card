@@ -1,4 +1,4 @@
-import patch from "../../../data/json/patch.json";
+import patch from "../../../data/json/patch.json" with { type: "json" };
 
 export const Patch = () => {
   return (

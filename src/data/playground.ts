@@ -1,5 +1,5 @@
-import dataSrc from "./json/data.json";
-import stringsSrc from "./json/strings.json";
+import dataSrc from "./json/data.json" with { type: "json" };
+import stringsSrc from "./json/strings.json" with { type: "json" };
 import { Data } from "./types/data_json_types";
 import { Strings } from "./types/strings_json_types";
 

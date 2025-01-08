@@ -20,5 +20,6 @@ export const getResImgUrl = (type: string) => `r/${type.toLowerCase()}.png`;
 export const getCivImgUrl = (civKey: string) => `c/${civKey}.png`;
 // export const getUnitImgUrl = (unitId: number) => `https://aoe2techtree.net/img/Units/${unitId}.png`;
 export const getUnitImgUrl = (unitId: number) => `u/a/${unitId}.png`;
+export const getTechImgUrl = (techId: number) => `t/${techId}.png`;
 
 export const getStatisticsImgUrl = (type: string) => `s/${type}.png`;

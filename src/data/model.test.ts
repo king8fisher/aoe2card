@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import dataSrc from "./json/data.json";
-import stringsSrc from "./json/strings.json";
-import unitBuildingsSrc from "./json/units_buildings_techs.json";
+import dataSrc from "./json/data.json" with { type: "json" };
+import stringsSrc from "./json/strings.json" with { type: "json" };
+import unitBuildingsSrc from "./json/units_buildings_techs.json" with { type: "json" };
 import { dataSchema } from "./types/zod/data_json_types";
 import { stringsSchema } from "./types/zod/strings_json_types";
 import { unitsBuildingsTechsSchema } from "./types/zod/units_buildings_techs_data_types";
