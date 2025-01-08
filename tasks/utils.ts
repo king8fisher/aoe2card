@@ -5,14 +5,21 @@ import fs from "node:fs";
  * Checks if GraphicsMagick (gm or gm.exe) is available in the system PATH.
  * @returns boolean
  */
-export function isGraphicsMagickInPath(): boolean {
+export function isGraphicsMagickAvailable(): boolean {
   const command = process.platform === "win32" ? "gm.exe" : "gm";
-
   try {
     execSync(`${command} -version`, { stdio: 'ignore' });
     return true;
   } catch {
-    // If an error occurs (e.g., command not found), return false
+    return false;
+  }
+}
+
+export function isDenoAvailable(): boolean {
+  try {
+    execSync(`deno -version`, { stdio: 'ignore' });
+    return true;
+  } catch {
     return false;
   }
 }

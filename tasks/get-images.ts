@@ -7,7 +7,7 @@ import { allTechs, getAllCivs, ICivData, type TechWithSource } from "../src/data
 import { BuildingElement, Data } from "../src/data/types/data_json_types.ts";
 import { Strings } from "../src/data/types/strings_json_types.ts";
 import { fetchAndSaveBinary } from "./fetch-and-save.ts";
-import { cmd, ensureDir, isGraphicsMagickInPath } from "./utils.ts";
+import { cmd, ensureDir, isDenoAvailable, isGraphicsMagickAvailable } from "./utils.ts";
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
@@ -234,12 +234,13 @@ async function taskBatchManualUnitsImgs() {
 }
 
 async function main() {
-  if (!isGraphicsMagickInPath()) throw "This tasks requires GraphicsMagick (gm or gm.exe) in the PATH";
+  if (!isGraphicsMagickAvailable()) throw "This tasks requires GraphicsMagick (gm or gm.exe) in the PATH";
+  if (!isDenoAvailable()) throw "This tasks requires deno in the PATH (used for formatting)";
   console.log({ uDir, uDirDest, cDir, cDirDest, dirManual, uDirManual, techsDir, techsDirDest });
   // await taskBatchRemoteUnitsImgs();
   // await taskBatchManualUnitsImgs();
   // await taskBatchRemoteCivsImgs();
-  await taskBatchRemoteTechsImgs();
+  // await taskBatchRemoteTechsImgs();
 }
 
 await main();

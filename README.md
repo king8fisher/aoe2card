@@ -64,7 +64,7 @@ SiegeEngineers combine/copy those:
 ## Data Update
 
 - Pull current data from **SeigeEngineers** and **HSZemi**:
-  - (requires Deno)
+  - (requires Deno for formatting)
     - `pnpm task-get-data` (this automatically formats the files using `deno fmt`)
     - `pnpm task-get-images`
 - Update current DE build in `./src/data/json/patch.json` (See
