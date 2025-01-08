@@ -50,7 +50,24 @@ export async function fetchAndSaveBinary(url: string, filePath: string) {
     });
     return { status: 'ok ' };
   } else {
-    throw new Error(`${response.status} on ${url}`);
+    throw new NotFoundError(url, response.status);
   }
 }
 
+export class NotFoundError extends Error {
+  private _url: string;
+  private _status: number;
+  constructor(url: string, status: number) {
+    super(`Resource not found at ${url} with status ${status}`);
+    this._url = url;
+    this._status = status;
+    this.name = 'NotFoundError';
+  }
+  get url() {
+    return this._url;
+  }
+  get status() {
+    return this._status;
+  }
+
+}

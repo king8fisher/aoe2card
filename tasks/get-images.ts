@@ -6,8 +6,9 @@ import stringsSrc from "../src/data/json/strings.json" with { type: "json" };
 import { allTechs, getAllCivs, ICivData, type TechWithSource } from "../src/data/model.ts";
 import { BuildingElement, Data } from "../src/data/types/data_json_types.ts";
 import { Strings } from "../src/data/types/strings_json_types.ts";
-import { fetchAndSaveBinary } from "./fetch-and-save.ts";
+import { fetchAndSaveBinary, NotFoundError } from "./fetch-and-save.ts";
 import { cmd, ensureDir, isDenoAvailable, isGraphicsMagickAvailable } from "./utils.ts";
+import inquirer from 'inquirer';
 
 const data = dataSrc as Data;
 const strings = stringsSrc as Strings;
@@ -111,7 +112,11 @@ async function _taskGetImgs(listOfStuff: Array<string | number> | Set<number>,
       try {
         await fetchAndSaveBinary(sourcePath(id), destinationPath(id));
       } catch (err) {
-        console.error(new Error("taskGetUnitImgs", { cause: err }));
+        if (err instanceof NotFoundError) {
+          console.log(`not found: ${err.url}`);
+        } else {
+          console.error(new Error("_taskGetImgs", { cause: err }));
+        }
       }
     }
   }
@@ -134,9 +139,20 @@ async function taskFillAlphaAsRgbAndRemoveBlackFromUnitImgs() {
   makeDir(`${uDirManual}/a`);
   for (const entry of fs.readdirSync(dirManual, { withFileTypes: true }))
     if (entry.isFile()) {
-      console.log('converting', entry.name);
-      cmd([`cmd.exe`, `/c`, `gm.exe convert ${path.join(dirManual, entry.name)} -background #014e92 -flatten ${path.join(uDirManual, entry.name)}`]);
-      cmd([`cmd.exe`, `/c`, `gm.exe convert ${path.join(uDirManual, entry.name)} -fuzz 5% -transparent #000 ${path.join(uDirManual, "a", entry.name)}`]);
+      // We should skip unit images that are already in the tasks/u
+      let foundExistingRemote = false;
+      try {
+        const existingRemote = fs.statSync(path.join(uDir, entry.name));
+        foundExistingRemote = existingRemote.isFile();
+      } catch (err) {
+      }
+      if (foundExistingRemote) {
+        console.log('skipping', entry.name, "(already exists in remote)");
+      } else {
+        console.log('converting', entry.name);
+        cmd([`cmd.exe`, `/c`, `gm.exe convert ${path.join(dirManual, entry.name)} -background #014e92 -flatten ${path.join(uDirManual, entry.name)}`]);
+        cmd([`cmd.exe`, `/c`, `gm.exe convert ${path.join(uDirManual, entry.name)} -fuzz 5% -transparent #000 ${path.join(uDirManual, "a", entry.name)}`]);
+      }
     }
 };
 
@@ -178,19 +194,19 @@ async function copyDirectory(srcDir: string, destDir: string) {
   }
 }
 
-async function taskMoveAllUnitImgs() {
+async function taskCopyAllUnitImgsToPublic() {
   rmDir(uDirDest);
   await copyDirectory(uDir, uDirDest);
   // This sequence. Since we may overwrite some images
   await copyDirectory(path.join(uDirManual), uDirDest);
 }
 
-async function taskMoveAllTechsImgs() {
+async function taskCopyAllTechsImgsToPublic() {
   rmDir(techsDirDest);
   await copyDirectory(techsDir, techsDirDest);
 }
 
-async function taskMoveCivsImgs() {
+async function taskCopyAllCivsImgsToPublic() {
   rmDir(cDirDest);
   await copyDirectory(cDir, cDirDest);
 }
@@ -212,23 +228,20 @@ function makeDir(dir: string) {
   }
 }
 
-async function taskBatchRemoteUnitsImgs() {
+async function taskFetchRemoteUnitsImgs() {
   await taskGetUnitImgs();
   await taskRemoveBlackFromUnitImgs();
-  await taskMoveAllUnitImgs();
 }
 
-async function taskBatchRemoteTechsImgs() {
+async function taskFetchRemoteTechsImgs() {
   await taskGetTechsImgs();
-  await taskMoveAllTechsImgs();
 }
 
-async function taskBatchRemoteCivsImgs() {
+async function taskFetchRemoteCivsImgs() {
   await taskGetCivsImgs();
-  await taskMoveCivsImgs();
 }
 
-async function taskBatchManualUnitsImgs() {
+async function taskProcessManualUnitsImgs() {
   // manual -> manual/u
   await taskFillAlphaAsRgbAndRemoveBlackFromUnitImgs();
 }
@@ -237,10 +250,57 @@ async function main() {
   if (!isGraphicsMagickAvailable()) throw "This tasks requires GraphicsMagick (gm or gm.exe) in the PATH";
   if (!isDenoAvailable()) throw "This tasks requires deno in the PATH (used for formatting)";
   console.log({ uDir, uDirDest, cDir, cDirDest, dirManual, uDirManual, techsDir, techsDirDest });
-  // await taskBatchRemoteUnitsImgs();
-  // await taskBatchManualUnitsImgs();
-  // await taskBatchRemoteCivsImgs();
-  // await taskBatchRemoteTechsImgs();
+
+  const commands =
+    [
+      {
+        prompt: 'fetch remote images for [units]',
+        fn: taskFetchRemoteUnitsImgs
+      },
+      {
+        prompt: 'process manual images for [units]',
+        fn: taskProcessManualUnitsImgs
+      },
+      {
+        prompt: 'copy images to public for [units] (remote & manual)',
+        fn: taskCopyAllUnitImgsToPublic
+      },
+      {
+        prompt: 'fetch remote images for [civs]',
+        fn: taskFetchRemoteCivsImgs
+      },
+      {
+        prompt: 'copy images to public for [civs]',
+        fn: taskCopyAllCivsImgsToPublic
+      },
+      {
+        prompt: 'fetch remote images for [techs]',
+        fn: taskFetchRemoteTechsImgs
+      },
+      {
+        prompt: 'copy images to public for [techs]',
+        fn: taskCopyAllTechsImgsToPublic
+      },
+    ];
+
+  for (const command of commands) {
+    await inquirer
+      .prompt([
+        {
+          name: 'choice',
+          message: command.prompt,
+          type: "list",
+          choices: ["yes", "no"],
+          default: "no",
+        },
+      ])
+      .then(async answers => {
+        if (answers.choice === "yes") {
+          await command.fn();
+        }
+      });
+  }
+
 }
 
 await main();
