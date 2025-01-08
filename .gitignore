@@ -24,3 +24,9 @@ node_modules
 *.sw?
 
 tsconfig.tsbuildinfo
+
+
+# tasks temporary folders
+tasks/c
+tasks/t
+tasks/u
