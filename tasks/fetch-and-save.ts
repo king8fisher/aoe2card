@@ -44,8 +44,8 @@ export async function fetchAndSaveBinary(url: string, filePath: string) {
       }
     });
     await response.body.pipeTo(stream);
-    await new Promise((resolve, reject) => {
-      dest.on('finish', resolve);
+    await new Promise<void>((resolve, reject) => {
+      dest.on('finish', () => resolve());
       dest.on('error', reject);
     });
     return { status: 'ok ' };
